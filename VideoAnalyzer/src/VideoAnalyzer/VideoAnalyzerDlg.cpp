@@ -401,7 +401,7 @@ bool CVideoAnalyzerDlg::openSource(TVideoSource& tSource)
 {
 	if (!this->loadConfig())
 	{
-		return false;
+		//return false;
 	}
 
     //打开视频源
