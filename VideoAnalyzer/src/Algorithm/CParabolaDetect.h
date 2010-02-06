@@ -80,8 +80,9 @@ struct ParamStruct
 
 	LineSet  tRectBlackBlock[5]        ;                  //加入的黑色块范围 
 	LineSet  tNightRange[2]            ;                 //夜间的区域值 用2块区域判断
-	float   iPersonRange[5][2]         ;                   //人员检测范围参数(梯形) 0-0高点 0-1未用 1左线高点 2左线低点 3右线高点 4右线低点  
-	// LineSet fPersonRange[2];
+	//float   iPersonRange[5][2]         ;                   //人员检测范围参数(梯形) 0-0高点 0-1未用 1左线高点 2左线低点 3右线高点 4右线低点  
+	LineSet  iPersonRange[2]            ;                // 人员检测范围参数(梯形)左线 右线
+	int      iPersonTopVal              ;                // 人员检测范围参数高度
 } ;
 
 struct ParamDistinguish
