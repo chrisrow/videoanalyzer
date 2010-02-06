@@ -135,10 +135,9 @@ void CGraphicsStatic::OnLButtonDown(UINT nFlags, CPoint point)
 		   m_ptPre = point;
 		   m_tmpPolyLine.push_back(point);
 		   cvCopy(m_image, m_imageDraft, NULL);
-
 		   //删除一下两行就可以支持折线
-		   m_bStart = false;
 		   m_pPolyLineArray->push_back(m_tmpPolyLine);
+		   m_bStart = false;
 	   }
 	} 
 	else

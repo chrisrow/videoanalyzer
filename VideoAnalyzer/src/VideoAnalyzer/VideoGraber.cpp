@@ -426,7 +426,7 @@ bool CVideoFile::setProperty(int iID, double value)
     {
     case PROP_FRAMERATE: 
         m_iFPS = (int)value;
-        m_iWaitTime = (int)(1000/value) - 10;
+        m_iWaitTime = (int)(1000/m_iFPS) - 10;
         if (m_iWaitTime < 0)
         {
             m_iWaitTime = 0;

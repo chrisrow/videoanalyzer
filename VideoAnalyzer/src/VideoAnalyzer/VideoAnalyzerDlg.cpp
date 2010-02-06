@@ -6,7 +6,6 @@
 #include "VideoAnalyzerDlg.h"
 
 #include "UDPAlerter.h"
-// #include "Algorithm/Macro.h"
 #include "Algorithm/ParabolaWarpper.h"
 
 #ifdef _DEBUG
@@ -15,8 +14,8 @@
 
 extern int g_debug;
 
-extern ParamStruct g_ps;
-extern ParamDistinguish g_pd;
+extern struct ParamStruct ParamSet;
+extern struct ParamDistinguish ParamDsting;
 
 
 // 用于应用程序“关于”菜单项的 CAboutDlg 对话框
@@ -252,7 +251,6 @@ HCURSOR CVideoAnalyzerDlg::OnQueryDragIcon()
 
 LRESULT CVideoAnalyzerDlg::OnMsgVideoEnd(WPARAM wParam,LPARAM lParam)
 {
-//     DEL_ALL_IMAGE();
     delete m_pVideoGraber;
     m_pVideoGraber = NULL;
 
@@ -546,7 +544,7 @@ bool CVideoAnalyzerDlg::openSource(TVideoSource& tSource)
 
 void CVideoAnalyzerDlg::closeSource()
 {
-	if (m_pVideoGraber)
+    if (m_pVideoGraber)
     {
         m_pVideoGraber->close();
     }
@@ -836,7 +834,7 @@ bool CVideoAnalyzerDlg::loadConfig()
         return false;
     }
 
-    if (!m_cfgParse.LoadChannel(iChannel, g_ps, g_pd))
+    if (!m_cfgParse.LoadChannel(iChannel, ParamSet, ParamDsting))
     {
         this->AddRunStatus("载入通道%d的数据失败", iChannel);
         return false;
@@ -856,7 +854,7 @@ bool CVideoAnalyzerDlg::saveConfig()
     strConfigFile = m_strAppPath + "\\" + strConfigFile;
     iChannel = atoi((LPCTSTR)strChannel);
 
-    if (!m_cfgParse.SaveChannel(iChannel, g_ps, g_pd))
+    if (!m_cfgParse.SaveChannel(iChannel, ParamSet, ParamDsting))
     {
         this->AddRunStatus("保存通道%d的数据失败", iChannel);
         return false;

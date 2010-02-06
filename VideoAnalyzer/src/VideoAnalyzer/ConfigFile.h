@@ -1,7 +1,8 @@
 
 #pragma once
 
-#include "Algorithm/ParabolaStruct.h"
+//#include "Algorithm/ParabolaStruct.h"
+#include "Algorithm/CParabolaDetect.h"
 
 #ifdef TIXML_USE_STL
 #include <iostream>
