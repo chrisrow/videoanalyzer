@@ -2246,16 +2246,16 @@ void CParabolaDetect::InitParaVal(  )
 {
 	int i = 0 ;
 
-    ParamSet.iPersonRange[0][0] = 53 ;
-    ParamSet.iPersonRange[0][1] = 0 ; 
-    ParamSet.iPersonRange[1][0] = 94 ; 
-    ParamSet.iPersonRange[1][1] = 59 ;
-    ParamSet.iPersonRange[2][0] = 4 ; 
-    ParamSet.iPersonRange[2][1] = 282 ;
-    ParamSet.iPersonRange[3][0] = 141 ; 
-    ParamSet.iPersonRange[3][1] = 58 ;
-    ParamSet.iPersonRange[4][0] = 242 ;
-    ParamSet.iPersonRange[4][1] = 271 ;
+    //ParamSet.iPersonRange[0][0] = 53 ;
+    //ParamSet.iPersonRange[0][1] = 0 ; 
+    //ParamSet.iPersonRange[1][0] = 94 ; 
+    //ParamSet.iPersonRange[1][1] = 59 ;
+    //ParamSet.iPersonRange[2][0] = 4 ; 
+    //ParamSet.iPersonRange[2][1] = 282 ;
+    //ParamSet.iPersonRange[3][0] = 141 ; 
+    //ParamSet.iPersonRange[3][1] = 58 ;
+    //ParamSet.iPersonRange[4][0] = 242 ;
+    //ParamSet.iPersonRange[4][1] = 271 ;
 
     PersonAddBlack( );
 
@@ -2781,18 +2781,18 @@ void CParabolaDetect::PersonAddBlack()
   int i = 0 ;
   int j = 0 ;
 
-  float vf_na = ( ParamSet.iPersonRange[2][1] - ParamSet.iPersonRange[1][1])/( ParamSet.iPersonRange[2][0] - ParamSet.iPersonRange[1][0] + 0.001f);
-  float vf_nb = ( ParamSet.iPersonRange[2][1] * ParamSet.iPersonRange[1][0] - ParamSet.iPersonRange[1][1] * ParamSet.iPersonRange[2][0])/(ParamSet.iPersonRange[1][0] - ParamSet.iPersonRange[2][0]+ 0.001f);
+  float vf_na = ( ParamSet.iPersonRange[0].EndPointY - ParamSet.iPersonRange[0].BeginPointY )/( ParamSet.iPersonRange[0].EndPointX - ParamSet.iPersonRange[0].BeginPointX );
+  float vf_nb = ( ParamSet.iPersonRange[0].EndPointY * ParamSet.iPersonRange[0].BeginPointX - ParamSet.iPersonRange[0].BeginPointY* ParamSet.iPersonRange[0].EndPointX )/(ParamSet.iPersonRange[0].BeginPointX - ParamSet.iPersonRange[0].EndPointX);
 
-  float vf_nc = ( ParamSet.iPersonRange[4][1] - ParamSet.iPersonRange[3][1])/( ParamSet.iPersonRange[4][0] - ParamSet.iPersonRange[3][0]+ 0.001f);
-  float vf_nd = ( ParamSet.iPersonRange[4][1] * ParamSet.iPersonRange[3][0] - ParamSet.iPersonRange[3][1] * ParamSet.iPersonRange[4][0])/(ParamSet.iPersonRange[3][0] - ParamSet.iPersonRange[4][0]+ 0.001f);
+  float vf_nc = ( ParamSet.iPersonRange[1].EndPointY - ParamSet.iPersonRange[1].BeginPointY )/( ParamSet.iPersonRange[1].EndPointX - ParamSet.iPersonRange[1].BeginPointX );
+  float vf_nd = ( ParamSet.iPersonRange[1].EndPointY * ParamSet.iPersonRange[1].BeginPointX - ParamSet.iPersonRange[1].BeginPointY* ParamSet.iPersonRange[1].EndPointX )/(ParamSet.iPersonRange[1].BeginPointX - ParamSet.iPersonRange[1].EndPointX);
 
   int16_t XLeft = 0 ;
   int16_t XRight = 0;
 
   memset ( m_pShowImage[4], 0, m_iFrameWidth*m_iFrameHeight);
 
-  for (j = (int)ParamSet.iPersonRange[0][0] ; j < m_iFrameHeight-2 ; j++)
+  for (j = (int)ParamSet.iPersonTopVal ; j < m_iFrameHeight-2 ; j++)
   {
     XLeft = (int16_t)( ( (float)j - vf_nb ) / vf_na ) ;
     XRight = (int16_t)( ( (float)j - vf_nd ) / vf_nc );
@@ -2944,13 +2944,13 @@ long CParabolaDetect::PersonDetectWhiteSpot( uint8_t *p_image_src )
   uint16_t framewidth  = m_iFrameWidth  ;    //Ö¡¿í
   uint16_t frameheight = m_iFrameHeight ;    //Í¼Ïñ¸ß
 
-  float vf_na = ( ParamSet.iPersonRange[2][1] - ParamSet.iPersonRange[1][1])/( ParamSet.iPersonRange[2][0] - ParamSet.iPersonRange[1][0]);
-  float vf_nb = ( ParamSet.iPersonRange[2][1]*ParamSet.iPersonRange[1][0] - ParamSet.iPersonRange[1][1]*ParamSet.iPersonRange[2][0])/(ParamSet.iPersonRange[1][0] - ParamSet.iPersonRange[2][0]);
+  float vf_na = ( ParamSet.iPersonRange[0].EndPointY - ParamSet.iPersonRange[0].BeginPointY )/( ParamSet.iPersonRange[0].EndPointX - ParamSet.iPersonRange[0].BeginPointX );
+  float vf_nb = ( ParamSet.iPersonRange[0].EndPointY * ParamSet.iPersonRange[0].BeginPointX - ParamSet.iPersonRange[0].BeginPointY* ParamSet.iPersonRange[0].EndPointX )/(ParamSet.iPersonRange[0].BeginPointX - ParamSet.iPersonRange[0].EndPointX);
 
-  float vf_nc = ( ParamSet.iPersonRange[4][1] - ParamSet.iPersonRange[3][1])/( ParamSet.iPersonRange[4][0] - ParamSet.iPersonRange[3][0]);
-  float vf_nd = ( ParamSet.iPersonRange[4][1]*ParamSet.iPersonRange[3][0] - ParamSet.iPersonRange[3][1]*ParamSet.iPersonRange[4][0])/(ParamSet.iPersonRange[3][0] - ParamSet.iPersonRange[4][0]);
+  float vf_nc = ( ParamSet.iPersonRange[1].EndPointY - ParamSet.iPersonRange[1].BeginPointY )/( ParamSet.iPersonRange[1].EndPointX - ParamSet.iPersonRange[1].BeginPointX );
+  float vf_nd = ( ParamSet.iPersonRange[1].EndPointY * ParamSet.iPersonRange[1].BeginPointX - ParamSet.iPersonRange[1].BeginPointY* ParamSet.iPersonRange[1].EndPointX )/(ParamSet.iPersonRange[1].BeginPointX - ParamSet.iPersonRange[1].EndPointX);
 
-  for (j = (int)ParamSet.iPersonRange[0][0] ; j < m_iFrameHeight-2 ; j++)
+  for (j = (int)ParamSet.iPersonTopVal ; j < m_iFrameHeight-2 ; j++)
   {
     XLeft = (int16_t)( ( (float)j - vf_nb ) / vf_na );
     XRight = (int16_t)( ( (float)j - vf_nd ) / vf_nc ) ;
