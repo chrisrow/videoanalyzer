@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="gb2312" ?>
+<configure>
+    <golbal>
+        <UDPServer>192.168.1.74</UDPServer>
+    </golbal>
+    <camera channel="0">
+        <ParamStruct>
+            <bSensitiveFlag value="1" />
+            <bTransLensImage value="2" />
+            <bLittleRegionFlag value="3" />
+            <bTreeLittleFlag value="4" />
+            <fLineFirstLocation>
+                <float value="1.000000" />
+                <float value="2.000000" />
+                <float value="3.000000" />
+                <float value="4.000000" />
+            </fLineFirstLocation>
+            <fLineSecondLocation>
+                <float value="1.000000" />
+                <float value="2.000000" />
+                <float value="3.000000" />
+                <float value="4.000000" />
+            </fLineSecondLocation>
+            <bBinarizeSubThreshold value="11" />
+            <bNightSubThreshold value="12" />
+            <iImfilterSingleThreshold value="13" />
+            <iImdilateThreshold value="14" />
+            <iWhiteSpotNumMax value="15" />
+            <iWhiteSpotNumMin value="16" />
+            <iXTrackContinueThreshold value="17" />
+            <iXTrackOffsetValue value="18" />
+            <iTrackMaxFrameNum value="19" />
+            <iLittleRegionValue value="10" />
+            <tRectLittleRegion>
+                <LineSet bFlag="1" BeginPointX="2" BeginPointY="3" EndPointX="4" EndPointY="5" />
+                <LineSet bFlag="11" BeginPointX="1" BeginPointY="1" EndPointX="1" EndPointY="1" />
+            </tRectLittleRegion>
+            <tRectTreeLittleRegion>
+                <LineSet bFlag="11" BeginPointX="1" BeginPointY="1" EndPointX="1" EndPointY="1" />
+                <LineSet bFlag="11" BeginPointX="1" BeginPointY="1" EndPointX="1" EndPointY="1" />
+            </tRectTreeLittleRegion>
+            <fPersonRange>
+                <LineSet bFlag="11" BeginPointX="1" BeginPointY="1" EndPointX="1" EndPointY="1" />
+                <LineSet bFlag="11" BeginPointX="1" BeginPointY="1" EndPointX="1" EndPointY="1" />
+            </fPersonRange>
+            <tLineCurverRange>
+                <LineSet bFlag="11" BeginPointX="1" BeginPointY="1" EndPointX="1" EndPointY="1" />
+                <LineSet bFlag="11" BeginPointX="1" BeginPointY="1" EndPointX="1" EndPointY="1" />
+            </tLineCurverRange>
+            <tLineStraightFirst>
+                <LineSet bFlag="11" BeginPointX="1" BeginPointY="1" EndPointX="1" EndPointY="1" />
+                <LineSet bFlag="11" BeginPointX="1" BeginPointY="1" EndPointX="1" EndPointY="1" />
+            </tLineStraightFirst>
+            <tLineStraightSecond>
+                <LineSet bFlag="11" BeginPointX="1" BeginPointY="1" EndPointX="1" EndPointY="1" />
+                <LineSet bFlag="11" BeginPointX="1" BeginPointY="1" EndPointX="1" EndPointY="1" />
+            </tLineStraightSecond>
+            <tRectBlackBlock>
+                <LineSet bFlag="11" BeginPointX="1" BeginPointY="1" EndPointX="1" EndPointY="1" />
+                <LineSet bFlag="11" BeginPointX="1" BeginPointY="1" EndPointX="1" EndPointY="1" />
+                <LineSet bFlag="11" BeginPointX="1" BeginPointY="1" EndPointX="1" EndPointY="1" />
+                <LineSet bFlag="11" BeginPointX="1" BeginPointY="1" EndPointX="1" EndPointY="1" />
+                <LineSet bFlag="11" BeginPointX="1" BeginPointY="1" EndPointX="1" EndPointY="1" />
+            </tRectBlackBlock>
+            <tLineBlackLeft>
+                <LineSet bFlag="11" BeginPointX="1" BeginPointY="1" EndPointX="1" EndPointY="1" />
+                <LineSet bFlag="11" BeginPointX="1" BeginPointY="1" EndPointX="1" EndPointY="1" />
+            </tLineBlackLeft>
+            <tLineBlackRight>
+                <LineSet bFlag="1" BeginPointX="1" BeginPointY="1" EndPointX="1" EndPointY="1" />
+                <LineSet bFlag="1" BeginPointX="1" BeginPointY="1" EndPointX="1" EndPointY="1" />
+            </tLineBlackRight>
+            <tNightRange>
+                <LineSet bFlag="11" BeginPointX="1" BeginPointY="1" EndPointX="1" EndPointY="1" />
+                <LineSet bFlag="11" BeginPointX="1" BeginPointY="1" EndPointX="1" EndPointY="1" />
+                <LineSet bFlag="11" BeginPointX="1" BeginPointY="1" EndPointX="1" EndPointY="1" />
+            </tNightRange>
+            <iNightRangeVal value="1" />
+        </ParamStruct>
+        <ParamDistinguish>
+            <TrackNumMax FirstValue="1" SecondValue="1" ThirdValue="1" FouthValue="1" />
+            <TrackNumMin FirstValue="11" SecondValue="1" ThirdValue="1" FouthValue="1" />
+            <LostNumVal FirstValue="12" SecondValue="1" ThirdValue="1" FouthValue="1" />
+            <MigrationDiff FirstValue="13" SecondValue="1" ThirdValue="1" FouthValue="1" />
+            <OriginCurrDis FirstValue="14" SecondValue="1" ThirdValue="1" FouthValue="1" />
+            <YHeightVal FirstValue="15" SecondValue="1" ThirdValue="1" FouthValue="1" />
+            <XContValue FirstValue="16" SecondValue="1" ThirdValue="1" FouthValue="1" />
+            <XMatchValue FirstValue="17" SecondValue="1" ThirdValue="1" FouthValue="1" />
+            <YMatchValue FirstValue="18" SecondValue="1" ThirdValue="1" FouthValue="1" />
+            <FindObjValue FirstValue="19" SecondValue="1" ThirdValue="1" FouthValue="1" />
+            <RiseNumVal FirstValue="10" SecondValue="1" ThirdValue="1" FouthValue="1" />
+            <DownNumVal FirstValue="19" SecondValue="1" ThirdValue="1" FouthValue="1" />
+            <FindObjValMax FirstValue="18" SecondValue="1" ThirdValue="1" FouthValue="1" />
+            <FindObjValMin FirstValue="17" SecondValue="1" ThirdValue="1" FouthValue="1" />
+            <WhiteSpotVal FirstValue="16" SecondValue="1" ThirdValue="1" FouthValue="1" />
+            <TopPointVal FirstValue="15" SecondValue="1" ThirdValue="1" FouthValue="1" />
+            <fFindObjInverse FirstValue="1.500000" SecondValue="1.000000" ThirdValue="1.000000" FouthValue="1.000000" />
+            <fXMatchInverse FirstValue="1.534000" SecondValue="1.000000" ThirdValue="1.000000" FouthValue="1.000000" />
+            <fYMatchInverse FirstValue="1.534000" SecondValue="1.000000" ThirdValue="1.000000" FouthValue="1.000000" />
+            <fXContInverse FirstValue="15.340000" SecondValue="12.000000" ThirdValue="13.000000" FouthValue="4.000000" />
+        </ParamDistinguish>
+    </camera>
+</configure>
