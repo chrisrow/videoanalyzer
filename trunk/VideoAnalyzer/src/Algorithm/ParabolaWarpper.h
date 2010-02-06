@@ -19,7 +19,7 @@ public:
 
 private:
     CFrameContainer *m_pFrameContainer, *m_pOutFrameContainer, *m_pFrame_matlabFunced;
-    CParabolaNatural* m_pDetector;
+    CParabolaDetect* m_pDetector;
 };
 
 

@@ -1,4 +1,4 @@
-#pragma once
+/*#pragma once
 
 //抛物检测配置参数的类型定义
 
@@ -85,3 +85,4 @@ struct ParamDistinguish
     JudgeSetFlt fXContInverse;
 
 };
+*/

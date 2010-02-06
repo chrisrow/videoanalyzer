@@ -597,19 +597,14 @@ int CCfgParse::LoadChannel(int iCh, ParamStruct& ps, ParamDistinguish& pd)
         return 0;
     }
 
+	//初始化类型
+    GET_VALUE(xPSElement, "ChangeStyle", ps.iStyleChange);
+
     //int
     GET_VALUE(xPSElement, "bSensitiveFlag", ps.bSensitiveFlag);
     GET_VALUE(xPSElement, "bTransLensImage", ps.bTransLensImage);
-    GET_VALUE(xPSElement, "bLittleRegionFlag", ps.bLittleRegionFlag);
-    GET_VALUE(xPSElement, "bTreeLittleFlag", ps.bTreeLittleFlag);
-
-    //float array
-    GET_VALUE(xPSElement, "fLineFirstLocation", *ps.fLineFirstLocation);
-    GET_VALUE(xPSElement, "fLineSecondLocation", *ps.fLineSecondLocation);
-
-    //int
-    GET_VALUE(xPSElement, "bBinarizeSubThreshold", ps.bBinarizeSubThreshold);
-    GET_VALUE(xPSElement, "bNightSubThreshold", ps.bNightSubThreshold);
+    GET_VALUE(xPSElement, "bBinarizeSubThreshold", ps.iBinarizeSubThreshold);
+    GET_VALUE(xPSElement, "bNightSubThreshold", ps.iNightSubThreshold);
     GET_VALUE(xPSElement, "iImfilterSingleThreshold", ps.iImfilterSingleThreshold);
     GET_VALUE(xPSElement, "iImdilateThreshold", ps.iImdilateThreshold);
     GET_VALUE(xPSElement, "iWhiteSpotNumMax", ps.iWhiteSpotNumMax);
@@ -617,24 +612,29 @@ int CCfgParse::LoadChannel(int iCh, ParamStruct& ps, ParamDistinguish& pd)
     GET_VALUE(xPSElement, "iXTrackContinueThreshold", ps.iXTrackContinueThreshold);
     GET_VALUE(xPSElement, "iXTrackOffsetValue", ps.iXTrackOffsetValue);
     GET_VALUE(xPSElement, "iTrackMaxFrameNum", ps.iTrackMaxFrameNum);
-    GET_VALUE(xPSElement, "iLittleRegionValue", ps.iLittleRegionValue);
+    GET_VALUE(xPSElement, "iLittleRegionValue", ps.iLittleRegionTop);
+	GET_VALUE(xPSElement, "iNightRangeVal", ps.iNightRangeVal);
+
+	GET_VALUE(xPSElement, "iCurveLeftVal", ps.iCurveLeftVal);
+	GET_VALUE(xPSElement, "iCurveRightVal", ps.iCurveRightVal);
+
+	GET_VALUE(xPSElement, "iPersonFlag", ps.iPersonFlag);
+	GET_VALUE(xPSElement, "iPersonWhitePotNum", ps.iPersonWhitePotNum);
 
     //LineSet
     GET_VALUE(xPSElement, "tRectLittleRegion", ps.tRectLittleRegion);
     GET_VALUE(xPSElement, "tRectTreeLittleRegion", ps.tRectTreeLittleRegion);
+	GET_VALUE(xPSElement, "tLineCurverRange", ps.tLineCurverRange);
+	GET_VALUE(xPSElement, "tLineStraightFirst", ps.tLineStraightFirst);
+	GET_VALUE(xPSElement, "tLineStraightSecond", ps.tLineStraightSecond);
+	GET_VALUE(xPSElement, "tLineBlackLeft", ps.tLineBlackLeft);
+	GET_VALUE(xPSElement, "tLineBlackRight", ps.tLineBlackRight);
 
-    //注意：对于数组，要加“*”
-    GET_VALUE(xPSElement, "fPersonRange", *ps.fPersonRange);
-    GET_VALUE(xPSElement, "tLineCurverRange", *ps.tLineCurverRange);
-    GET_VALUE(xPSElement, "tLineStraightFirst", *ps.tLineStraightFirst);
-    GET_VALUE(xPSElement, "tLineStraightSecond", *ps.tLineStraightSecond);
-    GET_VALUE(xPSElement, "tRectBlackBlock", *ps.tRectBlackBlock);
-    GET_VALUE(xPSElement, "tLineBlackLeft", *ps.tLineBlackLeft);
-    GET_VALUE(xPSElement, "tLineBlackRight", *ps.tLineBlackRight);
+    //注意：对于数组，要加“*”       
+    GET_VALUE(xPSElement, "tRectBlackBlock", *ps.tRectBlackBlock);    
     GET_VALUE(xPSElement, "tNightRange", *ps.tNightRange);
-
-    //int
-    GET_VALUE(xPSElement, "iNightRangeVal", ps.iNightRangeVal);
+//	GET_VALUE(xPSElement, "fPersonRange", *ps.iPersonRange);
+    
 
     //ParamDistinguish ///////////////////////////////////////////////
     const char* NODE_PARAMDISTINGUISH = "ParamDistinguish";
@@ -698,7 +698,44 @@ int CCfgParse::SaveChannel(int iCh, ParamStruct& ps, ParamDistinguish& pd)
         return 0;
     }
 
-    //int
+	//初始化类型
+	SET_VALUE(xPSElement, "ChangeStyle", ps.iStyleChange);
+
+	SET_VALUE(xPSElement, "bSensitiveFlag", ps.bSensitiveFlag);
+	SET_VALUE(xPSElement, "bTransLensImage", ps.bTransLensImage);
+	SET_VALUE(xPSElement, "bBinarizeSubThreshold", ps.iBinarizeSubThreshold);
+	SET_VALUE(xPSElement, "bNightSubThreshold", ps.iNightSubThreshold);
+	SET_VALUE(xPSElement, "iImfilterSingleThreshold", ps.iImfilterSingleThreshold);
+	SET_VALUE(xPSElement, "iImdilateThreshold", ps.iImdilateThreshold);
+	SET_VALUE(xPSElement, "iWhiteSpotNumMax", ps.iWhiteSpotNumMax);
+	SET_VALUE(xPSElement, "iWhiteSpotNumMin", ps.iWhiteSpotNumMin);
+	SET_VALUE(xPSElement, "iXTrackContinueThreshold", ps.iXTrackContinueThreshold);
+	SET_VALUE(xPSElement, "iXTrackOffsetValue", ps.iXTrackOffsetValue);
+	SET_VALUE(xPSElement, "iTrackMaxFrameNum", ps.iTrackMaxFrameNum);
+	SET_VALUE(xPSElement, "iLittleRegionValue", ps.iLittleRegionTop);
+	SET_VALUE(xPSElement, "iNightRangeVal", ps.iNightRangeVal);
+
+	SET_VALUE(xPSElement, "iCurveLeftVal", ps.iCurveLeftVal);
+	SET_VALUE(xPSElement, "iCurveRightVal", ps.iCurveRightVal);
+
+	SET_VALUE(xPSElement, "iPersonFlag", ps.iPersonFlag);
+	SET_VALUE(xPSElement, "iPersonWhitePotNum", ps.iPersonWhitePotNum);
+
+	//LineSet
+	SET_VALUE(xPSElement, "tRectLittleRegion", ps.tRectLittleRegion);
+	SET_VALUE(xPSElement, "tRectTreeLittleRegion", ps.tRectTreeLittleRegion);
+	SET_VALUE(xPSElement, "tLineCurverRange", ps.tLineCurverRange);
+	SET_VALUE(xPSElement, "tLineStraightFirst", ps.tLineStraightFirst);
+	SET_VALUE(xPSElement, "tLineStraightSecond", ps.tLineStraightSecond);
+	SET_VALUE(xPSElement, "tLineBlackLeft", ps.tLineBlackLeft);
+	SET_VALUE(xPSElement, "tLineBlackRight", ps.tLineBlackRight);
+
+	//注意：对于数组，要加“*”       
+	SET_VALUE(xPSElement, "tRectBlackBlock", *ps.tRectBlackBlock);    
+	SET_VALUE(xPSElement, "tNightRange", *ps.tNightRange);
+	//	SET_VALUE(xPSElement, "fPersonRange", *ps.iPersonRange);
+
+/*    //int
     SET_VALUE(xPSElement, "bSensitiveFlag", ps.bSensitiveFlag);
     SET_VALUE(xPSElement, "bTransLensImage", ps.bTransLensImage);
     SET_VALUE(xPSElement, "bLittleRegionFlag", ps.bLittleRegionFlag);
@@ -735,7 +772,7 @@ int CCfgParse::SaveChannel(int iCh, ParamStruct& ps, ParamDistinguish& pd)
     SET_VALUE(xPSElement, "tNightRange", *ps.tNightRange);
 
     //int
-    SET_VALUE(xPSElement, "iNightRangeVal", ps.iNightRangeVal);
+    SET_VALUE(xPSElement, "iNightRangeVal", ps.iNightRangeVal);*/
 
     //ParamDistinguish ///////////////////////////////////////////////
     const char* NODE_PARAMDISTINGUISH = "ParamDistinguish";

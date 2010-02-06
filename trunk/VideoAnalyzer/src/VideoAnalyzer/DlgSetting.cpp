@@ -29,6 +29,7 @@ void CDlgSetting::DoDataExchange(CDataExchange* pDX)
 
 BEGIN_MESSAGE_MAP(CDlgSetting, CDialog)
 	ON_BN_CLICKED(IDC_BUTTON_CLEAR, &CDlgSetting::OnBnClickedButtonClear)
+	ON_BN_CLICKED(IDC_BUTTON_SAVE, &CDlgSetting::OnBnClickedButtonSave)
 END_MESSAGE_MAP()
 
 
@@ -58,4 +59,15 @@ void CDlgSetting::setImage(const IplImage *pImage)
 void CDlgSetting::OnBnClickedButtonClear()
 {
 	m_ctrlImage.Refresh();
+}
+
+void CDlgSetting::OnBnClickedButtonSave()
+{
+	// TODO: Add your control notification handler code here
+	m_ctrlImage.Refresh() ;
+	int a = m_testPolyLineArray.size();
+	CPoint b = m_testPolyLineArray[0][0];
+	CPoint v = m_testPolyLineArray[0][1];
+	m_testPolyLineArray.clear();
+	int t = a ;
 }

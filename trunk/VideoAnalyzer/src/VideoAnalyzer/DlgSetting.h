@@ -34,4 +34,5 @@ private:
 
 public:
 	afx_msg void OnBnClickedButtonClear();
+	afx_msg void OnBnClickedButtonSave();
 };
