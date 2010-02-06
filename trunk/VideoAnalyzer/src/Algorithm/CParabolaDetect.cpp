@@ -2019,8 +2019,22 @@ bool CParabolaDetect::NightMedol(unsigned char  *pSrc, LineSet *pRect1, LineSet 
 		}
 	}
 
-	lTempVal1 = lTempVal1/lTempNum1;
-	lTempVal2 = lTempVal2/lTempNum2;
+	if (lTempNum1)
+	{
+		lTempVal1 = lTempVal1/lTempNum1;
+	}
+	else
+	{
+		lTempVal1 = 0 ;
+	}
+	if (lTempNum2)
+	{
+		lTempVal2 = lTempVal2/lTempNum2;
+	}
+	else
+	{
+		lTempVal2 = 0 ;       
+	}
 
 	if ( lTempVal1 <  ParamSet.iNightRangeVal || lTempVal2 < ParamSet.iNightRangeVal )
 	{
