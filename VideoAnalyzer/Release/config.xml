@@ -1,107 +1,98 @@
 <?xml version="1.0" encoding="gb2312"?>
 <configure>
-	<golbal>
-		<empty>    1 </empty>
-	</golbal>
+		<golbal>
+				<UDPServer>192.168.1.74</UDPServer>
+		</golbal>
 	
-	<camera channel="1">
-		<ParamStruct>
-			<bSensitiveFlag    value="1"/>
-			<bTransLensImage   value="2"/>
-			<bLittleRegionFlag value="3"/>
-			<bTreeLittleFlag   value="4"/>
-			<fLineFirstLocation>
-				<float value="1"/>
-				<float value="2"/>
-				<float value="3"/>
-				<float value="4"/>
-			</fLineFirstLocation>
-			<fLineSecondLocation>
-				<float value="1"/>
-				<float value="2"/>
-				<float value="3"/>
-				<float value="4"/>
-			</fLineSecondLocation>
-			<bBinarizeSubThreshold    value="11"/>
-			<bNightSubThreshold       value="12"/>
-			<iImfilterSingleThreshold value="13"/>
-			<iImdilateThreshold       value="14"/>
-			<iWhiteSpotNumMax         value="15"/>
-			<iWhiteSpotNumMin         value="16"/>
-			<iXTrackContinueThreshold value="17"/>
-			<iXTrackOffsetValue       value="18"/>
-			<iTrackMaxFrameNum        value="19"/>
-			<iLittleRegionValue       value="10"/>
-			<tRectLittleRegion>
-				<LineSet bFlag="1"  BeginPointX="2" BeginPointY="3" EndPointX="4" EndPointY="5"/>
-				<LineSet bFlag="11" BeginPointX="1" BeginPointY="1" EndPointX="1" EndPointY="1"/>
-			</tRectLittleRegion>
-			<tRectTreeLittleRegion>
-				<LineSet bFlag="11" BeginPointX="1" BeginPointY="1" EndPointX="1" EndPointY="1"/>
-				<LineSet bFlag="11" BeginPointX="1" BeginPointY="1" EndPointX="1" EndPointY="1"/>
-			</tRectTreeLittleRegion>
-			<fPersonRange>
-				<LineSet bFlag="11" BeginPointX="1" BeginPointY="1" EndPointX="1" EndPointY="1"/>
-				<LineSet bFlag="11" BeginPointX="1" BeginPointY="1" EndPointX="1" EndPointY="1"/>
-			</fPersonRange>
-			<tLineCurverRange>
-				<LineSet bFlag="11" BeginPointX="1" BeginPointY="1" EndPointX="1" EndPointY="1"/>
-				<LineSet bFlag="11" BeginPointX="1" BeginPointY="1" EndPointX="1" EndPointY="1"/>
-			</tLineCurverRange>
-			<tLineStraightFirst>
-				<LineSet bFlag="11" BeginPointX="1" BeginPointY="1" EndPointX="1" EndPointY="1"/>
-				<LineSet bFlag="11" BeginPointX="1" BeginPointY="1" EndPointX="1" EndPointY="1"/>
-			</tLineStraightFirst>
-			<tLineStraightSecond>
-				<LineSet bFlag="11" BeginPointX="1" BeginPointY="1" EndPointX="1" EndPointY="1"/>
-				<LineSet bFlag="11" BeginPointX="1" BeginPointY="1" EndPointX="1" EndPointY="1"/>
-			</tLineStraightSecond>
-			<tRectBlackBlock>
-				<LineSet bFlag="11" BeginPointX="1" BeginPointY="1" EndPointX="1" EndPointY="1"/>
-				<LineSet bFlag="11" BeginPointX="1" BeginPointY="1" EndPointX="1" EndPointY="1"/>
-				<LineSet bFlag="11" BeginPointX="1" BeginPointY="1" EndPointX="1" EndPointY="1"/>
-				<LineSet bFlag="11" BeginPointX="1" BeginPointY="1" EndPointX="1" EndPointY="1"/>
-				<LineSet bFlag="11" BeginPointX="1" BeginPointY="1" EndPointX="1" EndPointY="1"/>
-			</tRectBlackBlock>
-			<tLineBlackLeft>
-				<LineSet bFlag="11" BeginPointX="1" BeginPointY="1" EndPointX="1" EndPointY="1"/>
-				<LineSet bFlag="11" BeginPointX="1" BeginPointY="1" EndPointX="1" EndPointY="1"/>
-			</tLineBlackLeft>
-			<tLineBlackRight>
-				<LineSet bFlag="1" BeginPointX="1" BeginPointY="1" EndPointX="1" EndPointY="1"/>
-				<LineSet bFlag="1" BeginPointX="1" BeginPointY="1" EndPointX="1" EndPointY="1"/>
-			</tLineBlackRight>
-			<tNightRange>
-				<LineSet bFlag="11" BeginPointX="1" BeginPointY="1" EndPointX="1" EndPointY="1"/>
-				<LineSet bFlag="11" BeginPointX="1" BeginPointY="1" EndPointX="1" EndPointY="1"/>
-				<LineSet bFlag="11" BeginPointX="1" BeginPointY="1" EndPointX="1" EndPointY="1"/>
-			</tNightRange>
-			<iNightRangeVal value="1"/>
-		</ParamStruct>
+		<camera channel="0">
+				<ParamStruct>
+				    <iStyleChange             value="2"/>         <!-- 0_natural 1_tree 2_curver 3_-->
+						<bSensitiveFlag           value="0"/>   		  <!-- 0_灵敏度低 1_灵敏度高 -->
+						<bTransLensImage          value="0"/>   		  <!-- 0_正常 1_镜像 -->
+						<bBinarizeSubThreshold    value="40"/>        <!-- 二值化阈值 (30 ~ 50) -->
+						<bNightSubThreshold       value="50"/>        <!-- 夜间二值化阈值 (40 ~ 70) -->
+						<iImfilterSingleThreshold value="3"/>         <!-- 去小点阈值 (1 ~ 5) -->
+						<iImdilateThreshold       value="2"/>         <!-- 膨胀阈值 (1 ~ 5) -->
+						<iWhiteSpotNumMax         value="1000"/>      <!-- 最大白点数 (500 ~ 2000) -->
+						<iWhiteSpotNumMin         value="20"/>        <!-- 最小白点数 (1 ~ 50) -->
+						<iXTrackContinueThreshold value="0"/>         <!-- 判断目标改变方向的阈值 (0 ~ 3) -->
+						<iXTrackOffsetValue       value="18"/>        <!-- 判断条件:保证x方向有一定偏差 (0 ~ 3) -->
+						<iTrackMaxFrameNum        value="19"/>        <!-- 跟踪最大帧数 (20 ~ 39) -->
+						<iLittleRegionValue       value="10"/>        <!-- 小区域中Y的最高点 (5 ~ 285) -->
+				    <iNightRangeVal           value="120"/>       <!-- 判读是否到夜间的阈值 (80 ~ 150) -->
+						<iCurveLeftVal            value="0"/>         <!-- 拟合曲线最左边的点 (0 ~ 300) -->
+						<iCurveRightVal           value="450"/>       <!-- 拟合曲线最右边的点 (0 ~ 500) -->
+						<iPersonFlag              value="1"/>         <!-- 人员检测标志 (0 ~ 1) -->
+						<iPersonWhitePotNum       value="100"/>       <!-- 人员检测中人的白点数 (5 ~ 285) -->
 		
-		<ParamDistinguish>
-			<TrackNumMax   FirstValue="1"  SecondValue="1" ThirdValue="1" FouthValue="1" />
-			<TrackNumMin   FirstValue="11" SecondValue="1" ThirdValue="1" FouthValue="1" />
-	        <LostNumVal    FirstValue="12" SecondValue="1" ThirdValue="1" FouthValue="1" />
-	        <MigrationDiff FirstValue="13" SecondValue="1" ThirdValue="1" FouthValue="1" />
-	        <OriginCurrDis FirstValue="14" SecondValue="1" ThirdValue="1" FouthValue="1" />
-	        <YHeightVal    FirstValue="15" SecondValue="1" ThirdValue="1" FouthValue="1" />
-	        <XContValue    FirstValue="16" SecondValue="1" ThirdValue="1" FouthValue="1" />
-	        <XMatchValue   FirstValue="17" SecondValue="1" ThirdValue="1" FouthValue="1" />
-	        <YMatchValue   FirstValue="18" SecondValue="1" ThirdValue="1" FouthValue="1" />
-	        <FindObjValue  FirstValue="19" SecondValue="1" ThirdValue="1" FouthValue="1" />
-	        <RiseNumVal    FirstValue="10" SecondValue="1" ThirdValue="1" FouthValue="1" />
-	        <DownNumVal    FirstValue="19" SecondValue="1" ThirdValue="1" FouthValue="1" />
-	        <FindObjValMax FirstValue="18" SecondValue="1" ThirdValue="1" FouthValue="1" />
-	        <FindObjValMin FirstValue="17" SecondValue="1" ThirdValue="1" FouthValue="1" />
-	        <WhiteSpotVal  FirstValue="16" SecondValue="1" ThirdValue="1" FouthValue="1" />
-	        <TopPointVal   FirstValue="15" SecondValue="1" ThirdValue="1" FouthValue="1" />
-			
-	        <fFindObjInverse FirstValue="1.5"   SecondValue="1" ThirdValue="1" FouthValue="1" />
-	        <fXMatchInverse  FirstValue="1.534" SecondValue="1" ThirdValue="1" FouthValue="1" />
-	        <fYMatchInverse  FirstValue="1.534" SecondValue="1" ThirdValue="1" FouthValue="1" />
-	        <fXContInverse   FirstValue="15.34" SecondValue="1" ThirdValue="1" FouthValue="1" />
-	        
-		</ParamDistinguish>
-	</camera>
+		
+		
+						<tRectLittleRegion>                           <!-- 小区域范围 -->
+								<LineSet bFlag="0"  BeginPointX="2" BeginPointY="3" EndPointX="4" EndPointY="5"/>  <!-- 小区域范围 -->
+						</tRectLittleRegion>
+						<tRectTreeLittleRegion>
+								<LineSet bFlag="0" BeginPointX="1" BeginPointY="1" EndPointX="1" EndPointY="1"/>  <!-- 树一侧的小区域 -->
+						</tRectTreeLittleRegion>
+						<tLineCurverRange>
+								<LineSet bFlag="0" BeginPointX="1" BeginPointY="1" EndPointX="1" EndPointY="1"/>  <!-- 拟合曲线范围 -->
+						</tLineCurverRange>
+						<tLineStraightFirst>
+								<LineSet bFlag="0" BeginPointX="1" BeginPointY="1" EndPointX="1" EndPointY="1"/>  <!-- 两条轨迹经过区域线中的第一条线 -->
+						</tLineStraightFirst>
+						<tLineStraightSecond>
+								<LineSet bFlag="0" BeginPointX="1" BeginPointY="1" EndPointX="1" EndPointY="1"/>  <!-- 两条轨迹经过区域线中的第二条线 -->
+						</tLineStraightSecond>
+						<tLineBlackLeft>
+								<LineSet bFlag="0" BeginPointX="1" BeginPointY="1" EndPointX="1" EndPointY="1"/>  <!-- 加入的黑色直线中的左边为黑  -->
+						</tLineBlackLeft>
+						<tLineBlackRight>
+								<LineSet bFlag="0" BeginPointX="1" BeginPointY="1" EndPointX="1" EndPointY="1"/>  <!-- 加入的黑色直线中的右边为黑  -->
+						</tLineBlackRight>
+		
+					
+						<tRectBlackBlock>
+								<LineSet bFlag="0" BeginPointX="1" BeginPointY="1" EndPointX="1" EndPointY="1"/>  <!-- 加入的黑色块范围  -->
+								<LineSet bFlag="0" BeginPointX="1" BeginPointY="1" EndPointX="1" EndPointY="1"/>  <!-- 加入的黑色块范围  -->
+								<LineSet bFlag="0" BeginPointX="1" BeginPointY="1" EndPointX="1" EndPointY="1"/>  <!-- 加入的黑色块范围  -->
+								<LineSet bFlag="0" BeginPointX="1" BeginPointY="1" EndPointX="1" EndPointY="1"/>  <!-- 加入的黑色块范围  -->
+								<LineSet bFlag="0" BeginPointX="1" BeginPointY="1" EndPointX="1" EndPointY="1"/>  <!-- 加入的黑色块范围  -->
+						</tRectBlackBlock>
+		
+						<tNightRange>
+								<LineSet bFlag="0" BeginPointX="1" BeginPointY="1" EndPointX="1" EndPointY="1"/>  <!-- 小区域范围 -->
+								<LineSet bFlag="0" BeginPointX="1" BeginPointY="1" EndPointX="1" EndPointY="1"/>  <!-- 小区域范围 -->
+						</tNightRange>
+						<iPersonRange>
+								<LineSet bFlag="0" BeginPointX="1" BeginPointY="1" EndPointX="1" EndPointY="1"/>  <!--  -->
+								<LineSet bFlag="0" BeginPointX="1" BeginPointY="1" EndPointX="1" EndPointY="1"/>  <!--  -->
+						</iPersonRange>
+					
+						<iPersonTopVal value="1"/>
+				</ParamStruct>
+				
+				<ParamDistinguish>
+						<TrackNumMax   FirstValue="1"  SecondValue="1" ThirdValue="1" FouthValue="1" />  <!-- 判断跟踪次数的大值 -->
+						<TrackNumMin   FirstValue="11" SecondValue="1" ThirdValue="1" FouthValue="1" />  <!-- 判断跟踪次数的小值 -->
+		        <LostNumVal    FirstValue="2" SecondValue="2" ThirdValue="2" FouthValue="2" />  <!-- 判断的丢帧数 -->
+		        <MigrationDiff FirstValue="13" SecondValue="1" ThirdValue="1" FouthValue="1" />  <!-- 判断X每帧偏移量 -->
+		        <OriginCurrDis FirstValue="14" SecondValue="1" ThirdValue="1" FouthValue="1" />  <!-- 判断原始点到当前点的X距离 -->
+		        <YHeightVal    FirstValue="15" SecondValue="1" ThirdValue="1" FouthValue="1" />  <!-- 判断Y方向的最大距离 -->
+		        <XContValue    FirstValue="16" SecondValue="1" ThirdValue="1" FouthValue="1" />  <!-- 判断X方向的同一方向运动数 -->
+		        <XMatchValue   FirstValue="17" SecondValue="1" ThirdValue="1" FouthValue="1" />  <!-- 判断X方向的与预测的匹配个数 -->
+		        <YMatchValue   FirstValue="18" SecondValue="1" ThirdValue="1" FouthValue="1" />  <!-- 判断Y方向的与预测的匹配个数 -->
+		        <FindObjValue  FirstValue="19" SecondValue="1" ThirdValue="1" FouthValue="1" />  <!-- 判断找到目标个数 -->
+		        <RiseNumVal    FirstValue="10" SecondValue="1" ThirdValue="1" FouthValue="1" />  <!-- 判断上升帧数 -->
+		        <DownNumVal    FirstValue="19" SecondValue="1" ThirdValue="1" FouthValue="1" />  <!-- 判断下降帧数 -->
+		        <FindObjValMax FirstValue="18" SecondValue="1" ThirdValue="1" FouthValue="1" />  <!-- 判断找到目标目标的大值 -->
+		        <FindObjValMin FirstValue="17" SecondValue="1" ThirdValue="1" FouthValue="1" />  <!-- 判断找到目标目标的小值-->
+		        <WhiteSpotVal  FirstValue="16" SecondValue="1" ThirdValue="1" FouthValue="1" />  <!-- 判断白点数3个区段 -->
+		        <TopPointVal   FirstValue="15" SecondValue="1" ThirdValue="1" FouthValue="1" />  <!-- 判断Y方向的最大值 -->
+				
+		        <fFindObjInverse FirstValue="1.5"   SecondValue="1" ThirdValue="1" FouthValue="1" />  <!-- 判断找到目标和跟踪数的比率 -->
+		        <fXMatchInverse  FirstValue="1.534" SecondValue="1" ThirdValue="1" FouthValue="1" />  <!-- 判断 X匹配数与跟踪数的比率 -->
+		        <fYMatchInverse  FirstValue="1.534" SecondValue="1" ThirdValue="1" FouthValue="1" />  <!-- 判断 Y匹配数与跟踪数的比率 -->
+		        <fXContInverse   FirstValue="15.34" SecondValue="1" ThirdValue="1" FouthValue="1" />  <!-- 判断 X同一方向数与跟踪数的比率 -->
+			        
+				</ParamDistinguish>
+		</camera>
 </configure>

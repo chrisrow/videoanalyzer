@@ -598,9 +598,7 @@ int CCfgParse::LoadChannel(int iCh, ParamStruct& ps, ParamDistinguish& pd)
     }
 
 	//初始化类型
-    GET_VALUE(xPSElement, "ChangeStyle", ps.iStyleChange);
-
-    //int
+    GET_VALUE(xPSElement, "iStyleChange", ps.iStyleChange);
     GET_VALUE(xPSElement, "bSensitiveFlag", ps.bSensitiveFlag);
     GET_VALUE(xPSElement, "bTransLensImage", ps.bTransLensImage);
     GET_VALUE(xPSElement, "bBinarizeSubThreshold", ps.iBinarizeSubThreshold);
