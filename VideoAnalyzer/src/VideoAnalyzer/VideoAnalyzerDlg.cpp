@@ -175,8 +175,25 @@ BOOL CVideoAnalyzerDlg::OnInitDialog()
     m_cbAnalyzer.SetCurSel(0);
     this->OnCbnSelchangeComboAyalyzer();
 
-    //配置文件
-    m_cbConfigFile.AddString("config.xml");
+    //获取本程序的路径
+    GetModuleFileName(NULL,m_strAppPath.GetBufferSetLength(MAX_PATH+1),MAX_PATH);   
+    m_strAppPath.ReleaseBuffer();   
+    int iPos2;   
+    iPos2=m_strAppPath.ReverseFind('\\');   
+    m_strAppPath=m_strAppPath.Left(iPos2);   
+
+    //配置文件，默认文件名与本程序的名称相同，后缀为xml
+    CString strConfigFile;
+    GetModuleFileName(NULL,strConfigFile.GetBufferSetLength(MAX_PATH+1),MAX_PATH);   
+    strConfigFile.ReleaseBuffer();   
+    int iPos = 0;   
+    iPos = strConfigFile.ReverseFind('\\');   
+    strConfigFile = strConfigFile.Right(strConfigFile.GetLength() - iPos - 1);   
+    iPos = strConfigFile.ReverseFind('.');   
+    strConfigFile = strConfigFile.Left(iPos);   
+    strConfigFile += ".xml";
+
+    m_cbConfigFile.AddString((LPCTSTR)strConfigFile);
     m_cbConfigFile.SetCurSel(0);
     for (int i = 0; i < 9; i++)
     {
@@ -186,12 +203,6 @@ BOOL CVideoAnalyzerDlg::OnInitDialog()
     }
     m_cbChannel.SetCurSel(0);
 
-    //获取本程序的路径
-    GetModuleFileName(NULL,m_strAppPath.GetBufferSetLength(MAX_PATH+1),MAX_PATH);   
-    m_strAppPath.ReleaseBuffer();   
-    int iPos;   
-    iPos=m_strAppPath.ReverseFind('\\');   
-    m_strAppPath=m_strAppPath.Left(iPos);   
 
     this->loadConfig();
 
@@ -830,7 +841,7 @@ bool CVideoAnalyzerDlg::loadConfig()
 
     if (!m_cfgParse.Load((LPCTSTR)strConfigFile))
     {
-        this->AddRunStatus("载入%s失败", (LPCTSTR)strConfigFile);
+        this->AddRunStatus("载入失败：%s", (LPCTSTR)strConfigFile);
         return false;
     }
 
@@ -862,7 +873,7 @@ bool CVideoAnalyzerDlg::saveConfig()
 
     if (!m_cfgParse.Save((LPCTSTR)strConfigFile))
     {
-        this->AddRunStatus("保存到%s失败", (LPCTSTR)strConfigFile);
+        this->AddRunStatus("保存失败：%s", (LPCTSTR)strConfigFile);
         return false;
     }
 
