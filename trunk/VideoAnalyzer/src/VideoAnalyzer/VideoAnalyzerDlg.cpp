@@ -823,6 +823,7 @@ void CVideoAnalyzerDlg::OnBnClickedButtonSetup()
 
     if (m_dlgSetting.DoModal() != IDOK)
     {
+		
         return;
     }
 

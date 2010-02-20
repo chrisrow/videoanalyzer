@@ -48,6 +48,28 @@
 #define IDC_IMAGE                       1030
 #define IDC_BUTTON2                     1031
 #define IDC_BUTTON_SAVE                 1031
+#define IDC_COMBO_CONTROL               1032
+#define IDC_EDIT_TWO_VALUE              1033
+#define IDC_EDIT_FILTER_VALUE           1034
+#define IDC_EDIT_IMDILATE_VALUE         1035
+#define IDC_EDIT_WHITE_SPOT_MAX         1036
+#define IDC_EDIT_WHITE_SPOT_MIN         1037
+#define IDC_EDIT_STYLE                  1038
+#define IDC_EDIT_NIGHT_THR              1039
+#define IDC_EDIT_MAX_FRAME              1040
+#define IDC_CHECK1                      1041
+#define IDC_CHECK_                      1041
+#define IDC_CHECK_LENS                  1041
+#define IDC_RADIO_NATURAL               1043
+#define IDC_RADIO_TREE                  1044
+#define IDC_RADIO_CURVER                1045
+#define IDC_RADIO_NATUARL_CURVER        1046
+#define IDC_RADIO_NATUARL_NATUARL       1047
+#define IDC_RADIO_TREE_CURVER           1048
+#define IDC_RADIO_SENSITIVE1            1049
+#define IDC_RADIO_SENSITIVE2            1050
+#define IDC_RADIO_NATUARL_CURVER4       1051
+#define IDC_RADIO_SENSITIVE3            1051
 #define ID_32771                        32771
 #define ID_MENU_CLEAR                   32772
 
@@ -57,7 +79,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        131
 #define _APS_NEXT_COMMAND_VALUE         32773
-#define _APS_NEXT_CONTROL_VALUE         1032
+#define _APS_NEXT_CONTROL_VALUE         1044
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
