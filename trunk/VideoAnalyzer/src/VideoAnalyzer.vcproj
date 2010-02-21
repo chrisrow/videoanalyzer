@@ -26,6 +26,7 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
+				CommandLine=""
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -96,6 +97,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="copy $(SolutionDir)\src\Config\$(ProjectName).xml $(SolutionDir)$(ConfigurationName)\$(ProjectName).xml"
 			/>
 		</Configuration>
 		<Configuration
@@ -184,6 +186,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="copy $(SolutionDir)\src\Config\$(ProjectName).xml $(SolutionDir)$(ConfigurationName)\$(ProjectName).xml"
 			/>
 		</Configuration>
 	</Configurations>
