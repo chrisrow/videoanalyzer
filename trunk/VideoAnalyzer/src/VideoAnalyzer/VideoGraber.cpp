@@ -2,8 +2,11 @@
 #include "VideoAnalyzerDlg.h"
 #include "VideoGraber.h"
 
+#include "Algorithm/CParabolaDetect.h"
 #include "Algorithm/Macro.h"
+
 extern int g_debug;
+extern ParamStruct ParamSet;
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -189,6 +192,11 @@ void CCameraWarpper::doRun()
         if (!pFrame)
         {
             break;
+        }
+
+        if(ParamSet.bTransLensImage)
+        {
+            cvFlip(pFrame, NULL, 1);//水平镜像
         }
 
         FOR_EACH(IFrameReceiver*, updateFrame, pFrame);
@@ -401,6 +409,11 @@ void CVideoFile::doRun()
             break;
         }
         m_uFrame++;
+
+        if(ParamSet.bTransLensImage)
+        {
+            cvFlip(pFrame, NULL, 1);//水平镜像
+        }
 
         if (m_uFrame >= m_iStartFrame)
         {
