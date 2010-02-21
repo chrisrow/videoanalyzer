@@ -23,7 +23,7 @@
 						<iCurveLeftVal            value="0"/>         <!-- 拟合曲线最左边的点 (0 ~ 300) -->
 						<iCurveRightVal           value="450"/>       <!-- 拟合曲线最右边的点 (0 ~ 500) -->
 						<iPersonFlag              value="1"/>         <!-- 人员检测标志 (0 ~ 1) -->
-						<iPersonWhitePotNum       value="100"/>       <!-- 人员检测中人的白点数 (5 ~ 285) -->
+						<iPersonWhitePotNum       value="80"/>       <!-- 人员检测中人的白点数 (5 ~ 285) -->
 		
 		
 		

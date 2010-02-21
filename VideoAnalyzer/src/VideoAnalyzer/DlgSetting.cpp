@@ -48,6 +48,19 @@ BEGIN_MESSAGE_MAP(CDlgSetting, CDialog)
 	ON_BN_CLICKED(IDC_BUTTON_SAVE, &CDlgSetting::OnBnClickedButtonSave)
 	ON_CBN_SELCHANGE(IDC_COMBO_CONTROL, &CDlgSetting::OnCbnSelchangeComboControl)
 	ON_BN_CLICKED(IDC_CHECK_LENS, &CDlgSetting::OnBnClickedCheckLens)
+	ON_BN_CLICKED(IDC_RADIO_NATURAL, &CDlgSetting::OnBnClickedRadioNatural)
+	ON_BN_CLICKED(IDC_RADIO_TREE, &CDlgSetting::OnBnClickedRadioTree)
+	ON_BN_CLICKED(IDC_RADIO_CURVER, &CDlgSetting::OnBnClickedRadioCurver)
+	ON_BN_CLICKED(IDC_RADIO_NATUARL_CURVER, &CDlgSetting::OnBnClickedRadioNatuarlCurver)
+	ON_BN_CLICKED(IDC_RADIO_NATUARL_NATUARL, &CDlgSetting::OnBnClickedRadioNatuarlNatuarl)
+	ON_BN_CLICKED(IDC_RADIO_TREE_CURVER, &CDlgSetting::OnBnClickedRadioTreeCurver)
+	ON_BN_CLICKED(IDC_RADIO_DEPTH1, &CDlgSetting::OnBnClickedRadioDepth1)
+	ON_BN_CLICKED(IDC_RADIO_DEPTH2, &CDlgSetting::OnBnClickedRadioDepth2)
+	ON_BN_CLICKED(IDC_RADIO_DEPTH3, &CDlgSetting::OnBnClickedRadioDepth3)
+	ON_BN_CLICKED(IDC_RADIO_SENSITIVE1, &CDlgSetting::OnBnClickedRadioSensitive1)
+	ON_BN_CLICKED(IDC_RADIO_SENSITIVE2, &CDlgSetting::OnBnClickedRadioSensitive2)
+	ON_BN_CLICKED(IDC_RADIO_SENSITIVE3, &CDlgSetting::OnBnClickedRadioSensitive3)
+	ON_EN_CHANGE(IDC_EDIT_TWO_VALUE, &CDlgSetting::OnEnChangeEditTwoValue)
 END_MESSAGE_MAP()
 
 
@@ -126,8 +139,29 @@ BOOL CDlgSetting::OnInitDialog()
 	{
 		((CButton *)GetDlgItem(IDC_RADIO_SENSITIVE2))->SetCheck(TRUE);
 	}
+
+	if (ParamSet.iPersonWhitePotNum < 100 )
+	{
+		((CButton *)GetDlgItem(IDC_RADIO_DEPTH3))->SetCheck(TRUE);
+	}
+	else if (ParamSet.iPersonWhitePotNum >= 300 )
+	{
+		((CButton *)GetDlgItem(IDC_RADIO_DEPTH1))->SetCheck(TRUE);
+	}
+	else
+	{
+		((CButton *)GetDlgItem(IDC_RADIO_DEPTH2))->SetCheck(TRUE);
+	}
    
-// 	m_ctrlImage.SetGraphicsType(GT_Rectangle);
+	m_edit_two_value = ParamSet.iBinarizeSubThreshold ;
+	m_edit_filter_value = ParamSet.iImfilterSingleThreshold;
+	m_edit_imdilate_value = ParamSet.iImdilateThreshold;
+	m_edit_white_spot_max = ParamSet.iWhiteSpotNumMax ;
+	m_edit_white_min = ParamSet.iWhiteSpotNumMin ;
+	m_edit_night_thr = ParamSet.iNightSubThreshold ;
+	m_edit_max_frame = ParamSet.iTrackMaxFrameNum ;
+
+	UpdateData(false);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// EXCEPTION: OCX Property Pages should return FALSE
@@ -433,5 +467,100 @@ void CDlgSetting::OnBnClickedCheckLens()
 	else
 	{
         ParamSet.bTransLensImage = 1 ;
+	}
+}
+
+void CDlgSetting::OnBnClickedRadioNatural()
+{
+	// TODO: Add your control notification handler code here
+	ParamSet.iStyleChange = 0 ;
+}
+
+void CDlgSetting::OnBnClickedRadioTree()
+{
+	// TODO: Add your control notification handler code here
+	ParamSet.iStyleChange = 1 ;
+}
+
+void CDlgSetting::OnBnClickedRadioCurver()
+{
+	// TODO: Add your control notification handler code here
+	ParamSet.iStyleChange = 2 ;
+}
+
+void CDlgSetting::OnBnClickedRadioNatuarlCurver()
+{
+	// TODO: Add your control notification handler code 
+	ParamSet.iStyleChange = 3 ;
+
+}
+
+void CDlgSetting::OnBnClickedRadioNatuarlNatuarl()
+{
+	// TODO: Add your control notification handler code here
+	ParamSet.iStyleChange = 4 ;
+}
+
+void CDlgSetting::OnBnClickedRadioTreeCurver()
+{
+	// TODO: Add your control notification handler code here
+	ParamSet.iStyleChange = 5 ;
+}
+
+void CDlgSetting::OnBnClickedRadioDepth1()
+{
+	// TODO: Add your control notification handler code here
+	ParamSet.iPersonWhitePotNum = 300 ;
+	ParamSet.iXTrackContinueThreshold = 3 ;
+	ParamSet.iWhiteSpotNumMin = 40 ;
+}
+
+void CDlgSetting::OnBnClickedRadioDepth2()
+{
+	// TODO: Add your control notification handler code here
+	ParamSet.iPersonWhitePotNum = 200 ;
+	ParamSet.iXTrackContinueThreshold = 2 ;
+	ParamSet.iWhiteSpotNumMin = 30 ;
+}
+
+void CDlgSetting::OnBnClickedRadioDepth3()
+{
+	// TODO: Add your control notification handler code here
+	ParamSet.iPersonWhitePotNum = 80 ;
+	ParamSet.iXTrackContinueThreshold = 1 ;
+	ParamSet.iWhiteSpotNumMin = 20 ;
+}
+
+void CDlgSetting::OnBnClickedRadioSensitive1()
+{
+	// TODO: Add your control notification handler code here
+	ParamSet.bSensitiveFlag = 1 ;
+}
+
+void CDlgSetting::OnBnClickedRadioSensitive2()
+{
+	// TODO: Add your control notification handler code here
+	ParamSet.bSensitiveFlag = 0 ;
+}
+
+void CDlgSetting::OnBnClickedRadioSensitive3()
+{
+	// TODO: Add your control notification handler code here
+	ParamSet.bSensitiveFlag = 0 ;
+}
+
+void CDlgSetting::OnEnChangeEditTwoValue()
+{
+	// TODO:  Add your control notification handler code here
+	int tempVal = m_edit_two_value;
+	UpdateData(true);
+	if ( m_edit_two_value > 30 && m_edit_two_value < 60 )
+	{
+        ParamSet.iBinarizeSubThreshold = m_edit_two_value ;
+	}
+	else
+	{
+		m_edit_two_value = tempVal ;
+        UpdateData(false);
 	}
 }
