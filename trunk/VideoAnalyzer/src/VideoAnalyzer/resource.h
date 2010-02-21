@@ -68,8 +68,11 @@
 #define IDC_RADIO_TREE_CURVER           1048
 #define IDC_RADIO_SENSITIVE1            1049
 #define IDC_RADIO_SENSITIVE2            1050
-#define IDC_RADIO_NATUARL_CURVER4       1051
 #define IDC_RADIO_SENSITIVE3            1051
+#define IDC_RADIO_DEPTH1                1052
+#define IDC_RADIO_DEPTH2                1053
+//#define IDC_RADIO_DEPCH3                1054
+#define IDC_RADIO_DEPTH3                1054
 #define ID_32771                        32771
 #define ID_MENU_CLEAR                   32772
 

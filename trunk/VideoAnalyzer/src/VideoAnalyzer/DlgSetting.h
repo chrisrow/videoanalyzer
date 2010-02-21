@@ -45,4 +45,17 @@ public:
 	int m_edit_night_thr;
 	int m_edit_max_frame;
 	afx_msg void OnBnClickedCheckLens();
+	afx_msg void OnBnClickedRadioNatural();
+	afx_msg void OnBnClickedRadioTree();
+	afx_msg void OnBnClickedRadioCurver();
+	afx_msg void OnBnClickedRadioNatuarlCurver();
+	afx_msg void OnBnClickedRadioNatuarlNatuarl();
+	afx_msg void OnBnClickedRadioTreeCurver();
+	afx_msg void OnBnClickedRadioDepth1();
+	afx_msg void OnBnClickedRadioDepth2();
+	afx_msg void OnBnClickedRadioDepth3();
+	afx_msg void OnBnClickedRadioSensitive1();
+	afx_msg void OnBnClickedRadioSensitive2();
+	afx_msg void OnBnClickedRadioSensitive3();
+	afx_msg void OnEnChangeEditTwoValue();
 };
