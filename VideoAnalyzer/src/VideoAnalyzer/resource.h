@@ -39,6 +39,7 @@
 #define IDC_BUTTON_APPLY_FR             1023
 #define IDC_BUTTON_CLEAR                1023
 #define IDC_BUTTON_APPLY_RES            1024
+#define IDC_BUTTON_CLEAR2               1024
 #define IDC_STATIC_CURRENT_FRAME3       1025
 #define IDC_STATIC_CURRENT_ALERT        1025
 #define IDC_LIST_STATUS                 1026
@@ -71,7 +72,6 @@
 #define IDC_RADIO_SENSITIVE3            1051
 #define IDC_RADIO_DEPTH1                1052
 #define IDC_RADIO_DEPTH2                1053
-//#define IDC_RADIO_DEPCH3                1054
 #define IDC_RADIO_DEPTH3                1054
 #define ID_32771                        32771
 #define ID_MENU_CLEAR                   32772

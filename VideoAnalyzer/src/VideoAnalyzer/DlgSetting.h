@@ -4,6 +4,8 @@
 #include "highgui.h"
 #include "GraphicsStatic.h"
 
+#include "ConfigFile.h"
+
 // CDlgSetting dialog
 
 class CDlgSetting : public CDialog
@@ -23,7 +25,7 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	virtual BOOL OnInitDialog();
-	void setImage(const IplImage *pImage );
+	void setImage(const IplImage *pImage ,CCfgParse *m_pParse,const char* szFileName);
 private:
 	const IplImage *m_pImage;
 	CGraphicsStatic m_ctrlImage;
@@ -32,6 +34,9 @@ private:
 	RectArray     m_testRectArray;
 
 	int m_ComboChangeNum;
+
+	CCfgParse *m_pCfgParse;
+	const char* m_FileName;
 
 public:
 	afx_msg void OnBnClickedButtonClear();
@@ -58,4 +63,5 @@ public:
 	afx_msg void OnBnClickedRadioSensitive2();
 	afx_msg void OnBnClickedRadioSensitive3();
 	afx_msg void OnEnChangeEditTwoValue();
+	afx_msg void OnClose();
 };

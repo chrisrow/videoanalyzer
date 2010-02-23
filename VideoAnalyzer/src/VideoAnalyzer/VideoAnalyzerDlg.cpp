@@ -821,7 +821,15 @@ void CVideoAnalyzerDlg::OnBnClickedButtonSetup()
         AfxMessageBox("‘ÿ»Î≈‰÷√ ˝æ› ß∞‹");
     }
 
-	m_dlgSetting.setImage(m_ctlVideo.getImage());
+	CString strConfigFile;
+	CString strChannel;
+	int iChannel = 0;
+	m_cbConfigFile.GetWindowText(strConfigFile);
+	m_cbChannel.GetWindowText(strChannel);
+	strConfigFile = m_strAppPath + "\\" + strConfigFile;
+	iChannel = atoi((LPCTSTR)strChannel);
+
+	m_dlgSetting.setImage(m_ctlVideo.getImage(),&m_cfgParse,strConfigFile);
 
     if (m_dlgSetting.DoModal() != IDOK)
     {
