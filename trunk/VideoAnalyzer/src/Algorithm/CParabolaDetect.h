@@ -227,7 +227,7 @@ protected:
   void   AddStraightLine1( int x1, int y1, int x2, int y2 );
   void   AddStraightLine2( int x1, int y1, int x2, int y2 );
   void   AddStraightLineCurver( int x1, int y1, int x2, int y2 );
-  void   InverseImage(const CFrameContainer* const pFrame_in,  CFrameContainer* const pFrame_out, int InverseThresh);
+  void   InverseImage(const CFrameContainer* const pFrame_in,  CFrameContainer* const pFrame_out);
   ErrVal  StatisticsObjCurinfo (const CDList< CObjLabeled*, CPointerDNode >* const objDList_inout,
     const  CFrameContainer* const pFrame_curr_in, const CFrameContainer* const pFrame_bin_in);
   bool NightMedol(unsigned char  *pSrc, LineSet *pRect1, LineSet *pRect2);

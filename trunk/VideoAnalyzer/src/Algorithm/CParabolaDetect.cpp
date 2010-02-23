@@ -15,9 +15,6 @@
 #include "stdafx.h"
 #include "CParabolaDetect.h"
 
-#include "Macro.h"
-extern int g_debug;
-
 ParamStruct ParamSet;
 ParamDistinguish ParamDsting;
 
@@ -34,7 +31,7 @@ CParabolaDetect::CParabolaDetect(unsigned int const  nYWidth_in, unsigned int co
 
   ParamSet.iXTrackContinueThreshold = 0  ;
   ParamSet.iXTrackOffsetValue = 1        ;
-  ParamSet.bTransLensImage = true       ;
+  //ParamSet.bTransLensImage = true       ;
 
   m_AlarmFlg       = FALSE ;       //报警标志     
   m_bTrackedObjFlag = FALSE ;       //找到预测目标标志
@@ -1859,12 +1856,8 @@ $
 $
 $
 ******************************************/
-void CParabolaDetect::InverseImage(const CFrameContainer* const pFrame_in,  CFrameContainer* const pFrame_out, int InverseThresh)
+void CParabolaDetect::InverseImage(const CFrameContainer* const pFrame_in,  CFrameContainer* const pFrame_out)
 {
-  if (InverseThresh == 0)
-  {
-    return ;
-  }
 
   ASSERT(pFrame_in);
   ASSERT(pFrame_out);
@@ -1918,15 +1911,15 @@ CParabolaDetect::BinarizeSub(const CFrameContainer* const pFrame_in,  CFrameCont
   GetLocalTime(&Systemtime);
 
   //-----夜间模式
-  if(Systemtime.wHour  >= 18 || Systemtime.wHour <= 6)
-  {
-    v_temp_threshold = 80;
-  }
+  //if(Systemtime.wHour  >= 18 || Systemtime.wHour <= 6)
+  //{
+  //  v_temp_threshold = 80;
+  //}
 
-  if(Systemtime.wHour == 5)
-  {
-    v_temp_threshold = 60;
-  }
+  //if(Systemtime.wHour == 5)
+  //{
+  //  v_temp_threshold = 60;
+  //}
 
 
   if(pRectangle == NULL)
@@ -1958,7 +1951,7 @@ CParabolaDetect::BinarizeSub(const CFrameContainer* const pFrame_in,  CFrameCont
     }   
   }
 
-  //  memcpy(pFrame_out->m_YuvPlane[0],p_out_y, m_FrameWidth*m_FrameHeight);
+ //   memcpy(pFrame_out->m_YuvPlane[0],vp_out_y, vi_frame_width*vi_frame_height);
   ROK();
 }
 //////////////////////////////////////////////////////////////////////////
@@ -2052,8 +2045,11 @@ CParabolaDetect::ParaDetectTwo( const CFrameContainer* const pFrame_in,CFrameCon
   ASSERT(pFrame_in);
   ASSERT(pFrame_out);
 
-  InverseImage(pFrame_in, pFrame_out, ParamSet.bTransLensImage);
-
+	if (ParamSet.bTransLensImage)
+	{
+	  InverseImage(pFrame_in, pFrame_out );
+	}
+  
 	if ( ++m_NightNumber == 150 )//夜间模式判断
 	{
 	  m_NightNumber = 0 ;
@@ -2082,7 +2078,7 @@ CParabolaDetect::ParaDetectTwo( const CFrameContainer* const pFrame_in,CFrameCon
 	  m_ImfilterSingleThreshold = ParamSet.iImfilterSingleThreshold ;
 	}
 
-    SHOW_IMAGE("smooth", pFrame_in->getImage());
+
 
 	if (ParamSet.iPersonFlag )//人检测
 	{
@@ -2135,9 +2131,6 @@ CParabolaDetect::ParaDetectTwo( const CFrameContainer* const pFrame_in,CFrameCon
       RemoveBorder(pFrame_out);
       Imdilate(pFrame_out, ParamSet.iImdilateThreshold);
       ForecastObjectDetect(pFrame_in, pFrame_out);  //检测目标
-
-      SHOW_BIN_IMAGE("ForecastObjectDetect", pFrame_in->getWidth(), pFrame_in->getHeight(), 
-          (char*)pFrame_out->m_YuvPlane[0]);
 
       uint8_t* temp_add = m_pParaDetectImage[0] ;
       m_pParaDetectImage[0]= m_pParaDetectImage[1] ;
@@ -3195,10 +3188,10 @@ bool CParabolaNatural::TrackAlarmObject(uint16_t i)
 
   if (ParamSet.bSensitiveFlag)
   {
-    if ( TrackObject[i].iTrackFrameNum >= 3  
+    if ( TrackObject[i].iTrackFrameNum >= 3 
       && TrackObject[i].bLineRangeFlag[0]
-    && TrackObject[i].bLineRangeFlag[1]
-    && !TrackObject[i].bTrackAlarmFlag
+      && TrackObject[i].bLineRangeFlag[1]
+      && !TrackObject[i].bTrackAlarmFlag
       && TrackObject[i].iLostFrameNum == 0 
       && TrackObject[i].iTrackFrameNum <= 10
       && (TrackObject[i].iMigrationDiff[0] >= 1 && abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) >= y_height_value-3 ) 
@@ -3217,8 +3210,8 @@ bool CParabolaNatural::TrackAlarmObject(uint16_t i)
 
   if ( TrackObject[i].iTrackFrameNum >= 4  
     && TrackObject[i].bLineRangeFlag[0]
-  && TrackObject[i].bLineRangeFlag[1]
-  && !TrackObject[i].bTrackAlarmFlag
+    && TrackObject[i].bLineRangeFlag[1]
+    && !TrackObject[i].bTrackAlarmFlag
     && TrackObject[i].iLostFrameNum == 0 
     && TrackObject[i].iTrackFrameNum <= 12
     && ((TrackObject[i].iMigrationDiff[0] >= 1 && abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) >= y_height_value ) || (abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) >= y_height_value + 20 )  )
@@ -3234,8 +3227,8 @@ bool CParabolaNatural::TrackAlarmObject(uint16_t i)
   }
   if ( TrackObject[i].iTrackFrameNum >= 10  && TrackObject[i].iTrackFrameNum <= 18 
     && TrackObject[i].bLineRangeFlag[0]
-  && TrackObject[i].bLineRangeFlag[1]
-  && !TrackObject[i].bTrackAlarmFlag
+    && TrackObject[i].bLineRangeFlag[1]
+    && !TrackObject[i].bTrackAlarmFlag
     && TrackObject[i].iLostFrameNum == 0 
     && ((TrackObject[i].iMigrationDiff[0] >= 1 && abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) >= y_height_value ) || (abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) >=  y_height_value + 15))
     && (abs(TrackObject[i].iCurFrameCenter[0]-TrackObject[i].iOriginFrameCenter[0]) > 20 )
@@ -3251,8 +3244,8 @@ bool CParabolaNatural::TrackAlarmObject(uint16_t i)
 
   if ( TrackObject[i].iTrackFrameNum >= 14   
     && TrackObject[i].bLineRangeFlag[0]
-  && TrackObject[i].bLineRangeFlag[1]
-  && !TrackObject[i].bTrackAlarmFlag
+    && TrackObject[i].bLineRangeFlag[1]
+    && !TrackObject[i].bTrackAlarmFlag
     && ((TrackObject[i].iMigrationDiff[0] >= 1 && abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) >= y_height_value ) || (abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) >=  y_height_value + 15))
     && (abs(TrackObject[i].iCurFrameCenter[0]-TrackObject[i].iOriginFrameCenter[0]) > 30 )
     && (TrackObject[i].iXContinueNum[0] >= TrackObject[i].iTrackFrameNum * 0.5 ||TrackObject[i].iXContinueNum[0] >= 8 )

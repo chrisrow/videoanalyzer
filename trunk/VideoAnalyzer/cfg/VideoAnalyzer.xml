@@ -9,7 +9,7 @@
 				<ParamStruct>
 				    <iStyleChange             value="2"/>         <!-- 0_natural 1_tree 2_curver 3_-->
 						<bSensitiveFlag           value="0"/>   		  <!-- 0_灵敏度低 1_灵敏度高 -->
-						<bTransLensImage          value="1"/>   		  <!-- 0_正常 1_镜像 -->
+						<bTransLensImage          value="0"/>   		  <!-- 0_正常 1_镜像 -->
 						<bBinarizeSubThreshold    value="40"/>        <!-- 二值化阈值 (30 ~ 50) -->
 						<bNightSubThreshold       value="50"/>        <!-- 夜间二值化阈值 (40 ~ 70) -->
 						<iImfilterSingleThreshold value="3"/>         <!-- 去小点阈值 (1 ~ 5) -->
