@@ -15,6 +15,9 @@
 #include "stdafx.h"
 #include "CParabolaDetect.h"
 
+#include "Macro.h"
+extern int g_debug;
+
 ParamStruct ParamSet;
 ParamDistinguish ParamDsting;
 
@@ -2078,6 +2081,7 @@ CParabolaDetect::ParaDetectTwo( const CFrameContainer* const pFrame_in,CFrameCon
 	  m_ImfilterSingleThreshold = ParamSet.iImfilterSingleThreshold ;
 	}
 
+    SHOW_IMAGE("smooth", pFrame_in->getImage());
 
 
 	if (ParamSet.iPersonFlag )//ÈË¼ì²â
@@ -2131,6 +2135,9 @@ CParabolaDetect::ParaDetectTwo( const CFrameContainer* const pFrame_in,CFrameCon
       RemoveBorder(pFrame_out);
       Imdilate(pFrame_out, ParamSet.iImdilateThreshold);
       ForecastObjectDetect(pFrame_in, pFrame_out);  //¼ì²âÄ¿±ê
+
+      SHOW_BIN_IMAGE("ForecastObjectDetect", pFrame_in->getWidth(), pFrame_in->getHeight(), 
+          (char*)pFrame_out->m_YuvPlane[0]);
 
       uint8_t* temp_add = m_pParaDetectImage[0] ;
       m_pParaDetectImage[0]= m_pParaDetectImage[1] ;
