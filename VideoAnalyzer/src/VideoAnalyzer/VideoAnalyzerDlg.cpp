@@ -7,6 +7,7 @@
 
 #include "UDPAlerter.h"
 #include "Algorithm/ParabolaWarpper.h"
+#include "Algorithm/Macro.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -547,6 +548,7 @@ bool CVideoAnalyzerDlg::openSource(TVideoSource& tSource)
         m_pAnalyzer->addListener(m_pUDPAlerter);
     }
 
+    INIT_IMAGE();
     this->AddRunStatus("ÕýÔÚ²¥·Å");
     m_pVideoGraber->loopGetFrame();
 
