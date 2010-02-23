@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="gb2312"?>
 <configure>
 		<golbal>
-				<UDPServer>192.168.1.74</UDPServer>
+				<LocalAddr>0.0.0.0</LocalAddr>
+				<UDPServer>192.168.1.74:10116</UDPServer>
 		</golbal>
 	
 		<camera channel="0">

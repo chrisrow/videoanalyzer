@@ -3,6 +3,7 @@
 
 CUDPAlerter::CUDPAlerter()
 : m_iChannel(-1)
+, m_iPort(0)
 , m_pIplImage(NULL)
 {
     memset(m_ucLocalIP, 0, 4);
@@ -22,7 +23,7 @@ void CUDPAlerter::alert(const IplImage *pFrame)
 void CUDPAlerter::doRun()
 {
     IplImage* pImage = cvCloneImage(m_pIplImage);
-    const unsigned short REMOTE_PORT = 10116;
+//     const unsigned short REMOTE_PORT = 10116;
 
     SOCKET sockClient=socket(AF_INET,SOCK_DGRAM,0);
     SOCKADDR_IN addrClient;
@@ -45,7 +46,7 @@ void CUDPAlerter::doRun()
     //addrClient.sin_addr.S_un.S_addr=inet_addr("192.168.1.74");
     addrClient.sin_addr.S_un.S_addr = inet_addr(ucRemoteIP);
     addrClient.sin_family = AF_INET;
-    addrClient.sin_port = htons(REMOTE_PORT);
+    addrClient.sin_port = htons(m_iPort);
 
     sendto( sockClient, (const char*)pHead, sizeof(TVIAlarmHead), 0, (SOCKADDR*)&addrClient, sizeof(SOCKADDR) );
 
@@ -53,12 +54,17 @@ void CUDPAlerter::doRun()
     cvReleaseImage(&pImage);
 }
 
-bool CUDPAlerter::init(int iAlarmType, int iChannel, unsigned char ucLocalIP[4], unsigned char ucRemoteIP[4])
+bool CUDPAlerter::init(int iAlarmType, 
+                       int iChannel, 
+                       unsigned char ucLocalIP[4], 
+                       unsigned char ucRemoteIP[4], 
+                       int iPort)
 {
     m_iAlarmType = iAlarmType;
     m_iChannel = iChannel;
     memcpy(m_ucLocalIP, ucLocalIP, sizeof(ucLocalIP));
     memcpy(m_ucRemoteIP, ucRemoteIP, sizeof(ucRemoteIP));
+    m_iPort = iPort;
 
     WORD wVersionRequested;
     WSADATA wsaData;

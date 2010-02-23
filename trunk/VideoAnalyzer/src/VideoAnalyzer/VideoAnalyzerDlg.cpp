@@ -410,10 +410,7 @@ void CVideoAnalyzerDlg::EnableVisibleChildren()
 
 bool CVideoAnalyzerDlg::openSource(TVideoSource& tSource)
 {
-	if (!this->loadConfig())
-	{
-		//return false;
-	}
+    (void)this->loadConfig();
 
     //打开视频源
     CString strWndCaption = "VideoAnalyzer";
@@ -525,24 +522,27 @@ bool CVideoAnalyzerDlg::openSource(TVideoSource& tSource)
         CUDPAlerter* pUDPAlerter = new CUDPAlerter ;
         unsigned char local[4] = {127, 0, 0, 1};
         unsigned char remote[4] = {127, 0, 0, 1}; // {192, 168, 1, 74}
+        int port = 0;
 
         int tmp[4] = {0};
         const char* ip = NULL;
         if ( NULL == (ip = m_cfgParse.GetGolbalParam("UDPServer")) )
         {
-            this->AddRunStatus("获取UDPServer的IP地址失败");
+            this->AddRunStatus("获取UDPServer的IP地址失败，使用默认地址'192.168.1.74'");
             ip = "192.168.1.74";
         }
         m_cfgParse.GetGolbalParam("UDPServer");
-        sscanf(ip, "%d.%d.%d.%d", &tmp[0], &tmp[1], &tmp[2], &tmp[3]);
+        sscanf(ip, "%d.%d.%d.%d:%d", &tmp[0], &tmp[1], &tmp[2], &tmp[3], &port);
         remote[0] = (unsigned char)tmp[0];
         remote[1] = (unsigned char)tmp[1];
         remote[2] = (unsigned char)tmp[2];
         remote[3] = (unsigned char)tmp[3];
 
         int iAlarmType = 1;
-        int iChannel = m_cbCamera.GetCurSel();
-        pUDPAlerter->init(iAlarmType, iChannel, local, remote);
+        int iChannel = m_cbCamera.GetCurSel(); //第n个摄像机
+        this->AddRunStatus("报警中心：%d.%d.%d.%d:%d", 
+            remote[0], remote[1], remote[2], remote[3], port);
+        (void)pUDPAlerter->init(iAlarmType, iChannel, local, remote, port);
         m_pUDPAlerter = pUDPAlerter;
         m_pAnalyzer->addListener(m_pUDPAlerter);
     }
