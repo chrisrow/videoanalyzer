@@ -97,7 +97,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy $(SolutionDir)\cfg\$(ProjectName).xml $(SolutionDir)$(ConfigurationName)\$(ProjectName).xml"
+				CommandLine="rem copy $(SolutionDir)\cfg\$(ProjectName).xml $(SolutionDir)$(ConfigurationName)\$(ProjectName).xml"
 			/>
 		</Configuration>
 		<Configuration
@@ -186,7 +186,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy $(SolutionDir)\src\Config\$(ProjectName).xml $(SolutionDir)$(ConfigurationName)\$(ProjectName).xml"
+				CommandLine="rem copy $(SolutionDir)\src\Config\$(ProjectName).xml $(SolutionDir)$(ConfigurationName)\$(ProjectName).xml"
 			/>
 		</Configuration>
 	</Configurations>
