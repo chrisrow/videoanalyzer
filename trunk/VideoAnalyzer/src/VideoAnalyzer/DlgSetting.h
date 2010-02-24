@@ -64,4 +64,6 @@ public:
 	afx_msg void OnBnClickedRadioSensitive3();
 	afx_msg void OnEnChangeEditTwoValue();
 	afx_msg void OnClose();
+	afx_msg void OnBnClickedButtonCancel();
+	afx_msg void OnBnClickedCheckPerson();
 };

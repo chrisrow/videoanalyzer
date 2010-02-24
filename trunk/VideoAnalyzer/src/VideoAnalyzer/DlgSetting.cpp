@@ -62,6 +62,8 @@ BEGIN_MESSAGE_MAP(CDlgSetting, CDialog)
 	ON_BN_CLICKED(IDC_RADIO_SENSITIVE3, &CDlgSetting::OnBnClickedRadioSensitive3)
 	ON_EN_CHANGE(IDC_EDIT_TWO_VALUE, &CDlgSetting::OnEnChangeEditTwoValue)
 	ON_WM_CLOSE()
+	ON_BN_CLICKED(IDC_BUTTON_CANCEL, &CDlgSetting::OnBnClickedButtonCancel)
+	ON_BN_CLICKED(IDC_CHECK_PERSON, &CDlgSetting::OnBnClickedCheckPerson)
 END_MESSAGE_MAP()
 
 
@@ -127,6 +129,11 @@ BOOL CDlgSetting::OnInitDialog()
 
    }
 
+	if (ParamSet.iPersonFlag)
+	{
+		((CButton *)GetDlgItem(IDC_CHECK_PERSON))->SetCheck(TRUE);
+	}
+
 	if (ParamSet.bTransLensImage)
 	{
 		((CButton *)GetDlgItem(IDC_CHECK_LENS))->SetCheck(TRUE);
@@ -187,15 +194,25 @@ void CDlgSetting::OnBnClickedButtonSave()
 
 	int size_num = m_testPolyLineArray.size();
 
+	if (size_num == 0)
+	{
+		OnBnClickedButtonCancel();
+		m_ComboChangeNum += 1;
+		((CComboBox*)GetDlgItem(IDC_COMBO_CONTROL))->SetCurSel(m_ComboChangeNum); //! 
+		return ;
+	}
+
 	switch ( m_ComboChangeNum )
 	{
 	case 0:
-		if (size_num > 5 || size_num == 0)
+		if (size_num > 5 )
 		{
 			MessageBox(_T("超出给定数"));
 		}
 		else
 		{
+			OnBnClickedButtonCancel();
+
 			for (int i = 0 ; i < size_num ; i++)
 			{
 				ParamSet.tRectBlackBlock[i].BeginPointX = m_testPolyLineArray[i][0].x;
@@ -357,11 +374,11 @@ void CDlgSetting::OnBnClickedButtonSave()
 		else
 		{
 
-			ParamSet.iPersonRange[0].BeginPointX = m_testPolyLineArray[0][0].x;
-			ParamSet.iPersonRange[0].BeginPointY = m_testPolyLineArray[0][0].y;
-			ParamSet.iPersonRange[0].EndPointX = m_testPolyLineArray[0][1].x;
-			ParamSet.iPersonRange[0].EndPointY = m_testPolyLineArray[0][1].y;
-			ParamSet.iPersonRange[0].bFlag = 1 ;			
+			ParamSet.iPersonRange[2].BeginPointX = m_testPolyLineArray[0][0].x;
+			ParamSet.iPersonRange[2].BeginPointY = m_testPolyLineArray[0][0].y;
+			ParamSet.iPersonRange[2].EndPointX = m_testPolyLineArray[0][1].x;
+			ParamSet.iPersonRange[2].EndPointY = m_testPolyLineArray[0][1].y;
+			ParamSet.iPersonRange[2].bFlag = 1 ;			
 
 			m_ComboChangeNum += 1;
 
@@ -395,11 +412,11 @@ void CDlgSetting::OnBnClickedButtonSave()
 		else
 		{
 
-			ParamSet.iPersonRange[2].BeginPointX = m_testPolyLineArray[0][0].x;
-			ParamSet.iPersonRange[2].BeginPointY = m_testPolyLineArray[0][0].y;
-			ParamSet.iPersonRange[2].EndPointX = m_testPolyLineArray[0][1].x;
-			ParamSet.iPersonRange[2].EndPointY = m_testPolyLineArray[0][1].y;
-			ParamSet.iPersonRange[2].bFlag = 1 ;			
+			ParamSet.iPersonRange[0].BeginPointX = m_testPolyLineArray[0][0].x;
+			ParamSet.iPersonRange[0].BeginPointY = m_testPolyLineArray[0][0].y;
+			ParamSet.iPersonRange[0].EndPointX = m_testPolyLineArray[0][1].x;
+			ParamSet.iPersonRange[0].EndPointY = m_testPolyLineArray[0][1].y;
+			ParamSet.iPersonRange[0].bFlag = 1 ;			
 
 			m_ComboChangeNum += 1;
 
@@ -578,4 +595,121 @@ void CDlgSetting::OnClose()
 	m_pCfgParse->SaveChannel(0, ParamSet,ParamDsting);
 	m_pCfgParse->Save(m_FileName);
 	CDialog::OnClose();
+}
+
+void CDlgSetting::OnBnClickedButtonCancel()
+{
+	// TODO: Add your control notification handler code here
+	switch ( m_ComboChangeNum )
+	{
+	case 0:
+		for (int i = 0 ; i < 5 ; i++)
+		{
+			ParamSet.tRectBlackBlock[i].BeginPointX = 0;
+			ParamSet.tRectBlackBlock[i].BeginPointY = 0;
+			ParamSet.tRectBlackBlock[i].EndPointX = 0;
+			ParamSet.tRectBlackBlock[i].EndPointY = 0;
+			ParamSet.tRectBlackBlock[i].bFlag = 0 ;
+		}
+		break ;
+	case 1:
+		ParamSet.tLineBlackLeft.BeginPointX = 0;
+		ParamSet.tLineBlackLeft.BeginPointY = 0;
+		ParamSet.tLineBlackLeft.EndPointX = 0;
+		ParamSet.tLineBlackLeft.EndPointY = 0;
+		ParamSet.tLineBlackLeft.bFlag = 0 ;
+		break ;
+	case 2:
+		ParamSet.tLineBlackRight.BeginPointX = 0;
+		ParamSet.tLineBlackRight.BeginPointY = 0;
+		ParamSet.tLineBlackRight.EndPointX = 0;
+		ParamSet.tLineBlackRight.EndPointY = 0;
+		ParamSet.tLineBlackRight.bFlag = 0 ;
+		break ;
+	case 3:
+		ParamSet.tLineStraightFirst.BeginPointX = 0;
+		ParamSet.tLineStraightFirst.BeginPointY = 0;
+		ParamSet.tLineStraightFirst.EndPointX = 0;
+		ParamSet.tLineStraightFirst.EndPointY = 0;
+		ParamSet.tLineStraightFirst.bFlag = 0 ;	
+		break ;
+	case 4:
+		ParamSet.tLineStraightSecond.BeginPointX = 0;
+		ParamSet.tLineStraightSecond.BeginPointY = 0;
+		ParamSet.tLineStraightSecond.EndPointX = 0;
+		ParamSet.tLineStraightSecond.EndPointY = 0;
+		ParamSet.tLineStraightSecond.bFlag = 0 ;
+		break ;
+	case 5:
+		ParamSet.tLineCurverRange.BeginPointX = 0;
+		ParamSet.tLineCurverRange.BeginPointY = 0;
+		ParamSet.tLineCurverRange.EndPointX = 0;
+		ParamSet.tLineCurverRange.EndPointY = 0;
+		ParamSet.tLineCurverRange.bFlag = 0 ;
+		break ;
+	case 6:
+		ParamSet.tRectLittleRegion.BeginPointX = 0;
+		ParamSet.tRectLittleRegion.BeginPointY = 0;
+		ParamSet.tRectLittleRegion.EndPointX = 0;
+		ParamSet.tRectLittleRegion.EndPointY = 0;
+		ParamSet.tRectLittleRegion.bFlag = 0 ;	
+		break ;
+	case 7:
+		ParamSet.tRectTreeLittleRegion.BeginPointX = 0;
+		ParamSet.tRectTreeLittleRegion.BeginPointY = 0;
+		ParamSet.tRectTreeLittleRegion.EndPointX = 0;
+		ParamSet.tRectTreeLittleRegion.EndPointY = 0;
+		ParamSet.tRectTreeLittleRegion.bFlag = 0 ;
+		break ;
+	case 8:
+		ParamSet.iPersonRange[2].BeginPointX = 0;
+		ParamSet.iPersonRange[2].BeginPointY = 0;
+		ParamSet.iPersonRange[2].EndPointX = 0;
+		ParamSet.iPersonRange[2].EndPointY = 0;
+		ParamSet.iPersonRange[2].bFlag = 0 ;
+		break ;
+	case 9:
+		ParamSet.iPersonRange[1].BeginPointX = 0;
+		ParamSet.iPersonRange[1].BeginPointY = 0;
+		ParamSet.iPersonRange[1].EndPointX = 0;
+		ParamSet.iPersonRange[1].EndPointY = 0;
+		ParamSet.iPersonRange[1].bFlag = 0 ;
+		break ;
+	case 10:
+		ParamSet.iPersonRange[0].BeginPointX = 0;
+		ParamSet.iPersonRange[0].BeginPointY = 0;
+		ParamSet.iPersonRange[0].EndPointX = 0;
+		ParamSet.iPersonRange[0].EndPointY = 0;
+		ParamSet.iPersonRange[0].bFlag = 0 ;
+		break ;
+	case 11:
+		ParamSet.tNightRange[0].BeginPointX = 0;
+		ParamSet.tNightRange[0].BeginPointY = 0;
+		ParamSet.tNightRange[0].EndPointX = 0;
+		ParamSet.tNightRange[0].EndPointY = 0;
+		ParamSet.tNightRange[0].bFlag = 0 ;
+		break ;
+	case 12:
+		ParamSet.tNightRange[1].BeginPointX = 0;
+		ParamSet.tNightRange[1].BeginPointY = 0;
+		ParamSet.tNightRange[1].EndPointX = 0;
+		ParamSet.tNightRange[1].EndPointY = 0;
+		ParamSet.tNightRange[1].bFlag = 0 ;
+		break ;
+	default:            
+		break;
+	}
+}
+
+void CDlgSetting::OnBnClickedCheckPerson()
+{
+	// TODO: Add your control notification handler code here
+	if( ((CButton*)GetDlgItem(IDC_CHECK_PERSON))->GetCheck() == BST_UNCHECKED )
+	{
+		ParamSet.iPersonFlag = 0 ; 
+	}
+	else
+	{
+		ParamSet.iPersonFlag = 1 ;
+	}
 }

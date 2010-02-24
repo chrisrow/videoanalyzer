@@ -1910,8 +1910,8 @@ CParabolaDetect::BinarizeSub(const CFrameContainer* const pFrame_in,  CFrameCont
 
   int16_t v_temp_threshold = v_threshold ;
 
-  SYSTEMTIME Systemtime ;
-  GetLocalTime(&Systemtime);
+  //SYSTEMTIME Systemtime ;
+  //GetLocalTime(&Systemtime);
 
   //-----夜间模式
   //if(Systemtime.wHour  >= 18 || Systemtime.wHour <= 6)
@@ -2053,6 +2053,9 @@ CParabolaDetect::ParaDetectTwo( const CFrameContainer* const pFrame_in,CFrameCon
 	  InverseImage(pFrame_in, pFrame_out );
 	}
   
+	SHOW_BIN_IMAGE("ForecastObjectDetect", pFrame_in->getWidth(), pFrame_in->getHeight(), 
+	(char*)pFrame_out->m_YuvPlane[0]);
+
 	if ( ++m_NightNumber == 150 )//夜间模式判断
 	{
 	  m_NightNumber = 0 ;
@@ -2119,6 +2122,10 @@ CParabolaDetect::ParaDetectTwo( const CFrameContainer* const pFrame_in,CFrameCon
 		
 
 	}
+	else
+	{
+       m_bPersonDetectFlag = true ;
+	}
 
   if (m_bPersonDetectFlag)
   {
@@ -2136,8 +2143,8 @@ CParabolaDetect::ParaDetectTwo( const CFrameContainer* const pFrame_in,CFrameCon
       Imdilate(pFrame_out, ParamSet.iImdilateThreshold);
       ForecastObjectDetect(pFrame_in, pFrame_out);  //检测目标
 
-      SHOW_BIN_IMAGE("ForecastObjectDetect", pFrame_in->getWidth(), pFrame_in->getHeight(), 
-          (char*)pFrame_out->m_YuvPlane[0]);
+      /*SHOW_BIN_IMAGE("ForecastObjectDetect", pFrame_in->getWidth(), pFrame_in->getHeight(), 
+          (char*)pFrame_out->m_YuvPlane[0]);*/
 
       uint8_t* temp_add = m_pParaDetectImage[0] ;
       m_pParaDetectImage[0]= m_pParaDetectImage[1] ;
@@ -3151,7 +3158,6 @@ bool CParabolaNatural::CurveContrast( LabelObjStatus* pTrackCurveInfo)
       }
 
     }
-
 
   }
 

@@ -631,7 +631,7 @@ int CCfgParse::LoadChannel(int iCh, ParamStruct& ps, ParamDistinguish& pd)
     //注意：对于数组，要加“*”       
     GET_VALUE(xPSElement, "tRectBlackBlock", *ps.tRectBlackBlock);    
     GET_VALUE(xPSElement, "tNightRange", *ps.tNightRange);
-//	GET_VALUE(xPSElement, "fPersonRange", *ps.iPersonRange);
+	GET_VALUE(xPSElement, "iPersonRange", *ps.iPersonRange);
     
 
     //ParamDistinguish ///////////////////////////////////////////////
@@ -697,7 +697,7 @@ int CCfgParse::SaveChannel(int iCh, ParamStruct& ps, ParamDistinguish& pd)
     }
 
 	//初始化类型
-	SET_VALUE(xPSElement, "ChangeStyle", ps.iStyleChange);
+	SET_VALUE(xPSElement, "iStyleChange", ps.iStyleChange);
 
 	SET_VALUE(xPSElement, "bSensitiveFlag", ps.bSensitiveFlag);
 	SET_VALUE(xPSElement, "bTransLensImage", ps.bTransLensImage);
@@ -731,46 +731,7 @@ int CCfgParse::SaveChannel(int iCh, ParamStruct& ps, ParamDistinguish& pd)
 	//注意：对于数组，要加“*”       
 	SET_VALUE(xPSElement, "tRectBlackBlock", *ps.tRectBlackBlock);    
 	SET_VALUE(xPSElement, "tNightRange", *ps.tNightRange);
-	//	SET_VALUE(xPSElement, "fPersonRange", *ps.iPersonRange);
-
-/*    //int
-    SET_VALUE(xPSElement, "bSensitiveFlag", ps.bSensitiveFlag);
-    SET_VALUE(xPSElement, "bTransLensImage", ps.bTransLensImage);
-    SET_VALUE(xPSElement, "bLittleRegionFlag", ps.bLittleRegionFlag);
-    SET_VALUE(xPSElement, "bTreeLittleFlag", ps.bTreeLittleFlag);
-
-    //float array
-    SET_VALUE(xPSElement, "fLineFirstLocation", *ps.fLineFirstLocation);
-    SET_VALUE(xPSElement, "fLineSecondLocation", *ps.fLineSecondLocation);
-
-    //int
-    SET_VALUE(xPSElement, "bBinarizeSubThreshold", ps.bBinarizeSubThreshold);
-    SET_VALUE(xPSElement, "bNightSubThreshold", ps.bNightSubThreshold);
-    SET_VALUE(xPSElement, "iImfilterSingleThreshold", ps.iImfilterSingleThreshold);
-    SET_VALUE(xPSElement, "iImdilateThreshold", ps.iImdilateThreshold);
-    SET_VALUE(xPSElement, "iWhiteSpotNumMax", ps.iWhiteSpotNumMax);
-    SET_VALUE(xPSElement, "iWhiteSpotNumMin", ps.iWhiteSpotNumMin);
-    SET_VALUE(xPSElement, "iXTrackContinueThreshold", ps.iXTrackContinueThreshold);
-    SET_VALUE(xPSElement, "iXTrackOffsetValue", ps.iXTrackOffsetValue);
-    SET_VALUE(xPSElement, "iTrackMaxFrameNum", ps.iTrackMaxFrameNum);
-    SET_VALUE(xPSElement, "iLittleRegionValue", ps.iLittleRegionValue);
-
-    //LineSet
-    SET_VALUE(xPSElement, "tRectLittleRegion", ps.tRectLittleRegion);
-    SET_VALUE(xPSElement, "tRectTreeLittleRegion", ps.tRectTreeLittleRegion);
-
-    //注意：对于数组，要加“*”
-    SET_VALUE(xPSElement, "fPersonRange", *ps.fPersonRange);
-    SET_VALUE(xPSElement, "tLineCurverRange", *ps.tLineCurverRange);
-    SET_VALUE(xPSElement, "tLineStraightFirst", *ps.tLineStraightFirst);
-    SET_VALUE(xPSElement, "tLineStraightSecond", *ps.tLineStraightSecond);
-    SET_VALUE(xPSElement, "tRectBlackBlock", *ps.tRectBlackBlock);
-    SET_VALUE(xPSElement, "tLineBlackLeft", *ps.tLineBlackLeft);
-    SET_VALUE(xPSElement, "tLineBlackRight", *ps.tLineBlackRight);
-    SET_VALUE(xPSElement, "tNightRange", *ps.tNightRange);
-
-    //int
-    SET_VALUE(xPSElement, "iNightRangeVal", ps.iNightRangeVal);*/
+	SET_VALUE(xPSElement, "iPersonRange", *ps.iPersonRange);
 
     //ParamDistinguish ///////////////////////////////////////////////
     const char* NODE_PARAMDISTINGUISH = "ParamDistinguish";
