@@ -25,7 +25,7 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	virtual BOOL OnInitDialog();
-	void setImage(const IplImage *pImage ,CCfgParse *m_pParse,const char* szFileName);
+	void setImage(const IplImage *pImage);
 private:
 	const IplImage *m_pImage;
 	CGraphicsStatic m_ctrlImage;
@@ -34,9 +34,6 @@ private:
 	RectArray     m_testRectArray;
 
 	int m_ComboChangeNum;
-
-	CCfgParse *m_pCfgParse;
-	const char* m_FileName;
 
 public:
 	afx_msg void OnBnClickedButtonClear();
@@ -63,7 +60,8 @@ public:
 	afx_msg void OnBnClickedRadioSensitive2();
 	afx_msg void OnBnClickedRadioSensitive3();
 	afx_msg void OnEnChangeEditTwoValue();
-	afx_msg void OnClose();
+//	afx_msg void OnClose();
 	afx_msg void OnBnClickedButtonCancel();
 	afx_msg void OnBnClickedCheckPerson();
+    afx_msg void OnBnClickedOk();
 };

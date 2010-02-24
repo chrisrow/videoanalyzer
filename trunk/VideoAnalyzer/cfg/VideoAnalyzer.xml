@@ -17,7 +17,7 @@
 						<iWhiteSpotNumMax         value="1000"/>      <!-- 最大白点数 (500 ~ 2000) -->
 						<iWhiteSpotNumMin         value="20"/>        <!-- 最小白点数 (1 ~ 50) -->
 						<iXTrackContinueThreshold value="0"/>         <!-- 判断目标改变方向的阈值 (0 ~ 3) -->
-						<iXTrackOffsetValue       value="18"/>        <!-- 判断条件:保证x方向有一定偏差 (0 ~ 3) -->
+						<iXTrackOffsetValue       value="1"/>        <!-- 判断条件:保证x方向有一定偏差 (0 ~ 3) -->
 						<iTrackMaxFrameNum        value="19"/>        <!-- 跟踪最大帧数 (20 ~ 39) -->
 						<iLittleRegionValue       value="10"/>        <!-- 小区域中Y的最高点 (5 ~ 285) -->
 				    <iNightRangeVal           value="120"/>       <!-- 判读是否到夜间的阈值 (80 ~ 150) -->

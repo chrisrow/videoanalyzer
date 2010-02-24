@@ -16,7 +16,7 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// Chinese (P.R.C.) resources
+// 中文(中华人民共和国) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
 #ifdef _WIN32
@@ -136,14 +136,14 @@ BEGIN
     LTEXT           "CH",IDC_STATIC,92,228,10,10
 END
 
-IDD_SETTING DIALOGEX 0, 0, 521, 414
+IDD_SETTING DIALOGEX 0, 0, 521, 285
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "配置"
 FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
     CONTROL         "",IDC_IMAGE,"Static",SS_OWNERDRAW | SS_NOTIFY,7,7,251,178
-    PUSHBUTTON      "取消操作",IDC_BUTTON_CLEAR,443,19,36,16
-    PUSHBUTTON      "保存",IDC_BUTTON_SAVE,379,19,36,16
+    PUSHBUTTON      "取消",IDC_BUTTON_CLEAR,434,19,45,16
+    PUSHBUTTON      "应用",IDC_BUTTON_SAVE,369,19,46,16
     COMBOBOX        IDC_COMBO_CONTROL,280,20,75,19,CBS_DROPDOWN | CBS_SORT | WS_VSCROLL | WS_TABSTOP
     EDITTEXT        IDC_EDIT_TWO_VALUE,66,200,46,14,ES_AUTOHSCROLL
     EDITTEXT        IDC_EDIT_FILTER_VALUE,66,218,46,14,ES_AUTOHSCROLL
@@ -180,6 +180,8 @@ BEGIN
     GROUPBOX        "景深选择",IDC_STATIC,274,141,240,37
     PUSHBUTTON      "清空数据",IDC_BUTTON_CANCEL,492,7,22,16,NOT WS_VISIBLE
     CONTROL         "人员检测",IDC_CHECK_PERSON,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,336,57,52,16
+    PUSHBUTTON      "确定",IDOK,281,242,70,26
+    PUSHBUTTON      "取消",IDCANCEL,391,242,66,26
 END
 
 
@@ -251,7 +253,7 @@ BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 514
         TOPMARGIN, 7
-        BOTTOMMARGIN, 407
+        BOTTOMMARGIN, 278
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -281,7 +283,7 @@ BEGIN
     IDS_ABOUTBOX            "关于 VideoAnalyzer(&A)..."
 END
 
-#endif    // Chinese (P.R.C.) resources
+#endif    // 中文(中华人民共和国) resources
 /////////////////////////////////////////////////////////////////////////////
 
 

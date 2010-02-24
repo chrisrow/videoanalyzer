@@ -61,9 +61,10 @@ BEGIN_MESSAGE_MAP(CDlgSetting, CDialog)
 	ON_BN_CLICKED(IDC_RADIO_SENSITIVE2, &CDlgSetting::OnBnClickedRadioSensitive2)
 	ON_BN_CLICKED(IDC_RADIO_SENSITIVE3, &CDlgSetting::OnBnClickedRadioSensitive3)
 	ON_EN_CHANGE(IDC_EDIT_TWO_VALUE, &CDlgSetting::OnEnChangeEditTwoValue)
-	ON_WM_CLOSE()
+//	ON_WM_CLOSE()
 	ON_BN_CLICKED(IDC_BUTTON_CANCEL, &CDlgSetting::OnBnClickedButtonCancel)
 	ON_BN_CLICKED(IDC_CHECK_PERSON, &CDlgSetting::OnBnClickedCheckPerson)
+    ON_BN_CLICKED(IDOK, &CDlgSetting::OnBnClickedOk)
 END_MESSAGE_MAP()
 
 
@@ -175,12 +176,11 @@ BOOL CDlgSetting::OnInitDialog()
 	// EXCEPTION: OCX Property Pages should return FALSE
 }
 
-void CDlgSetting::setImage(const IplImage *pImage, CCfgParse *m_pParse,const char* szFileName)
+void CDlgSetting::setImage(const IplImage *pImage)
 {
 	m_pImage = pImage;
-	m_pCfgParse = m_pParse;
-	m_FileName = szFileName ;
 }
+
 void CDlgSetting::OnBnClickedButtonClear()
 {
 	m_ctrlImage.Refresh();
@@ -567,8 +567,6 @@ void CDlgSetting::OnBnClickedRadioSensitive3()
 {
 	// TODO: Add your control notification handler code here
 	ParamSet.bSensitiveFlag = 0 ;
-
-	m_pCfgParse->SaveChannel(0, ParamSet,ParamDsting);
 }
 
 void CDlgSetting::OnEnChangeEditTwoValue()
@@ -579,8 +577,6 @@ void CDlgSetting::OnEnChangeEditTwoValue()
 	if ( m_edit_two_value >= 0 && m_edit_two_value <= 60 )
 	{
         ParamSet.iBinarizeSubThreshold = m_edit_two_value ;
-	    m_pCfgParse->SaveChannel(0, ParamSet,ParamDsting);
-		m_pCfgParse->Save(m_FileName);
 	}
 	else
 	{
@@ -589,13 +585,13 @@ void CDlgSetting::OnEnChangeEditTwoValue()
 	}
 }
 
-void CDlgSetting::OnClose()
-{
-	// TODO: Add your message handler code here and/or call default
-	m_pCfgParse->SaveChannel(0, ParamSet,ParamDsting);
-	m_pCfgParse->Save(m_FileName);
-	CDialog::OnClose();
-}
+//void CDlgSetting::OnClose()
+//{
+//	// TODO: Add your message handler code here and/or call default
+//	m_pCfgParse->SaveChannel(0, ParamSet,ParamDsting);
+//	m_pCfgParse->Save(m_FileName);
+//	CDialog::OnClose();
+//}
 
 void CDlgSetting::OnBnClickedButtonCancel()
 {
@@ -712,4 +708,10 @@ void CDlgSetting::OnBnClickedCheckPerson()
 	{
 		ParamSet.iPersonFlag = 1 ;
 	}
+}
+
+void CDlgSetting::OnBnClickedOk()
+{
+    this->OnBnClickedButtonSave();
+    OnOK();
 }
