@@ -206,6 +206,7 @@ public:
   ErrVal ImgMoveObjectDetect(const CFrameContainer* const p_frame_in,CFrameContainer* const p_frame_out);
 
 protected:
+	void YUV444FromRGB24( unsigned char * Src , unsigned char * Dst ,int wide ,int height );
   ErrVal DetectedTrackedObject(const CFrameContainer* const pFrame_in, CFrameContainer* const pFrame_out, LabelObjStatus* pLabelObjStatus);
   void   ImfilterSingle(CFrameContainer* const pFrame_in, int SingleThreshold, uint16_t* const pRectangle = NULL);
   ErrVal BinarizeSub(const CFrameContainer* const pFrame_in,  CFrameContainer* const pFrame_out,  int16_t v_threshold, uint16_t* pRectangle  = NULL);
