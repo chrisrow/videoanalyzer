@@ -159,8 +159,8 @@ BOOL CVideoAnalyzerDlg::OnInitDialog()
 
     //选项
     m_chkPreview.SetCheck(1);
-    m_chkDebug.SetCheck(1);
-    g_debug = 1;
+    m_chkDebug.SetCheck(0);//改动
+    g_debug = 0;
     
     //选择视频属性
     m_edtWidth.SetWindowText("352");

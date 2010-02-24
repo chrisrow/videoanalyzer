@@ -39,7 +39,6 @@
 #define IDC_BUTTON_APPLY_FR             1023
 #define IDC_BUTTON_CLEAR                1023
 #define IDC_BUTTON_APPLY_RES            1024
-#define IDC_BUTTON_CLEAR2               1024
 #define IDC_STATIC_CURRENT_FRAME3       1025
 #define IDC_STATIC_CURRENT_ALERT        1025
 #define IDC_LIST_STATUS                 1026
@@ -61,6 +60,7 @@
 #define IDC_CHECK1                      1041
 #define IDC_CHECK_                      1041
 #define IDC_CHECK_LENS                  1041
+#define IDC_BUTTON_CANCEL               1042
 #define IDC_RADIO_NATURAL               1043
 #define IDC_RADIO_TREE                  1044
 #define IDC_RADIO_CURVER                1045
@@ -73,6 +73,8 @@
 #define IDC_RADIO_DEPTH1                1052
 #define IDC_RADIO_DEPTH2                1053
 #define IDC_RADIO_DEPTH3                1054
+#define IDC_CHECK_LENS2                 1055
+#define IDC_CHECK_PERSON                1055
 #define ID_32771                        32771
 #define ID_MENU_CLEAR                   32772
 
