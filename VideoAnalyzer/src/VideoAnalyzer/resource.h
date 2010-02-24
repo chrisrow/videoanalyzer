@@ -75,6 +75,7 @@
 #define IDC_RADIO_DEPTH3                1054
 #define IDC_CHECK_LENS2                 1055
 #define IDC_CHECK_PERSON                1055
+#define IDC_BUTTON4                     1057
 #define ID_32771                        32771
 #define ID_MENU_CLEAR                   32772
 
@@ -84,7 +85,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        131
 #define _APS_NEXT_COMMAND_VALUE         32773
-#define _APS_NEXT_CONTROL_VALUE         1044
+#define _APS_NEXT_CONTROL_VALUE         1058
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
