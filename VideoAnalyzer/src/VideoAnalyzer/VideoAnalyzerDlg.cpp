@@ -511,6 +511,7 @@ bool CVideoAnalyzerDlg::openSource(TVideoSource& tSource)
     m_txtAlert.SetWindowText("0");
 
     //ÉèÖÃÊÓÆµ·ÖÎöÆ÷
+    OnCbnSelchangeComboAyalyzer();
     if(m_pAnalyzer)
     {
         m_pVideoGraber->addListener(m_pAnalyzer);
