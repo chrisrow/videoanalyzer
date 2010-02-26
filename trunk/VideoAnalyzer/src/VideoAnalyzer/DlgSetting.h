@@ -27,13 +27,17 @@ public:
 	virtual BOOL OnInitDialog();
 	void setImage(const IplImage *pImage);
 private:
-	const IplImage *m_pImage;
+	IplImage *m_pImage;
 	CGraphicsStatic m_ctrlImage;
 
-	PolyLineArray m_testPolyLineArray;
-	RectArray     m_testRectArray;
+    enum {COMBOBOX_ITEM_NUM = 13};
+	PolyLineArray m_polyLineArrays[COMBOBOX_ITEM_NUM];
+// 	RectArray     m_testRectArray;
 
 	int m_ComboChangeNum;
+
+    void SaveComboboxData();
+    void LoadComboboxData();
 
 public:
 	afx_msg void OnBnClickedButtonClear();
