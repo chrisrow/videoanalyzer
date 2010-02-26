@@ -32,20 +32,67 @@ END_MESSAGE_MAP()
 
 bool CGraphicsStatic::ShowImage(const IplImage* pFrame)
 {
-    Reset();
+//     Reset();
 
 	if (pFrame)
 	{
-		m_image = cvCloneImage(pFrame);
+        if (m_image)
+        {
+            cvCopy(pFrame, m_image);
+        }
+        else
+        {
+            m_image = cvCloneImage(pFrame);
+        }
 	}
 	else
 	{
-		m_image = cvCreateImage( cvSize(352, 288), 8, 3);
-		cvZero(m_image);
+        if (m_image)
+        {
+            cvZero(m_image);
+        }
+        else
+        {
+            m_image = cvCreateImage( cvSize(352, 288), 8, 3);
+            cvZero(m_image);
+        }
 	}
 
-    m_imageDraft = cvCloneImage(m_image);
-    m_imageOrg = cvCloneImage(m_image);
+    if (m_pPolyLineArray)
+    {
+        for (unsigned i = 0; i < m_pPolyLineArray->size(); i++)
+        {
+            PolyLine& line = (*m_pPolyLineArray)[i];
+            if (line.size() < 2)
+            {
+                continue;
+            }
+
+            for (unsigned j = 0; j < line.size() - 1; j++)
+            {
+                cvLine(m_image, cvPoint(line[j].x, line[j].y), cvPoint(line[j+1].x, line[j+1].y), 
+                    m_color, 1, CV_AA, 0 );
+            }
+        }
+    }
+
+    if (m_imageDraft)
+    {
+        cvCopy(m_image, m_imageDraft);
+    }
+    else
+    {
+        m_imageDraft = cvCloneImage(m_image);
+    }
+
+    if (m_imageOrg)
+    {
+        cvCopy(m_image, m_imageOrg);
+    }
+    else
+    {
+        m_imageOrg = cvCloneImage(m_image);
+    }
 
     SetWindowPos(NULL, -1, -1, m_image->width, m_image->height, SWP_NOMOVE);
 
