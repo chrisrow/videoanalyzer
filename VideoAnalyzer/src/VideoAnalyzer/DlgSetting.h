@@ -86,5 +86,14 @@ public:
 	afx_msg void OnBnClickedButtonCancel();
 	afx_msg void OnBnClickedCheckPerson();
     afx_msg void OnBnClickedOk();
-    afx_msg void OnEnChangeEditMaxFrame();
+    //afx_msg void OnEnChangeEditMaxFrame();
+	afx_msg void OnEnChangeEditWhiteSpotMin();
+	afx_msg void OnEnChangeEditFilterValue();
+	afx_msg void OnEnChangeEditImdilateValue();
+	afx_msg void OnEnChangeEditWhiteSpotMax();
+	afx_msg void OnEnChangeEditNightThr();
+	int m_edit_alarm;
+	afx_msg void OnEnChangeEditAlarm();
+	int m_edit_alarm_delay;
+	afx_msg void OnEnChangeEditAlarmDelay();
 };

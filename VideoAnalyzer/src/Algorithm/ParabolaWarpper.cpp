@@ -44,13 +44,19 @@ const IplImage* CParabolaWarpper::analysis(const IplImage *pFrame)
 			m_pDetector  = new CParabolaLineOneSide(pFrame->width, pFrame->height);
 			break;
 		case 1:
-			m_pDetector  = new CParabolaCurveOneSide(pFrame->width, pFrame->height);
+			m_pDetector  = new CParabolaLineTwoSide(pFrame->width, pFrame->height);
 			break;
 		case 2:
-			m_pDetector  = new CParabolaTree(pFrame->width, pFrame->height);
+			m_pDetector  = new CParabolaCurveOneSide(pFrame->width, pFrame->height);
 			break;
 		case 3:
-			m_pDetector  = new CParabolaLineOneSide(pFrame->width, pFrame->height);
+			m_pDetector  = new CParabolaCurveTwoSide(pFrame->width, pFrame->height);
+			break;
+		case 4:
+			m_pDetector  = new CParabolaTree(pFrame->width, pFrame->height);
+			break;
+		case 5:
+			m_pDetector  = new CParabolaTree(pFrame->width, pFrame->height);
 			break;
 		default : 
 			m_pDetector  = new CParabolaLineTwoSide(pFrame->width, pFrame->height);

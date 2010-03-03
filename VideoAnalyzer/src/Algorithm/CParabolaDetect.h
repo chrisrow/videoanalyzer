@@ -47,7 +47,7 @@ struct JudgeSetFlt
 };
 struct ParamStruct
 {
-	int     iStyleChange               ;                  //0_natural 1_Curve 2_Above 3_Tree
+	int     iStyleChange              ;                  //0_natural 1_Curve 2_Above 3_Tree
 	int     bSensitiveFlag            ;                  //灵敏度标志，0: 3帧报警, 1: 7帧报警,2: 10帧报警
 	int     bTransLensImage           ;                  //镜像图像标志
 	int     iBinarizeSubThreshold     ;                  //二值化阈值  
@@ -65,6 +65,8 @@ struct ParamStruct
 	int     iCurveRightVal             ;                  //拟合曲线线的最右端
 	int     iPersonFlag               ;                  //人员检测标志
 	int     iPersonWhitePotNum        ;                  //人员白点数目
+	int     iAlarmDelay               ;                  //报警延时
+    int     iSceneDepth               ;                  //景深选择
 
 	LineSet  tRectLittleRegion         ;                  //小区域范围   flag:是否启用小区域的标志 1 启用 0 不用
 	LineSet  tLittleRegionYLine        ;                  //小区域的高度线  

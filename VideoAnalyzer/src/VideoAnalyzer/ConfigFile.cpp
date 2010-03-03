@@ -618,6 +618,9 @@ int CCfgParse::LoadChannel(int iCh, ParamStruct& ps, ParamDistinguish& pd)
 
 	GET_VALUE(xPSElement, "iPersonFlag", ps.iPersonFlag);
 	GET_VALUE(xPSElement, "iPersonWhitePotNum", ps.iPersonWhitePotNum);
+	GET_VALUE(xPSElement, "iAlarmDelay", ps.iAlarmDelay);
+	GET_VALUE(xPSElement, "iSceneDepth", ps.iSceneDepth);
+	
 
     //LineSet
     GET_VALUE(xPSElement, "tRectLittleRegion", ps.tRectLittleRegion);
@@ -718,7 +721,8 @@ int CCfgParse::SaveChannel(int iCh, ParamStruct& ps, ParamDistinguish& pd)
 
 	SET_VALUE(xPSElement, "iPersonFlag", ps.iPersonFlag);
 	SET_VALUE(xPSElement, "iPersonWhitePotNum", ps.iPersonWhitePotNum);
-
+    SET_VALUE(xPSElement, "iAlarmDelay", ps.iAlarmDelay);
+	SET_VALUE(xPSElement, "iSceneDepth", ps.iAlarmDelay);
 	//LineSet
 	SET_VALUE(xPSElement, "tRectLittleRegion", ps.tRectLittleRegion);
 	SET_VALUE(xPSElement, "tLittleRegionYLine", ps.tLittleRegionYLine);

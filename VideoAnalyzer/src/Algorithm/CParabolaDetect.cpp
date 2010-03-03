@@ -1376,7 +1376,7 @@ CParabolaDetect::ForecastObjectDetect(const CFrameContainer* const pFrame_in,CFr
           {
             TrackObject[i].bTrackAlarmFlag = true ;
             m_AlarmFlg = TRUE ;
-            m_iAlarmDelay = 20 ;
+            m_iAlarmDelay = ParamSet.iAlarmDelay*25 ;
           }  
         }
 
@@ -3270,34 +3270,43 @@ bool CParabolaLineOneSide::TrackAlarmObject(uint16_t i)
 		  && (TrackObject[i].iRiseFrameNum[0] >=4 || TrackObject[i].iRiseFrameNum[1] >= 4)
 		  )
 	  {
-		  if ( TrackObject[i].iWhiteSpotNum <= 200  
-			  && TrackObject[i].iTrackBottomPoint[1] > v_line_y
-			  && TrackObject[i].iTrackTopPoint[1] < v_line_y
-			  && abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 15 
-			  )
-
+		  if(ParamSet.iSceneDepth == 0)
 		  {
-			  Temp_alarm = TRUE;
+			  if ( TrackObject[i].iWhiteSpotNum <= 200  
+				  && TrackObject[i].iTrackBottomPoint[1] > v_line_y
+				  && TrackObject[i].iTrackTopPoint[1] < v_line_y
+				  && abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 15 
+				  )
+
+			  {
+				  Temp_alarm = TRUE;
+			  }
 		  }
 
-		  if ( TrackObject[i].iWhiteSpotNum > 200 
-			  && TrackObject[i].iWhiteSpotNum <= 400 
-			  && TrackObject[i].iTrackBottomPoint[1] > v_line_y
-			  && TrackObject[i].iTrackTopPoint[1] < v_line_y
-			  && abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 30 
-			  )
+		  if(ParamSet.iSceneDepth == 1)
 		  {
-			  Temp_alarm = TRUE;
+			  if ( TrackObject[i].iWhiteSpotNum > 150 
+				  && TrackObject[i].iWhiteSpotNum <= 400 
+				  && TrackObject[i].iTrackBottomPoint[1] > v_line_y
+				  && TrackObject[i].iTrackTopPoint[1] < v_line_y
+				  && abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 30 
+				  )
+			  {
+				  Temp_alarm = TRUE;
+			  }
 		  }
 
-		  if ( TrackObject[i].iWhiteSpotNum > 400 
-			  && TrackObject[i].iWhiteSpotNum <= 600 
-			  && TrackObject[i].iTrackBottomPoint[1] > v_line_y
-			  && TrackObject[i].iTrackTopPoint[1] < v_line_y
-			  && abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 40 
-			  )
+		  if(ParamSet.iSceneDepth == 2)
 		  {
-			  Temp_alarm = TRUE;
+			  if ( TrackObject[i].iWhiteSpotNum > 250 
+				  && TrackObject[i].iWhiteSpotNum <= 600 
+				  && TrackObject[i].iTrackBottomPoint[1] > v_line_y
+				  && TrackObject[i].iTrackTopPoint[1] < v_line_y
+				  && abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 40 
+				  )
+			  {
+				  Temp_alarm = TRUE;
+			  }
 		  }
 	  }
   }
@@ -3497,34 +3506,43 @@ bool CParabolaCurveOneSide::TrackAlarmObject(uint16_t i)
 	  && (TrackObject[i].iRiseFrameNum[0] >=4 || TrackObject[i].iRiseFrameNum[1] >= 4)
 	  )
   {
-	  if ( TrackObject[i].iWhiteSpotNum <= 200  
-		  && TrackObject[i].iTrackBottomPoint[1] > v_line_y
-		  && TrackObject[i].iTrackTopPoint[1] < v_line_y
-		  && abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 15 
-		  )
-
+	  if(ParamSet.iSceneDepth == 0)
 	  {
-		  Temp_alarm = TRUE;
+		  if ( TrackObject[i].iWhiteSpotNum <= 200  
+			  && TrackObject[i].iTrackBottomPoint[1] > v_line_y
+			  && TrackObject[i].iTrackTopPoint[1] < v_line_y
+			  && abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 15 
+			  )
+
+		  {
+			  Temp_alarm = TRUE;
+		  }
 	  }
 
-	  if ( TrackObject[i].iWhiteSpotNum > 200 
-		  && TrackObject[i].iWhiteSpotNum <= 400 
-		  && TrackObject[i].iTrackBottomPoint[1] > v_line_y
-		  && TrackObject[i].iTrackTopPoint[1] < v_line_y
-		  && abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 30 
-		  )
+	  if(ParamSet.iSceneDepth == 1)
 	  {
-		  Temp_alarm = TRUE;
+		  if ( TrackObject[i].iWhiteSpotNum > 150 
+			  && TrackObject[i].iWhiteSpotNum <= 400 
+			  && TrackObject[i].iTrackBottomPoint[1] > v_line_y
+			  && TrackObject[i].iTrackTopPoint[1] < v_line_y
+			  && abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 30 
+			  )
+		  {
+			  Temp_alarm = TRUE;
+		  }
 	  }
 
-	  if ( TrackObject[i].iWhiteSpotNum > 400 
-		  && TrackObject[i].iWhiteSpotNum <= 600 
-		  && TrackObject[i].iTrackBottomPoint[1] > v_line_y
-		  && TrackObject[i].iTrackTopPoint[1] < v_line_y
-		  && abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 40 
-		  )
+	  if(ParamSet.iSceneDepth == 2)
 	  {
-		  Temp_alarm = TRUE;
+		  if ( TrackObject[i].iWhiteSpotNum > 250 
+			  && TrackObject[i].iWhiteSpotNum <= 600 
+			  && TrackObject[i].iTrackBottomPoint[1] > v_line_y
+			  && TrackObject[i].iTrackTopPoint[1] < v_line_y
+			  && abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 40 
+			  )
+		  {
+			  Temp_alarm = TRUE;
+		  }
 	  }
 
   }
@@ -3731,34 +3749,43 @@ bool CParabolaCurveTwoSide::TrackAlarmObject(uint16_t i)
 		&& (TrackObject[i].iRiseFrameNum[0] >=4 || TrackObject[i].iRiseFrameNum[1] >= 4)
 		)
 	{
-		if ( TrackObject[i].iWhiteSpotNum <= 200  
-			&& TrackObject[i].iTrackBottomPoint[1] > v_line_y
-			&& TrackObject[i].iTrackTopPoint[1] < v_line_y
-			&& abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 15 
-			)
-
+		if(ParamSet.iSceneDepth == 0)
 		{
-			Temp_alarm = TRUE;
+			if ( TrackObject[i].iWhiteSpotNum <= 200  
+				&& TrackObject[i].iTrackBottomPoint[1] > v_line_y
+				&& TrackObject[i].iTrackTopPoint[1] < v_line_y
+				&& abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 15 
+				)
+
+			{
+				Temp_alarm = TRUE;
+			}
 		}
 
-		if ( TrackObject[i].iWhiteSpotNum > 200 
-			&& TrackObject[i].iWhiteSpotNum <= 400 
-			&& TrackObject[i].iTrackBottomPoint[1] > v_line_y
-			&& TrackObject[i].iTrackTopPoint[1] < v_line_y
-			&& abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 30 
-			)
+		if(ParamSet.iSceneDepth == 1)
 		{
-			Temp_alarm = TRUE;
+			if ( TrackObject[i].iWhiteSpotNum > 150 
+				&& TrackObject[i].iWhiteSpotNum <= 400 
+				&& TrackObject[i].iTrackBottomPoint[1] > v_line_y
+				&& TrackObject[i].iTrackTopPoint[1] < v_line_y
+				&& abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 30 
+				)
+			{
+				Temp_alarm = TRUE;
+			}
 		}
 
-		if ( TrackObject[i].iWhiteSpotNum > 400 
-			&& TrackObject[i].iWhiteSpotNum <= 600 
-			&& TrackObject[i].iTrackBottomPoint[1] > v_line_y
-			&& TrackObject[i].iTrackTopPoint[1] < v_line_y
-			&& abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 40 
-			)
+		if(ParamSet.iSceneDepth == 2)
 		{
-			Temp_alarm = TRUE;
+			if ( TrackObject[i].iWhiteSpotNum > 250 
+				&& TrackObject[i].iWhiteSpotNum <= 600 
+				&& TrackObject[i].iTrackBottomPoint[1] > v_line_y
+				&& TrackObject[i].iTrackTopPoint[1] < v_line_y
+				&& abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 40 
+				)
+			{
+				Temp_alarm = TRUE;
+			}
 		}
 
 	}
@@ -3990,34 +4017,43 @@ bool CParabolaLineTwoSide::TrackAlarmObject(uint16_t i)
 		  && (TrackObject[i].iRiseFrameNum[0] >=4 || TrackObject[i].iRiseFrameNum[1] >= 4)
 		  )
 	  {
-		  if ( TrackObject[i].iWhiteSpotNum <= 200  
-			  && TrackObject[i].iTrackBottomPoint[1] > v_line_y
-			  && TrackObject[i].iTrackTopPoint[1] < v_line_y
-			  && abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 15 
-			  )
-
+		  if(ParamSet.iSceneDepth == 0)
 		  {
-			  Temp_alarm = TRUE;
+			  if ( TrackObject[i].iWhiteSpotNum <= 200  
+				  && TrackObject[i].iTrackBottomPoint[1] > v_line_y
+				  && TrackObject[i].iTrackTopPoint[1] < v_line_y
+				  && abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 15 
+				  )
+
+			  {
+				  Temp_alarm = TRUE;
+			  }
 		  }
 
-		  if ( TrackObject[i].iWhiteSpotNum > 200 
-			  && TrackObject[i].iWhiteSpotNum <= 400 
-			  && TrackObject[i].iTrackBottomPoint[1] > v_line_y
-			  && TrackObject[i].iTrackTopPoint[1] < v_line_y
-			  && abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 30 
-			  )
+		  if(ParamSet.iSceneDepth == 1)
 		  {
-			  Temp_alarm = TRUE;
+			  if ( TrackObject[i].iWhiteSpotNum > 150 
+				  && TrackObject[i].iWhiteSpotNum <= 400 
+				  && TrackObject[i].iTrackBottomPoint[1] > v_line_y
+				  && TrackObject[i].iTrackTopPoint[1] < v_line_y
+				  && abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 30 
+				  )
+			  {
+				  Temp_alarm = TRUE;
+			  }
 		  }
 
-		  if ( TrackObject[i].iWhiteSpotNum > 400 
-			  && TrackObject[i].iWhiteSpotNum <= 600 
-			  && TrackObject[i].iTrackBottomPoint[1] > v_line_y
-			  && TrackObject[i].iTrackTopPoint[1] < v_line_y
-			  && abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 40 
-			  )
+		  if(ParamSet.iSceneDepth == 2)
 		  {
-			  Temp_alarm = TRUE;
+			  if ( TrackObject[i].iWhiteSpotNum > 250 
+				  && TrackObject[i].iWhiteSpotNum <= 600 
+				  && TrackObject[i].iTrackBottomPoint[1] > v_line_y
+				  && TrackObject[i].iTrackTopPoint[1] < v_line_y
+				  && abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 40 
+				  )
+			  {
+				  Temp_alarm = TRUE;
+			  }
 		  }
 	  }
   }
@@ -4167,7 +4203,11 @@ bool CParabolaTree::CurveContrast( LabelObjStatus* pTrackCurveInfo)
       {
         if (pTrackCurveInfo->iLittleRegionNum >= (pTrackCurveInfo->iFindObjNumber-2))
         {
-          return true ;
+			v_line_y = (long)( m_fCurveLineLocation[0] * pTrackCurveInfo->iTrackTopPoint[0] + m_fCurveLineLocation[1] );
+			if (pTrackCurveInfo->iTrackTopPoint[1] < v_line_y )
+			{
+				return true ;
+			}
         }
       }
 
@@ -4208,34 +4248,43 @@ bool CParabolaTree::TrackAlarmObject(uint16_t i)
 		  && (TrackObject[i].iRiseFrameNum[0] >=4 || TrackObject[i].iRiseFrameNum[1] >= 4)
 		  )
 	  {
-		  if ( TrackObject[i].iWhiteSpotNum <= 200  
-			  && TrackObject[i].iTrackBottomPoint[1] > v_line_y
-			  && TrackObject[i].iTrackTopPoint[1] < v_line_y
-			  && abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 15 
-			  )
-
+		  if(ParamSet.iSceneDepth == 0)
 		  {
-			  Temp_alarm = TRUE;
+			  if ( TrackObject[i].iWhiteSpotNum <= 200  
+				  && TrackObject[i].iTrackBottomPoint[1] > v_line_y
+				  && TrackObject[i].iTrackTopPoint[1] < v_line_y
+				  && abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 15 
+				  )
+
+			  {
+				  Temp_alarm = TRUE;
+			  }
 		  }
 
-		  if ( TrackObject[i].iWhiteSpotNum > 200 
-			  && TrackObject[i].iWhiteSpotNum <= 400 
-			  && TrackObject[i].iTrackBottomPoint[1] > v_line_y
-			  && TrackObject[i].iTrackTopPoint[1] < v_line_y
-			  && abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 30 
-			  )
+		  if(ParamSet.iSceneDepth == 1)
 		  {
-			  Temp_alarm = TRUE;
+			  if ( TrackObject[i].iWhiteSpotNum > 150 
+				  && TrackObject[i].iWhiteSpotNum <= 400 
+				  && TrackObject[i].iTrackBottomPoint[1] > v_line_y
+				  && TrackObject[i].iTrackTopPoint[1] < v_line_y
+				  && abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 30 
+				  )
+			  {
+				  Temp_alarm = TRUE;
+			  }
 		  }
 
-		  if ( TrackObject[i].iWhiteSpotNum > 400 
-			  && TrackObject[i].iWhiteSpotNum <= 600 
-			  && TrackObject[i].iTrackBottomPoint[1] > v_line_y
-			  && TrackObject[i].iTrackTopPoint[1] < v_line_y
-			  && abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 40 
-			  )
+		  if(ParamSet.iSceneDepth == 2)
 		  {
-			  Temp_alarm = TRUE;
+			  if ( TrackObject[i].iWhiteSpotNum > 250 
+				  && TrackObject[i].iWhiteSpotNum <= 600 
+				  && TrackObject[i].iTrackBottomPoint[1] > v_line_y
+				  && TrackObject[i].iTrackTopPoint[1] < v_line_y
+				  && abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 40 
+				  )
+			  {
+				  Temp_alarm = TRUE;
+			  }
 		  }
 	  }
   }

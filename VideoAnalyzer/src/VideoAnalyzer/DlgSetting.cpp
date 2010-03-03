@@ -21,6 +21,8 @@ CDlgSetting::CDlgSetting(CWnd* pParent /*=NULL*/)
     , m_edit_white_min(0)
     , m_edit_night_thr(0)
     , m_edit_max_frame(0)
+	, m_edit_alarm(0)
+	, m_edit_alarm_delay(0)
 {
     m_pImage = NULL;
 }
@@ -40,15 +42,17 @@ CDlgSetting::~CDlgSetting()
 
 void CDlgSetting::DoDataExchange(CDataExchange* pDX)
 {
-    CDialog::DoDataExchange(pDX);
-    DDX_Control(pDX, IDC_IMAGE, m_ctrlImage);
-    DDX_Text(pDX, IDC_EDIT_TWO_VALUE, m_edit_two_value);
-    DDX_Text(pDX, IDC_EDIT_FILTER_VALUE, m_edit_filter_value);
-    DDX_Text(pDX, IDC_EDIT_IMDILATE_VALUE, m_edit_imdilate_value);
-    DDX_Text(pDX, IDC_EDIT_WHITE_SPOT_MAX, m_edit_white_spot_max);
-    DDX_Text(pDX, IDC_EDIT_WHITE_SPOT_MIN, m_edit_white_min);
-    DDX_Text(pDX, IDC_EDIT_NIGHT_THR, m_edit_night_thr);
-    DDX_Text(pDX, IDC_EDIT_MAX_FRAME, m_edit_max_frame);
+	CDialog::DoDataExchange(pDX);
+	DDX_Control(pDX, IDC_IMAGE, m_ctrlImage);
+	DDX_Text(pDX, IDC_EDIT_TWO_VALUE, m_edit_two_value);
+	DDX_Text(pDX, IDC_EDIT_FILTER_VALUE, m_edit_filter_value);
+	DDX_Text(pDX, IDC_EDIT_IMDILATE_VALUE, m_edit_imdilate_value);
+	DDX_Text(pDX, IDC_EDIT_WHITE_SPOT_MAX, m_edit_white_spot_max);
+	DDX_Text(pDX, IDC_EDIT_WHITE_SPOT_MIN, m_edit_white_min);
+	DDX_Text(pDX, IDC_EDIT_NIGHT_THR, m_edit_night_thr);
+	//DDX_Text(pDX, IDC_EDIT_MAX_FRAME, m_edit_max_frame);
+	DDX_Text(pDX, IDC_EDIT_ALARM, m_edit_alarm);
+	DDX_Text(pDX, IDC_EDIT_ALARM_DELAY, m_edit_alarm_delay);
 }
 
 
@@ -72,7 +76,14 @@ BEGIN_MESSAGE_MAP(CDlgSetting, CDialog)
     ON_BN_CLICKED(IDC_CHECK_PERSON, &CDlgSetting::OnBnClickedCheckPerson)
     ON_BN_CLICKED(IDOK, &CDlgSetting::OnBnClickedOk)
     ON_EN_CHANGE(IDC_EDIT_TWO_VALUE, &CDlgSetting::OnEnChangeEditTwoValue)
-    ON_EN_CHANGE(IDC_EDIT_MAX_FRAME, &CDlgSetting::OnEnChangeEditMaxFrame)
+    //ON_EN_CHANGE(IDC_EDIT_MAX_FRAME, &CDlgSetting::OnEnChangeEditMaxFrame)
+	ON_EN_CHANGE(IDC_EDIT_WHITE_SPOT_MIN, &CDlgSetting::OnEnChangeEditWhiteSpotMin)
+	ON_EN_CHANGE(IDC_EDIT_FILTER_VALUE, &CDlgSetting::OnEnChangeEditFilterValue)
+	ON_EN_CHANGE(IDC_EDIT_IMDILATE_VALUE, &CDlgSetting::OnEnChangeEditImdilateValue)
+	ON_EN_CHANGE(IDC_EDIT_WHITE_SPOT_MAX, &CDlgSetting::OnEnChangeEditWhiteSpotMax)
+	ON_EN_CHANGE(IDC_EDIT_NIGHT_THR, &CDlgSetting::OnEnChangeEditNightThr)
+	ON_EN_CHANGE(IDC_EDIT_ALARM, &CDlgSetting::OnEnChangeEditAlarm)
+	ON_EN_CHANGE(IDC_EDIT_ALARM_DELAY, &CDlgSetting::OnEnChangeEditAlarmDelay)
 END_MESSAGE_MAP()
 
 
@@ -183,6 +194,8 @@ BOOL CDlgSetting::OnInitDialog()
     m_edit_white_min = ParamSet.iWhiteSpotNumMin ;
     m_edit_night_thr = ParamSet.iNightSubThreshold ;
     m_edit_max_frame = ParamSet.iTrackMaxFrameNum ;
+	m_edit_alarm_delay = ParamSet.iAlarmDelay  ;
+	m_edit_alarm = ParamDsting.TrackNumMin.SecondValue ;
 
     UpdateData(false);
 
@@ -743,7 +756,7 @@ void CDlgSetting::OnBnClickedRadioTree()
 
 void CDlgSetting::OnBnClickedRadioCurver()
 {
-    ParamSet.iStyleChange = 2 ;
+    ParamSet.iStyleChange = 5 ;
 }
 
 void CDlgSetting::OnBnClickedRadioNatuarlCurver()
@@ -758,11 +771,12 @@ void CDlgSetting::OnBnClickedRadioNatuarlNatuarl()
 
 void CDlgSetting::OnBnClickedRadioTreeCurver()
 {
-    ParamSet.iStyleChange = 5 ;
+    ParamSet.iStyleChange = 6 ;
 }
 
 void CDlgSetting::OnBnClickedRadioDepth1()
 {
+	ParamSet.iSceneDepth = 2 ;
     ParamSet.iPersonWhitePotNum = 300 ;
     ParamSet.iXTrackContinueThreshold = 3 ;
     ParamSet.iWhiteSpotNumMin = 40 ;
@@ -770,6 +784,7 @@ void CDlgSetting::OnBnClickedRadioDepth1()
 
 void CDlgSetting::OnBnClickedRadioDepth2()
 {
+	ParamSet.iSceneDepth = 1 ;
     ParamSet.iPersonWhitePotNum = 200 ;
     ParamSet.iXTrackContinueThreshold = 2 ;
     ParamSet.iWhiteSpotNumMin = 30 ;
@@ -777,6 +792,7 @@ void CDlgSetting::OnBnClickedRadioDepth2()
 
 void CDlgSetting::OnBnClickedRadioDepth3()
 {
+	ParamSet.iSceneDepth = 0 ;
     ParamSet.iPersonWhitePotNum = 80 ;
     ParamSet.iXTrackContinueThreshold = 1 ;
     ParamSet.iWhiteSpotNumMin = 20 ;
@@ -784,17 +800,17 @@ void CDlgSetting::OnBnClickedRadioDepth3()
 
 void CDlgSetting::OnBnClickedRadioSensitive1()
 {
-    ParamSet.bSensitiveFlag = 1 ;
+    ParamSet.bSensitiveFlag = 0 ;
 }
 
 void CDlgSetting::OnBnClickedRadioSensitive2()
 {
-    ParamSet.bSensitiveFlag = 0 ;
+    ParamSet.bSensitiveFlag = 1 ;
 }
 
 void CDlgSetting::OnBnClickedRadioSensitive3()
 {
-    ParamSet.bSensitiveFlag = 0 ;
+    ParamSet.bSensitiveFlag = 2 ;
 }
 
 void CDlgSetting::OnEnChangeEditTwoValue()
@@ -946,6 +962,112 @@ void CDlgSetting::OnBnClickedOk()
     SaveComboboxData();
     OnOK();
 }
-void CDlgSetting::OnEnChangeEditMaxFrame()
+//void CDlgSetting::OnEnChangeEditMaxFrame()
+//{
+//}
+
+void CDlgSetting::OnEnChangeEditWhiteSpotMin()
 {
+	// TODO:  Add your control notification handler code here
+	int tempVal = m_edit_white_min;
+	UpdateData(true);
+	if ( m_edit_white_min >= 0 && m_edit_white_min <= 50 )
+	{
+		ParamSet.iWhiteSpotNumMin = m_edit_white_min ;
+	}
+	else
+	{
+		m_edit_white_min = tempVal ;
+		UpdateData(false);
+	}
+}
+
+void CDlgSetting::OnEnChangeEditFilterValue()
+{
+	int tempVal = m_edit_filter_value;
+	UpdateData(true);
+	if ( m_edit_filter_value >= 0 && m_edit_filter_value <= 3 )
+	{
+		ParamSet.iImfilterSingleThreshold = m_edit_filter_value ;
+	}
+	else
+	{
+		m_edit_filter_value = tempVal ;
+		UpdateData(false);
+	}
+}
+
+void CDlgSetting::OnEnChangeEditImdilateValue()
+{	
+	int tempVal = m_edit_imdilate_value;
+	UpdateData(true);
+	if ( m_edit_imdilate_value >= 0 && m_edit_imdilate_value <= 5 )
+	{
+		ParamSet.iImdilateThreshold = m_edit_imdilate_value ;
+	}
+	else
+	{
+		m_edit_imdilate_value = tempVal ;
+		UpdateData(false);
+	}
+}
+
+void CDlgSetting::OnEnChangeEditWhiteSpotMax()
+{
+	int tempVal = m_edit_white_spot_max;
+	UpdateData(true);
+	if ( m_edit_white_spot_max >= 0 && m_edit_white_spot_max <= 30000 )
+	{
+		ParamSet.iWhiteSpotNumMax = m_edit_white_spot_max ;
+	}
+	else
+	{
+		m_edit_white_spot_max = tempVal ;
+		UpdateData(false);
+	}
+}
+
+void CDlgSetting::OnEnChangeEditNightThr()
+{
+	int tempVal = m_edit_night_thr;
+	UpdateData(true);
+	if ( m_edit_night_thr >= 0 && m_edit_night_thr <= 80 )
+	{
+		ParamSet.iNightSubThreshold = m_edit_night_thr ;
+	}
+	else
+	{
+		m_edit_night_thr = tempVal ;
+		UpdateData(false);
+	}
+}
+
+void CDlgSetting::OnEnChangeEditAlarm()
+{
+	int tempVal = m_edit_alarm;
+	UpdateData(true);
+	if ( m_edit_alarm >= 0 && m_edit_alarm <= 10 )
+	{
+		ParamDsting.TrackNumMin.SecondValue = m_edit_alarm ;
+	}
+	else
+	{
+		m_edit_alarm = tempVal ;
+		UpdateData(false);
+	}
+}
+
+void CDlgSetting::OnEnChangeEditAlarmDelay()
+{
+	int tempVal = m_edit_alarm_delay;
+	UpdateData(true);
+	if ( m_edit_alarm_delay >= 0 && m_edit_alarm_delay <= 30 )
+	{
+		ParamSet.iAlarmDelay = m_edit_alarm_delay ;
+	}
+	else
+	{
+		m_edit_alarm_delay = tempVal ;
+		UpdateData(false);
+	}
 }
