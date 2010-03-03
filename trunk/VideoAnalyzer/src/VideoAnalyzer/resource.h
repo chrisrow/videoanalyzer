@@ -54,11 +54,13 @@
 #define IDC_EDIT_IMDILATE_VALUE         1035
 #define IDC_EDIT_WHITE_SPOT_MAX         1036
 #define IDC_EDIT_WHITE_SPOT_MIN         1037
-#define IDC_EDIT_STYLE                  1038
+//#define IDC_EDIT_STYLE                  1038
+#define IDC_EDIT_ALARM                  1038
 #define IDC_EDIT_NIGHT_THR              1039
-#define IDC_EDIT_MAX_FRAME              1040
-#define IDC_CHECK1                      1041
-#define IDC_CHECK_                      1041
+//#define IDC_EDIT_MAX_FRAME              1040
+#define IDC_EDIT_ALARM_DELAY            1040
+//#define IDC_CHECK1                      1041
+//#define IDC_CHECK_                      1041
 #define IDC_CHECK_LENS                  1041
 #define IDC_BUTTON_CANCEL               1042
 #define IDC_RADIO_NATURAL               1043
