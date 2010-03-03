@@ -48,12 +48,8 @@ struct JudgeSetFlt
 struct ParamStruct
 {
 	int     iStyleChange               ;                  //0_natural 1_Curve 2_Above 3_Tree
-	int     bSensitiveFlag            ;                  //灵敏度标志，3帧报警
+	int     bSensitiveFlag            ;                  //灵敏度标志，0: 3帧报警, 1: 7帧报警,2: 10帧报警
 	int     bTransLensImage           ;                  //镜像图像标志
-	//  int     bLittleRegionFlag         ;                  //是否启用小区域的标志
-	//  int     bTreeLittleFlag           ;                  //树一侧是否启用小区域的标志
-	// float    fLineFirstLocation[4]     ;                  //目标穿越的两条直线参数 0：线1_A   1：线1_B   2：线2左       3：线2又
-	//  float    fLineSecondLocation[4]    ;                  //拟合曲线需要的高度参数 0：线 A    1: 线B     2：线的最左端  3：线的最右端  
 	int     iBinarizeSubThreshold     ;                  //二值化阈值  
 	int     iNightSubThreshold        ;                  //夜间二值化阈值 
 	int     iImfilterSingleThreshold  ;                  //去小点阈值
@@ -71,7 +67,7 @@ struct ParamStruct
 	int     iPersonWhitePotNum        ;                  //人员白点数目
 
 	LineSet  tRectLittleRegion         ;                  //小区域范围   flag:是否启用小区域的标志 1 启用 0 不用
-	LineSet  tRectTreeLittleRegion     ;                  //树一侧的小区域   flag: 树一侧是否启用小区域的标志 1 启用 0 不用   
+	LineSet  tLittleRegionYLine        ;                  //小区域的高度线  
 	LineSet  tLineCurverRange          ;                  //拟合曲线范围 
 	LineSet  tLineStraightFirst        ;                  //两条轨迹经过区域线中的第一条线 
 	LineSet  tLineStraightSecond       ;                  //两条轨迹经过区域线中的第二条线 
@@ -79,10 +75,8 @@ struct ParamStruct
 	LineSet  tLineBlackRight           ;                 //加入的黑色直线中的右边为黑 
 
 	LineSet  tRectBlackBlock[5]        ;                  //加入的黑色块范围 
-	LineSet  tNightRange[2]            ;                 //夜间的区域值 用2块区域判断
-	//float   iPersonRange[5][2]       ;                   //人员检测范围参数(梯形) 0-0高点 0-1未用 1左线高点 2左线低点 3右线高点 4右线低点  
+	LineSet  tNightRange[2]            ;                 //夜间的区域值 用2块区域判断 
 	LineSet  iPersonRange[3]           ;                // 人员检测范围参数(梯形)左线 右线
-//	int      iPersonTopVal             ;                // 人员检测范围参数高度
 } ;
 
 struct ParamDistinguish
@@ -153,7 +147,6 @@ protected:
     int16_t  iTrackTopPoint[3]     ;                        //-- track top point    0:x 1:y  2:frame number 
     int16_t  iTrackBottomPoint[3]  ;                        //-- track bottom point  0:x 1:y  2:frame number 
     int16_t  iLittleRegionNum   ;                        //-- little region number
-    int16_t  iTreeLittleRegionNum ;                      //-- 数一侧的第二区域数目
   };
 
   LabelObjStatus TrackObject[m_iTrackObjectMaxNum];
@@ -199,7 +192,7 @@ protected:
   int      m_NightFlag                ;
   float    m_fLineFirstLocation[4]      ;                  //目标穿越的两条直线参数 0：线1_A   1：线1_B   2：线2左       3：线2又
   float    m_fLineSecondLocation[2]     ;                   //拟合曲线需要的高度参数 0：线 A    1: 线B
-
+  float    m_fCurveLineLocation[2]     ;                   //曲线中围栏高度线
   /* methods */
 public:
   ErrVal ParaDetectTwo(const CFrameContainer* const pFrame_in,CFrameContainer* const pFrame_out);
@@ -225,6 +218,7 @@ protected:
   void   InitParaVal( );
   ErrVal AddLeftBlackLine(uint8_t* pFrame_in, int x1, int y1, int x2, int y2 );
   ErrVal AddRightBlackLine(uint8_t* pFrame_in, int x1, int y1, int x2, int y2  );
+  void   AddCurveLine(int x1, int y1, int x2, int y2 );
   void   AddStraightLine1( int x1, int y1, int x2, int y2 );
   void   AddStraightLine2( int x1, int y1, int x2, int y2 );
   void   AddStraightLineCurver( int x1, int y1, int x2, int y2 );
@@ -252,10 +246,10 @@ protected:
   void  PersonCreateBK( uint8_t *p_frame ,int ScaleVal );
 };
 
-class CParabolaNatural : public CParabolaDetect
+class CParabolaLineOneSide : public CParabolaDetect
 {
 public:
-  CParabolaNatural(unsigned int const  nYWidth_in, unsigned int const  nYHeight_in):CParabolaDetect(nYWidth_in,  nYHeight_in){}
+  CParabolaLineOneSide(unsigned int const  nYWidth_in, unsigned int const  nYHeight_in):CParabolaDetect(nYWidth_in,  nYHeight_in){}
 protected:
   bool TrackAlarmObject(uint16_t i);
   bool CurveContrast( LabelObjStatus* pTrackCurveInfo);
@@ -263,20 +257,30 @@ protected:
 
 
 
-class CParabolaCurve :public CParabolaDetect
+class CParabolaCurveOneSide :public CParabolaDetect
 {
 public:
-  CParabolaCurve(unsigned int const  nYWidth_in, unsigned int const  nYHeight_in):CParabolaDetect(nYWidth_in,  nYHeight_in){}
+  CParabolaCurveOneSide(unsigned int const  nYWidth_in, unsigned int const  nYHeight_in):CParabolaDetect(nYWidth_in,  nYHeight_in){}
 protected: 
   bool TrackAlarmObject(uint16_t i);
   bool CurveContrast( LabelObjStatus* pTrackCurveInfo);
 
 };
 
-class CParabolaAbove :public CParabolaDetect
+class CParabolaCurveTwoSide :public CParabolaDetect
 {
 public:
-  CParabolaAbove(unsigned int const  nYWidth_in, unsigned int const  nYHeight_in):CParabolaDetect(nYWidth_in,  nYHeight_in){}
+	CParabolaCurveTwoSide(unsigned int const  nYWidth_in, unsigned int const  nYHeight_in):CParabolaDetect(nYWidth_in,  nYHeight_in){}
+protected: 
+	bool TrackAlarmObject(uint16_t i);
+	bool CurveContrast( LabelObjStatus* pTrackCurveInfo);
+
+};
+
+class CParabolaLineTwoSide :public CParabolaDetect
+{
+public:
+  CParabolaLineTwoSide(unsigned int const  nYWidth_in, unsigned int const  nYHeight_in):CParabolaDetect(nYWidth_in,  nYHeight_in){}
 protected:  
   bool TrackAlarmObject(uint16_t i);
   bool CurveContrast( LabelObjStatus* pTrackCurveInfo);

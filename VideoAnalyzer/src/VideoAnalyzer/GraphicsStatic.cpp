@@ -1,6 +1,8 @@
 #include "StdAfx.h"
 #include "GraphicsStatic.h"
 
+const int LINE_WIDTH = 2;
+
 CGraphicsStatic::CGraphicsStatic(void)
     :m_image(NULL)
     , m_imageDraft(NULL)
@@ -71,8 +73,18 @@ bool CGraphicsStatic::ShowImage(const IplImage* pFrame)
             for (unsigned j = 0; j < line.size() - 1; j++)
             {
                 cvLine(m_image, cvPoint(line[j].x, line[j].y), cvPoint(line[j+1].x, line[j+1].y), 
-                    m_color, 1, CV_AA, 0 );
+                    m_color, LINE_WIDTH, CV_AA, 0 );
             }
+        }
+    }
+
+    if (m_pRectArray)
+    {
+        for (unsigned i = 0; i < m_pRectArray->size(); i++)
+        {
+            CRect& rect = (*m_pRectArray)[i];
+            cvRectangle(m_image, cvPoint(rect.left, rect.top), cvPoint(rect.right, rect.bottom), 
+                m_color, LINE_WIDTH, CV_AA, 0 );
         }
     }
 
@@ -178,7 +190,7 @@ void CGraphicsStatic::OnLButtonDown(UINT nFlags, CPoint point)
 	   else
 	   {
 		   cvLine(m_image, cvPoint(m_ptPre.x, m_ptPre.y), cvPoint(point.x, point.y), 
-			   m_color, 1, CV_AA, 0 );
+			   m_color, LINE_WIDTH, CV_AA, 0 );
 		   m_ptPre = point;
 		   m_tmpPolyLine.push_back(point);
 		   cvCopy(m_image, m_imageDraft, NULL);
@@ -199,8 +211,8 @@ void CGraphicsStatic::OnLButtonDown(UINT nFlags, CPoint point)
 	   else
 	   {
 		   cvRectangle(m_image, cvPoint(m_ptPre.x, m_ptPre.y), cvPoint(point.x, point.y), 
-			   m_color, 1, CV_AA, 0 );
-		   m_ptPre = point;
+			   m_color, LINE_WIDTH, CV_AA, 0 );
+// 		   m_ptPre = point;
 		   if (m_pRectArray)
 		   {
 			   m_pRectArray->push_back(CRect(m_ptPre.x, m_ptPre.y, point.x, point.y));
@@ -224,7 +236,7 @@ void CGraphicsStatic::OnMouseMove(UINT nFlags, CPoint point)
         if (m_bStart)
         {
             cvLine(m_imageDraft, cvPoint(m_OrgPoint.x, m_OrgPoint.y), cvPoint(point.x, point.y), 
-                m_color, 1, CV_AA, 0 );
+                m_color, LINE_WIDTH, CV_AA, 0 );
         }
     } 
     else
@@ -232,7 +244,7 @@ void CGraphicsStatic::OnMouseMove(UINT nFlags, CPoint point)
         if (m_bStart)
         {
             cvRectangle(m_imageDraft, cvPoint(m_OrgPoint.x, m_OrgPoint.y), cvPoint(point.x, point.y), 
-                m_color, 1, CV_AA, 0 );
+                m_color, LINE_WIDTH, CV_AA, 0 );
        }
     }
 

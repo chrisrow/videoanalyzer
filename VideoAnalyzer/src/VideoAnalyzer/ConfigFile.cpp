@@ -621,7 +621,7 @@ int CCfgParse::LoadChannel(int iCh, ParamStruct& ps, ParamDistinguish& pd)
 
     //LineSet
     GET_VALUE(xPSElement, "tRectLittleRegion", ps.tRectLittleRegion);
-    GET_VALUE(xPSElement, "tRectTreeLittleRegion", ps.tRectTreeLittleRegion);
+    GET_VALUE(xPSElement, "tLittleRegionYLine", ps.tLittleRegionYLine);
 	GET_VALUE(xPSElement, "tLineCurverRange", ps.tLineCurverRange);
 	GET_VALUE(xPSElement, "tLineStraightFirst", ps.tLineStraightFirst);
 	GET_VALUE(xPSElement, "tLineStraightSecond", ps.tLineStraightSecond);
@@ -721,7 +721,7 @@ int CCfgParse::SaveChannel(int iCh, ParamStruct& ps, ParamDistinguish& pd)
 
 	//LineSet
 	SET_VALUE(xPSElement, "tRectLittleRegion", ps.tRectLittleRegion);
-	SET_VALUE(xPSElement, "tRectTreeLittleRegion", ps.tRectTreeLittleRegion);
+	SET_VALUE(xPSElement, "tLittleRegionYLine", ps.tLittleRegionYLine);
 	SET_VALUE(xPSElement, "tLineCurverRange", ps.tLineCurverRange);
 	SET_VALUE(xPSElement, "tLineStraightFirst", ps.tLineStraightFirst);
 	SET_VALUE(xPSElement, "tLineStraightSecond", ps.tLineStraightSecond);

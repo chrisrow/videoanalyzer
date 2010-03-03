@@ -41,19 +41,19 @@ const IplImage* CParabolaWarpper::analysis(const IplImage *pFrame)
 		switch ( ParamSet.iStyleChange )
 		{
 		case 0: 
-			m_pDetector  = new CParabolaNatural(pFrame->width, pFrame->height);
+			m_pDetector  = new CParabolaLineOneSide(pFrame->width, pFrame->height);
 			break;
 		case 1:
-			m_pDetector  = new CParabolaCurve(pFrame->width, pFrame->height);
+			m_pDetector  = new CParabolaCurveOneSide(pFrame->width, pFrame->height);
 			break;
 		case 2:
-			m_pDetector  = new CParabolaAbove(pFrame->width, pFrame->height);
-			break;
-		case 3:
 			m_pDetector  = new CParabolaTree(pFrame->width, pFrame->height);
 			break;
+		case 3:
+			m_pDetector  = new CParabolaLineOneSide(pFrame->width, pFrame->height);
+			break;
 		default : 
-			m_pDetector  = new CParabolaNatural(pFrame->width, pFrame->height);
+			m_pDetector  = new CParabolaLineTwoSide(pFrame->width, pFrame->height);
 			break;
 		}
 
