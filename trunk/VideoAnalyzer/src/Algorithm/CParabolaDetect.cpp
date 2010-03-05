@@ -526,14 +526,14 @@ CParabolaDetect::GlobalLabelObject(CFrameContainer* const pFrame_binaried)
         ObjLabelInfo[i].iObjLabelCenter[1] = yTotal[i]/objWhiteNum[i+1];
 
         TempWhiteNum  = 0 ;
-        if (ObjLabelInfo[i].iObjWhiteSpotNum > ParamSet.iWhiteSpotNumMin && ObjLabelInfo[i].iObjWhiteSpotNum < ParamSet.iWhiteSpotNumMax )
+        if (ObjLabelInfo[i].iObjWhiteSpotNum > (uint32_t)ParamSet.iWhiteSpotNumMin && ObjLabelInfo[i].iObjWhiteSpotNum < (uint32_t)ParamSet.iWhiteSpotNumMax )
         {
           ObjLabelInfo[i].t_flag = false ;
-          if(ObjLabelInfo[i].iObjWhiteSpotNum < ParamSet.iWhiteSpotNumMax )
+          if(ObjLabelInfo[i].iObjWhiteSpotNum < (uint32_t)ParamSet.iWhiteSpotNumMax )
           {
-            for (m = ObjLabelInfo[i].iObjLabelRect[1]-3;m < ObjLabelInfo[i].iObjLabelRect[1] + ObjLabelInfo[i].iObjLabelRect[3] +4 ;m++)
+            for (m = ObjLabelInfo[i].iObjLabelRect[1]-3;m < (uint32_t)(ObjLabelInfo[i].iObjLabelRect[1] + ObjLabelInfo[i].iObjLabelRect[3] +4) ;m++)
             {
-              for (n = ObjLabelInfo[i].iObjLabelRect[0]-3; n < ObjLabelInfo[i].iObjLabelRect[0] + ObjLabelInfo[i].iObjLabelRect[2] +4 ;n++)
+              for (n = ObjLabelInfo[i].iObjLabelRect[0]-3; n < (uint32_t)(ObjLabelInfo[i].iObjLabelRect[0] + ObjLabelInfo[i].iObjLabelRect[2] +4) ;n++)
               {
                 if (1 == p_whitespot[framewidth*m + n ])
                 {
@@ -2032,7 +2032,7 @@ CParabolaDetect::YUV444FromRGB24( unsigned char * Src , unsigned char * Dst ,int
 
 	// ITU-R version of the conversion formula 
 	// m_nYuvByteSize[0] is YByteSize
-	for( yuv_pos = 0, bmp_pos = 0; yuv_pos < wide*height; ++yuv_pos, bmp_pos+=3 )
+	for( yuv_pos = 0, bmp_pos = 0; yuv_pos < (uint32_t)(wide*height); ++yuv_pos, bmp_pos+=3 )
 	{
 
 		////===== floating accurate slow approach =====
