@@ -3312,7 +3312,7 @@ bool CParabolaLineOneSide::TrackAlarmObject(uint16_t i)
   }
 
 
-  if (ParamSet.bSensitiveFlag)
+  if (ParamSet.bSensitiveFlag == 0)
   {
     if ( TrackObject[i].iTrackFrameNum >= 3 
       && TrackObject[i].bLineRangeFlag[0]
@@ -3790,7 +3790,7 @@ bool CParabolaCurveTwoSide::TrackAlarmObject(uint16_t i)
 
 	}
 
-	if (ParamSet.bSensitiveFlag)
+	if (ParamSet.bSensitiveFlag == 0)
 	{
 		if ( TrackObject[i].iTrackFrameNum >= 3  
 			&& TrackObject[i].bLineRangeFlag[0]
@@ -4059,7 +4059,7 @@ bool CParabolaLineTwoSide::TrackAlarmObject(uint16_t i)
   }
 
 
-  if (ParamSet.bSensitiveFlag)
+  if (ParamSet.bSensitiveFlag == 0)
   {
     if ( TrackObject[i].iTrackFrameNum >= 3  
       && TrackObject[i].bLineRangeFlag[0]
@@ -4289,7 +4289,7 @@ bool CParabolaTree::TrackAlarmObject(uint16_t i)
 	  }
   }
 
-  if (ParamSet.bSensitiveFlag)
+  if (ParamSet.bSensitiveFlag == 0)
   {
     if ( TrackObject[i].iTrackFrameNum >= 3  
       && TrackObject[i].bLineRangeFlag[0]

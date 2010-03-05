@@ -722,7 +722,7 @@ int CCfgParse::SaveChannel(int iCh, ParamStruct& ps, ParamDistinguish& pd)
 	SET_VALUE(xPSElement, "iPersonFlag", ps.iPersonFlag);
 	SET_VALUE(xPSElement, "iPersonWhitePotNum", ps.iPersonWhitePotNum);
     SET_VALUE(xPSElement, "iAlarmDelay", ps.iAlarmDelay);
-	SET_VALUE(xPSElement, "iSceneDepth", ps.iAlarmDelay);
+	SET_VALUE(xPSElement, "iSceneDepth", ps.iSceneDepth);
 	//LineSet
 	SET_VALUE(xPSElement, "tRectLittleRegion", ps.tRectLittleRegion);
 	SET_VALUE(xPSElement, "tLittleRegionYLine", ps.tLittleRegionYLine);

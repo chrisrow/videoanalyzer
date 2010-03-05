@@ -165,26 +165,30 @@ BOOL CDlgSetting::OnInitDialog()
         ((CButton *)GetDlgItem(IDC_CHECK_LENS))->SetCheck(TRUE);
     }
 
-    if (ParamSet.bSensitiveFlag)
+    if (ParamSet.bSensitiveFlag == 0 )
     {
         ((CButton *)GetDlgItem(IDC_RADIO_SENSITIVE1))->SetCheck(TRUE);
     }
-    else
+    else if(ParamSet.bSensitiveFlag == 1 )
     {
         ((CButton *)GetDlgItem(IDC_RADIO_SENSITIVE2))->SetCheck(TRUE);
     }
+	else
+	{
+        ((CButton *)GetDlgItem(IDC_RADIO_SENSITIVE3))->SetCheck(TRUE);
+	}
 
-    if (ParamSet.iPersonWhitePotNum < 100 )
+    if (ParamSet.iSceneDepth == 0 )
     {
         ((CButton *)GetDlgItem(IDC_RADIO_DEPTH3))->SetCheck(TRUE);
     }
-    else if (ParamSet.iPersonWhitePotNum >= 300 )
+    else if (ParamSet.iSceneDepth == 1 )
     {
-        ((CButton *)GetDlgItem(IDC_RADIO_DEPTH1))->SetCheck(TRUE);
+        ((CButton *)GetDlgItem(IDC_RADIO_DEPTH2))->SetCheck(TRUE);
     }
     else
     {
-        ((CButton *)GetDlgItem(IDC_RADIO_DEPTH2))->SetCheck(TRUE);
+        ((CButton *)GetDlgItem(IDC_RADIO_DEPTH1))->SetCheck(TRUE);
     }
    
     m_edit_two_value = ParamSet.iBinarizeSubThreshold ;
