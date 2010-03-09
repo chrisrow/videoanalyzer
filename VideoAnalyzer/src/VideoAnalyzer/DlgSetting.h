@@ -5,6 +5,7 @@
 #include "GraphicsStatic.h"
 
 #include "ConfigFile.h"
+#include "afxwin.h"
 
 // CDlgSetting dialog
 enum
@@ -51,6 +52,7 @@ private:
  	RectArray     m_rectArrays[COMBOBOX_ITEM_NUM];
 
 	int m_ComboChangeNum;
+    CComboBox m_cbGraphicsType;
 
 private:
 	void SetPaintType();
@@ -65,6 +67,8 @@ private:
     int m_edit_white_min;
     int m_edit_night_thr;
     int m_edit_max_frame;
+    int m_edit_alarm_delay;
+    int m_edit_alarm;
 
 public:
 	afx_msg void OnBnClickedButtonClear();
@@ -86,14 +90,12 @@ public:
 	afx_msg void OnBnClickedButtonCancel();
 	afx_msg void OnBnClickedCheckPerson();
     afx_msg void OnBnClickedOk();
-    //afx_msg void OnEnChangeEditMaxFrame();
 	afx_msg void OnEnChangeEditWhiteSpotMin();
 	afx_msg void OnEnChangeEditFilterValue();
 	afx_msg void OnEnChangeEditImdilateValue();
 	afx_msg void OnEnChangeEditWhiteSpotMax();
 	afx_msg void OnEnChangeEditNightThr();
-	int m_edit_alarm;
 	afx_msg void OnEnChangeEditAlarm();
-	int m_edit_alarm_delay;
 	afx_msg void OnEnChangeEditAlarmDelay();
+    afx_msg void OnBnClickedButtonNext();
 };
