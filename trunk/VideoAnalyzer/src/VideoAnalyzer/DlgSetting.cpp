@@ -42,17 +42,18 @@ CDlgSetting::~CDlgSetting()
 
 void CDlgSetting::DoDataExchange(CDataExchange* pDX)
 {
-	CDialog::DoDataExchange(pDX);
-	DDX_Control(pDX, IDC_IMAGE, m_ctrlImage);
-	DDX_Text(pDX, IDC_EDIT_TWO_VALUE, m_edit_two_value);
-	DDX_Text(pDX, IDC_EDIT_FILTER_VALUE, m_edit_filter_value);
-	DDX_Text(pDX, IDC_EDIT_IMDILATE_VALUE, m_edit_imdilate_value);
-	DDX_Text(pDX, IDC_EDIT_WHITE_SPOT_MAX, m_edit_white_spot_max);
-	DDX_Text(pDX, IDC_EDIT_WHITE_SPOT_MIN, m_edit_white_min);
-	DDX_Text(pDX, IDC_EDIT_NIGHT_THR, m_edit_night_thr);
-	//DDX_Text(pDX, IDC_EDIT_MAX_FRAME, m_edit_max_frame);
-	DDX_Text(pDX, IDC_EDIT_ALARM, m_edit_alarm);
-	DDX_Text(pDX, IDC_EDIT_ALARM_DELAY, m_edit_alarm_delay);
+    CDialog::DoDataExchange(pDX);
+    DDX_Control(pDX, IDC_IMAGE, m_ctrlImage);
+    DDX_Text(pDX, IDC_EDIT_TWO_VALUE, m_edit_two_value);
+    DDX_Text(pDX, IDC_EDIT_FILTER_VALUE, m_edit_filter_value);
+    DDX_Text(pDX, IDC_EDIT_IMDILATE_VALUE, m_edit_imdilate_value);
+    DDX_Text(pDX, IDC_EDIT_WHITE_SPOT_MAX, m_edit_white_spot_max);
+    DDX_Text(pDX, IDC_EDIT_WHITE_SPOT_MIN, m_edit_white_min);
+    DDX_Text(pDX, IDC_EDIT_NIGHT_THR, m_edit_night_thr);
+    //DDX_Text(pDX, IDC_EDIT_MAX_FRAME, m_edit_max_frame);
+    DDX_Text(pDX, IDC_EDIT_ALARM, m_edit_alarm);
+    DDX_Text(pDX, IDC_EDIT_ALARM_DELAY, m_edit_alarm_delay);
+    DDX_Control(pDX, IDC_COMBO_CONTROL, m_cbGraphicsType);
 }
 
 
@@ -84,6 +85,7 @@ BEGIN_MESSAGE_MAP(CDlgSetting, CDialog)
 	ON_EN_CHANGE(IDC_EDIT_NIGHT_THR, &CDlgSetting::OnEnChangeEditNightThr)
 	ON_EN_CHANGE(IDC_EDIT_ALARM, &CDlgSetting::OnEnChangeEditAlarm)
 	ON_EN_CHANGE(IDC_EDIT_ALARM_DELAY, &CDlgSetting::OnEnChangeEditAlarmDelay)
+    ON_BN_CLICKED(IDC_BUTTON_NEXT, &CDlgSetting::OnBnClickedButtonNext)
 END_MESSAGE_MAP()
 
 
@@ -1074,4 +1076,23 @@ void CDlgSetting::OnEnChangeEditAlarmDelay()
 		m_edit_alarm_delay = tempVal ;
 		UpdateData(false);
 	}
+}
+
+void CDlgSetting::OnBnClickedButtonNext()
+{
+    m_ComboChangeNum = m_cbGraphicsType.GetCurSel();
+    int iTotal = m_cbGraphicsType.GetCount();
+    if(m_ComboChangeNum+1 >= iTotal)
+    {
+        AfxMessageBox(_T("已经达到最后一项"));
+        return;
+    }
+    else if(m_ComboChangeNum < 0)
+    {
+        m_ComboChangeNum = 0;
+    }
+
+    m_ComboChangeNum++;
+    m_cbGraphicsType.SetCurSel(m_ComboChangeNum);
+    this->OnCbnSelchangeComboControl();
 }
