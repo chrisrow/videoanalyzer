@@ -513,6 +513,11 @@ bool CVideoAnalyzerDlg::openSource(TVideoSource& tSource)
             m_bPause = true;
             m_uCurrentFrame = (unsigned int)(dStartFrame-1);
         }
+        else
+        {
+            m_btnPause.SetWindowText("ÔÝÍ£");
+            m_bPause = false;
+        }
     }
 
     m_uAlert = 0;
@@ -599,7 +604,7 @@ void CVideoAnalyzerDlg::OnCbnDropdownComboCamera()
     }
 
 
-    m_tSource.eType = TYPE_CAMERA;
+//     m_tSource.eType = TYPE_CAMERA;
     if (iCount > 0)
     {
         if (m_tSource.iCamID >= 0 && m_tSource.iCamID < iCount)
@@ -634,7 +639,6 @@ void CVideoAnalyzerDlg::OnBnClickedButtonOpenFile()
         m_tSource.strFileName = FileDlg.GetPathName();
         m_tSource.eType = TYPE_FILE;
         this->OnBnClickedButtonRestart();
-//         m_eVideoCtrl = VC_OPEN;
     }
 }
 
