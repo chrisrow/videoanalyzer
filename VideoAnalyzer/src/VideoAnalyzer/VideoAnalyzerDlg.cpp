@@ -315,7 +315,7 @@ void CVideoAnalyzerDlg::alert(const IplImage *pFrame)
     CreateDirectory(strPath, NULL);
     
     int iChannel = 0;
-    if (m_tSource.eType = TYPE_CAMERA)
+    if (TYPE_CAMERA == m_tSource.eType)
     {
         iChannel = m_cbCamera.GetCurSel();
     }
@@ -533,7 +533,6 @@ bool CVideoAnalyzerDlg::openSource(TVideoSource& tSource)
     //设置报警器
     if (m_pAnalyzer && NULL == m_pUDPAlerter)
     {
-
         CUDPAlerter* pUDPAlerter = new CUDPAlerter ;
         unsigned char local[4] = {127, 0, 0, 1};
         unsigned char remote[4] = {127, 0, 0, 1}; // {192, 168, 1, 74}
@@ -559,8 +558,8 @@ bool CVideoAnalyzerDlg::openSource(TVideoSource& tSource)
             remote[0], remote[1], remote[2], remote[3], port);
         (void)pUDPAlerter->init(iAlarmType, iChannel, local, remote, port);
         m_pUDPAlerter = pUDPAlerter;
-        m_pAnalyzer->addListener(m_pUDPAlerter);
     }
+    m_pAnalyzer->addListener(m_pUDPAlerter);
 
     INIT_IMAGE();
     this->AddRunStatus("正在播放");
