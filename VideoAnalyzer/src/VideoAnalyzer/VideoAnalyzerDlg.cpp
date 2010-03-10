@@ -306,8 +306,6 @@ void CVideoAnalyzerDlg::alert(const IplImage *pFrame)
 {
     m_uAlert++;
 
-
-
     SYSTEMTIME Systemtime ;
     GetLocalTime(&Systemtime);
     
@@ -315,13 +313,23 @@ void CVideoAnalyzerDlg::alert(const IplImage *pFrame)
     CString strPath;
     strPath.Format(_T("D:\\%d月%d日"),Systemtime.wMonth,Systemtime.wDay);
     CreateDirectory(strPath, NULL);
+    
+    int iChannel = 0;
+    if (m_tSource.eType = TYPE_CAMERA)
+    {
+        iChannel = m_cbCamera.GetCurSel();
+    }
+    else
+    {
+        iChannel = m_cbChannel.GetCurSel();
+    }
 
     //保存图片
     CString strFile, strChannel;
     m_cbChannel.GetWindowText(strChannel);
-    strFile.Format("D:\\%d月%d日\\%s_%d_%d_%d.jpg",
+    strFile.Format("D:\\%d月%d日\\%d_%d_%d_%d.jpg",
         Systemtime.wMonth,Systemtime.wDay,
-        (LPCTSTR)strChannel,
+        iChannel,
         Systemtime.wHour, Systemtime.wMinute, Systemtime.wSecond );
     cvFlip(pFrame, NULL, 0);//垂直镜像
     int iResult = cvSaveImage((LPCTSTR)strFile, pFrame);
@@ -419,7 +427,7 @@ bool CVideoAnalyzerDlg::openSource(TVideoSource& tSource)
     if (TYPE_CAMERA == tSource.eType)
     {
         CString tmp;
-        tmp.Format("Camera %d", tSource.iCamID);
+        tmp.Format("Camera %d ", tSource.iCamID);
 		strWndCaption = tmp + strWndCaption; 
         //strWndCaption += tmp;
         SetWindowText(strWndCaption);
