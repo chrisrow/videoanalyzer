@@ -324,6 +324,11 @@ void CVideoAnalyzerDlg::alert(const IplImage *pFrame)
         iChannel = m_cbChannel.GetCurSel();
     }
 
+    if (iChannel < 0)
+    {
+        iChannel = 0;
+    }
+
     //保存图片
     CString strFile, strChannel;
     m_cbChannel.GetWindowText(strChannel);
@@ -534,7 +539,7 @@ bool CVideoAnalyzerDlg::openSource(TVideoSource& tSource)
     if (m_pAnalyzer && NULL == m_pUDPAlerter)
     {
         CUDPAlerter* pUDPAlerter = new CUDPAlerter ;
-        unsigned char local[4] = {127, 0, 0, 1};
+        unsigned char local[4] = {0, 0, 0, 0};
         unsigned char remote[4] = {127, 0, 0, 1}; // {192, 168, 1, 74}
         int port = 0;
 
@@ -553,7 +558,15 @@ bool CVideoAnalyzerDlg::openSource(TVideoSource& tSource)
         remote[3] = (unsigned char)tmp[3];
 
         int iAlarmType = 1;
-        int iChannel = m_cbCamera.GetCurSel(); //第n个摄像机
+        int iChannel = 0;
+        if (TYPE_CAMERA == m_tSource.eType)
+        {
+            iChannel = m_cbCamera.GetCurSel();
+        }
+        else
+        {
+            iChannel = m_cbChannel.GetCurSel();
+        }
         this->AddRunStatus("报警中心：%d.%d.%d.%d:%d", 
             remote[0], remote[1], remote[2], remote[3], port);
         (void)pUDPAlerter->init(iAlarmType, iChannel, local, remote, port);
