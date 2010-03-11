@@ -201,7 +201,7 @@ BOOL CDlgSetting::OnInitDialog()
     m_edit_night_thr = ParamSet.iNightSubThreshold ;
     m_edit_max_frame = ParamSet.iTrackMaxFrameNum ;
 	m_edit_alarm_delay = ParamSet.iAlarmDelay  ;
-	m_edit_alarm = ParamDsting.TrackNumMin.SecondValue ;
+	m_edit_alarm = ParamDsting.FindObjValue.FirstValue ;
 
     UpdateData(false);
 
@@ -1054,7 +1054,7 @@ void CDlgSetting::OnEnChangeEditAlarm()
 	UpdateData(true);
 	if ( m_edit_alarm >= 0 && m_edit_alarm <= 10 )
 	{
-		ParamDsting.TrackNumMin.SecondValue = m_edit_alarm ;
+		ParamDsting.FindObjValue.FirstValue = m_edit_alarm ;
 	}
 	else
 	{

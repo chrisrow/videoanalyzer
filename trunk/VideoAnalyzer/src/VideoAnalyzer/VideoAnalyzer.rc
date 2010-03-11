@@ -185,7 +185,7 @@ BEGIN
     LTEXT           "( 0 - 5 )",IDC_STATIC,97,239,28,11
     LTEXT           "(1000+)",IDC_STATIC,97,259,28,11
     LTEXT           "(10-50)",IDC_STATIC,225,257,28,11
-    LTEXT           "(7 -10 )",IDC_STATIC,226,219,28,11
+    LTEXT           "(5 -10 )",IDC_STATIC,226,219,28,11
     LTEXT           "(40-80)",IDC_STATIC,226,200,28,11
     LTEXT           "(1 -30 )",IDC_STATIC,225,238,28,11
     GROUPBOX        "",IDC_STATIC,274,80,240,55
