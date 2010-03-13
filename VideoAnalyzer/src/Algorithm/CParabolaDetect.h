@@ -257,7 +257,14 @@ protected:
   bool CurveContrast( LabelObjStatus* pTrackCurveInfo);
 };
 
-
+class CParabolaLineTwoSide :public CParabolaDetect
+{
+public:
+	CParabolaLineTwoSide(unsigned int const  nYWidth_in, unsigned int const  nYHeight_in):CParabolaDetect(nYWidth_in,  nYHeight_in){}
+protected:  
+	bool TrackAlarmObject(uint16_t i);
+	bool CurveContrast( LabelObjStatus* pTrackCurveInfo);
+};
 
 class CParabolaInnerCurve :public CParabolaDetect
 {
@@ -279,14 +286,7 @@ protected:
 
 };
 
-class CParabolaLineTwoSide :public CParabolaDetect
-{
-public:
-  CParabolaLineTwoSide(unsigned int const  nYWidth_in, unsigned int const  nYHeight_in):CParabolaDetect(nYWidth_in,  nYHeight_in){}
-protected:  
-  bool TrackAlarmObject(uint16_t i);
-  bool CurveContrast( LabelObjStatus* pTrackCurveInfo);
-};
+
 
 class CParabolaTree :public CParabolaDetect
 {
