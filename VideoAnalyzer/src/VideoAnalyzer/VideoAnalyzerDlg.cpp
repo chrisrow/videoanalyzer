@@ -637,10 +637,8 @@ void CVideoAnalyzerDlg::OnCbnSelchangeComboCamera()
 {
     m_tSource.eType = TYPE_CAMERA;
     m_tSource.iCamID = m_cbCamera.GetCurSel();
-//     m_cbChannel.SetCurSel(m_tSource.iCamID);
 
     this->OnBnClickedButtonRestart();
-//     m_eVideoCtrl = VC_OPEN;
 }
 
 void CVideoAnalyzerDlg::OnBnClickedButtonOpenFile()
