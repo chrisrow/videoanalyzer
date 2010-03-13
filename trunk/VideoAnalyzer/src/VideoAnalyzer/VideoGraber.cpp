@@ -147,12 +147,17 @@ bool CCameraWarpper::setProperty(int iID, double value)
         return false;
     }
 
+    CVideoGraber::pause();
+
+    bool bResult = false;
     switch(iID)
     {
-    case PROP_WIDTH:   return m_pCamera->setWidth(static_cast<int>(value));
-    case PROP_HEITHT:  return m_pCamera->setHeight(static_cast<int>(value));
-    default:           return false;
+    case PROP_WIDTH:   bResult = m_pCamera->setWidth(static_cast<int>(value)); break;
+    case PROP_HEITHT:  bResult = m_pCamera->setHeight(static_cast<int>(value));break;
+    default:           bResult = false; break;
     }
+
+    CVideoGraber::resume();
 
     return true;
 }
@@ -329,13 +334,24 @@ IplImage* CVIWarpper::retrieveFrame()
 
 bool CVIWarpper::setWidth(int iWidth)
 {
-    m_iWidth = iWidth;
-    return true;
+    if( iWidth != m_camera.getWidth(m_iIndex) )
+    {
+        m_iWidth = iWidth;
+        m_camera.stopDevice(m_iIndex);
+        m_camera.setupDevice(m_iIndex, m_iWidth, m_iHeight);
+    }
+    return m_camera.isDeviceSetup(m_iIndex);
 }
+
 bool CVIWarpper::setHeight(int iHeight)
 {
-    m_iHeight = iHeight;
-    return true;
+    if( iHeight != m_camera.getHeight(m_iIndex) )
+    {
+        m_iHeight = iHeight;
+        m_camera.stopDevice(m_iIndex);
+        m_camera.setupDevice(m_iIndex, m_iWidth, m_iHeight);
+    }
+    return m_camera.isDeviceSetup(m_iIndex);
 }
 
 int  CVIWarpper::getWidth()
