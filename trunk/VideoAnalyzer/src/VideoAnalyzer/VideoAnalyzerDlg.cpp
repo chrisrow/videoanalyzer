@@ -868,7 +868,7 @@ void CVideoAnalyzerDlg::OnBnClickedButtonSetup()
     {
         AfxMessageBox("‘ÿ»Î≈‰÷√ ˝æ› ß∞‹");
     }
-
+//CDlgSetting m_dlgSetting;
 	m_dlgSetting.setImage(m_ctlVideo.getImage());
 
     if (m_dlgSetting.DoModal() != IDOK)
