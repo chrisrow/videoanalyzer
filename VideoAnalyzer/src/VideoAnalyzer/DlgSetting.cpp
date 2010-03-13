@@ -139,15 +139,15 @@ BOOL CDlgSetting::OnInitDialog()
        break ;
 
    case 2: 
-       ((CButton *)GetDlgItem(IDC_RADIO_CURVER))->SetCheck(TRUE);
+       ((CButton *)GetDlgItem(IDC_RADIO_NATUARL_CURVER ))->SetCheck(TRUE);
        break ;
 
    case 3: 
-       ((CButton *)GetDlgItem(IDC_RADIO_NATUARL_CURVER))->SetCheck(TRUE);
+       ((CButton *)GetDlgItem(IDC_RADIO_NATUARL_NATUARL))->SetCheck(TRUE);
        break ;
 
    case 4: 
-       ((CButton *)GetDlgItem(IDC_RADIO_NATUARL_NATUARL))->SetCheck(TRUE);
+       ((CButton *)GetDlgItem(IDC_RADIO_CURVER  ))->SetCheck(TRUE);
        break ;
    case 5: 
        ((CButton *)GetDlgItem(IDC_RADIO_TREE_CURVER))->SetCheck(TRUE);
@@ -767,12 +767,12 @@ void CDlgSetting::OnBnClickedRadioCurver()
 
 void CDlgSetting::OnBnClickedRadioNatuarlCurver()
 {
-    ParamSet.iStyleChange = 3 ;
+    ParamSet.iStyleChange = 2 ;
 }
 
 void CDlgSetting::OnBnClickedRadioNatuarlNatuarl()
 {
-    ParamSet.iStyleChange = 4 ;
+    ParamSet.iStyleChange = 3 ;
 }
 
 void CDlgSetting::OnBnClickedRadioTreeCurver()
