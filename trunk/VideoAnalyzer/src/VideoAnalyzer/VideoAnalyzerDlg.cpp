@@ -66,6 +66,7 @@ CVideoAnalyzerDlg::CVideoAnalyzerDlg(CWnd* pParent /*=NULL*/)
     m_bPause = false;
     m_uCurrentFrame = 0;
     m_uAlert = 0;
+    m_bAutoStart = false;
 }
 
 void CVideoAnalyzerDlg::DoDataExchange(CDataExchange* pDX)
@@ -208,6 +209,21 @@ BOOL CVideoAnalyzerDlg::OnInitDialog()
     this->loadConfig();
 
     this->AddRunStatus("程序启动");
+
+    if (m_bAutoStart)
+    {
+        this->OnCbnDropdownComboCamera();
+        m_cbCamera.SetCurSel(m_tSource.iCamID);
+        if(!this->openSource(m_tSource))
+        {
+            CString str;
+            str.Format(_T("打开摄像机%d失败"), m_tSource.iCamID);
+            AfxMessageBox(str);
+            return false;
+        }
+        m_chkPreview.SetCheck(BST_UNCHECKED);
+        ExpandDialog (IDC_VIDEO, m_chkPreview.GetCheck());
+    }
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
@@ -421,6 +437,15 @@ void CVideoAnalyzerDlg::EnableVisibleChildren()
         pWndCtl = pWndCtl->GetWindow (GW_HWNDNEXT);
     }
 } 
+
+bool CVideoAnalyzerDlg::autoStart(int iCamera)
+{
+    m_tSource.eType = TYPE_CAMERA;
+    m_tSource.iCamID = iCamera;
+    m_bAutoStart = true;
+
+    return true;
+}
 
 bool CVideoAnalyzerDlg::openSource(TVideoSource& tSource)
 {

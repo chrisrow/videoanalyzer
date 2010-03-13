@@ -49,6 +49,8 @@ BOOL CVideoAnalyzerApp::InitInstance()
 
 	AfxEnableControlContainer();
 
+
+
 	// 标准初始化
 	// 如果未使用这些功能并希望减小
 	// 最终可执行文件的大小，则应移除下列
@@ -60,6 +62,12 @@ BOOL CVideoAnalyzerApp::InitInstance()
 
 	CVideoAnalyzerDlg dlg;
 	m_pMainWnd = &dlg;
+
+    if (3 == __argc && (strcmp(__argv[1], "-c") == 0 || strcmp(__argv[1], "-C") == 0))
+    {
+        dlg.autoStart(atoi(__argv[2]));
+    }
+
 	INT_PTR nResponse = dlg.DoModal();
 	if (nResponse == IDOK)
 	{
