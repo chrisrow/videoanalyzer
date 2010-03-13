@@ -259,20 +259,20 @@ protected:
 
 
 
-class CParabolaCurveOneSide :public CParabolaDetect
+class CParabolaInnerCurve :public CParabolaDetect
 {
 public:
-  CParabolaCurveOneSide(unsigned int const  nYWidth_in, unsigned int const  nYHeight_in):CParabolaDetect(nYWidth_in,  nYHeight_in){}
+  CParabolaInnerCurve(unsigned int const  nYWidth_in, unsigned int const  nYHeight_in):CParabolaDetect(nYWidth_in,  nYHeight_in){}
 protected: 
   bool TrackAlarmObject(uint16_t i);
   bool CurveContrast( LabelObjStatus* pTrackCurveInfo);
 
 };
 
-class CParabolaCurveTwoSide :public CParabolaDetect
+class CParabolaOuterCurve :public CParabolaDetect
 {
 public:
-	CParabolaCurveTwoSide(unsigned int const  nYWidth_in, unsigned int const  nYHeight_in):CParabolaDetect(nYWidth_in,  nYHeight_in){}
+	CParabolaOuterCurve(unsigned int const  nYWidth_in, unsigned int const  nYHeight_in):CParabolaDetect(nYWidth_in,  nYHeight_in){}
 protected: 
 	bool TrackAlarmObject(uint16_t i);
 	bool CurveContrast( LabelObjStatus* pTrackCurveInfo);
