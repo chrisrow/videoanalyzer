@@ -34,7 +34,11 @@ END_MESSAGE_MAP()
 
 bool CGraphicsStatic::ShowImage(const IplImage* pFrame)
 {
-//     Reset();
+    if (m_image && pFrame
+        && (m_image->width != pFrame->width || m_image->height != pFrame->height))
+    {
+        this->Reset();
+    }
 
 	if (pFrame)
 	{
