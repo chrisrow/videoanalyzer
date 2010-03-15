@@ -434,6 +434,7 @@ void CVideoFile::doRun()
 
         if (m_uFrame >= m_iStartFrame)
         {
+            retrieveListener();
             FOR_EACH(IFrameReceiver*, updateFrame, pFrame);
             cvWaitKey(1);
             Sleep(m_iWaitTime);
