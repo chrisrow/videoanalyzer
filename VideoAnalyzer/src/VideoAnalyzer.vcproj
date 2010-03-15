@@ -400,6 +400,14 @@
 				RelativePath="VideoAnalyzer\VideoGraber.h"
 				>
 			</File>
+			<File
+				RelativePath=".\VideoAnalyzer\VideoRecorder.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\VideoAnalyzer\VideoRecorder.h"
+				>
+			</File>
 			<Filter
 				Name="resource"
 				Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
