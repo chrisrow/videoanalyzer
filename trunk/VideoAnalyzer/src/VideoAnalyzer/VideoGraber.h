@@ -44,7 +44,6 @@ public:
     virtual bool open(const char* szPath);
     virtual bool open(int iIndex);
     virtual void close();
-    virtual void release() {}
 
     virtual void pause();
     virtual void resume();
@@ -60,6 +59,7 @@ protected:
     virtual bool doOpen(int iIndex)           { return false; }
     virtual void afterStop();
 	virtual void doAfterStop()                {  }
+    virtual void release() {}
 
 protected:
     CWnd* m_pWnd;

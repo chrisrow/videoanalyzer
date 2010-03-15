@@ -982,6 +982,7 @@ void CVideoAnalyzerDlg::OnBnClickedButtonRecStart()
         this->stopRecord();
 
         m_bRecord = false;
+        m_edtRecPath.EnableWindow(TRUE);
         GetDlgItem(IDC_BUTTON_REC_OPEN)->EnableWindow(TRUE);
         GetDlgItem(IDC_BUTTON_REC_START)->SetWindowText("¿ªÊ¼");
         this->AddRunStatus("Â¼ÏñÍ£Ö¹");
