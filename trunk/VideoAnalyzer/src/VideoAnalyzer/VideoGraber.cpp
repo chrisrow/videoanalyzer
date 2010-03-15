@@ -204,6 +204,7 @@ void CCameraWarpper::doRun()
             cvFlip(pFrame, NULL, 1);//Ë®Æ½¾µÏñ
         }
 
+        retrieveListener();
         FOR_EACH(IFrameReceiver*, updateFrame, pFrame);
         cvWaitKey(1);
     }

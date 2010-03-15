@@ -10,6 +10,7 @@
 
 #include "ConfigFile.h"
 #include "VideoGraber.h"
+#include "VideoRecorder.h"
 #include "PreviewStatic.h"
 #include "Algorithm/Analyzer.h"
 #include "afxcmn.h"
@@ -69,6 +70,9 @@ protected:
     bool openSource(TVideoSource& tSource);
     void closeSource();
 
+    bool startRecord(const char* szFileName);
+    void stopRecord();
+
     bool loadConfig();
     bool saveConfig();
 
@@ -79,6 +83,7 @@ protected:
     CVideoGraber* m_pVideoGraber;
     CAnalyzer* m_pAnalyzer;
     IAlerter* m_pUDPAlerter;
+    CVideoRecorder* m_pVideoRecoder;
 
     CString m_strAppPath;
     VIDEO_CONTROL m_eVideoCtrl;
@@ -89,8 +94,9 @@ protected:
     unsigned int m_uCurrentFrame;
     unsigned int m_uAlert;
     bool m_bAutoStart;
+    bool m_bRecord;
+    void (CVideoAnalyzerDlg::*m_fDoFunc)();
 
-	CDlgSetting m_dlgSetting;
     CButton m_btnRestart;
     CButton m_btnPause;
     CButton m_chkPreview;
@@ -105,6 +111,7 @@ protected:
     CEdit m_edtFrameRate;
     CEdit m_edtStartFrame;
     CEdit m_edtStartTime;
+    CEdit m_edtRecPath;
     CStatic m_txtCurrentFrame;
     CStatic m_txtAlert;
     CListCtrl m_lstStatus;
@@ -139,4 +146,6 @@ public:
     afx_msg void OnClose();
     afx_msg void OnEnSetfocusEditStartFrame();
     afx_msg void OnEnSetfocusEditStartTime();
+    afx_msg void OnBnClickedButtonRecOpen();
+    afx_msg void OnBnClickedButtonRecStart();
 };

@@ -99,8 +99,6 @@ BOOL CDlgSetting::OnInitDialog()
     m_ctrlImage.ShowImage(m_pImage);
     m_ctrlImage.SetGraphicsColor(RGB(255, 0, 0));
 
-//     m_ctrlImage.setPolyLineArray(m_polyLineArrays[0]);
-//     m_ctrlImage.setRectArray(m_testRectArray);
     this->LoadComboboxData();
 
     m_ComboChangeNum = 0 ;    
