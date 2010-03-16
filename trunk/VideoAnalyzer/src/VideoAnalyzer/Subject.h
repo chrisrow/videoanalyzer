@@ -165,6 +165,7 @@ void CSubject<T>::destroyListener()
 
 #define FOR_EACH(type, func, ...) \
 {\
+    retrieveListener();\
     std::vector<##type>::iterator it = m_elem.begin();\
     for (; it != m_elem.end(); it++)\
     {\
