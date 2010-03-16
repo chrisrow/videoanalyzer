@@ -204,7 +204,6 @@ void CCameraWarpper::doRun()
             cvFlip(pFrame, NULL, 1);//Ë®Æ½¾µÏñ
         }
 
-        retrieveListener();
         FOR_EACH(IFrameReceiver*, updateFrame, pFrame);
         cvWaitKey(1);
     }
@@ -434,7 +433,6 @@ void CVideoFile::doRun()
 
         if (m_uFrame >= m_iStartFrame)
         {
-            retrieveListener();
             FOR_EACH(IFrameReceiver*, updateFrame, pFrame);
             cvWaitKey(1);
             Sleep(m_iWaitTime);
