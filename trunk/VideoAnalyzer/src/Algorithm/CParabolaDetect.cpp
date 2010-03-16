@@ -827,7 +827,7 @@ ErrVal CParabolaDetect::ChangeObjectValue(const CFrameContainer* const pFrame_in
 			}
 			else
 			{
-				if (pTrackObjInfo->iXContinueNum[0] < 3 )
+				if (pTrackObjInfo->iXContinueNum[0] < 5 )
 				{
 					pTrackObjInfo->iXContinueNum[0] = 0 ;
 				}
@@ -846,7 +846,7 @@ ErrVal CParabolaDetect::ChangeObjectValue(const CFrameContainer* const pFrame_in
 			}
 			else
 			{
-				if (pTrackObjInfo->iXContinueNum[0] < 3 )
+				if (pTrackObjInfo->iXContinueNum[0] < 5 )
 				{
 					pTrackObjInfo->iXContinueNum[0] = 0 ;
 				}
@@ -3496,7 +3496,7 @@ bool CParabolaInnerCurve::TrackAlarmObject(uint16_t i)
 
 	if (TrackObject[i].iWhiteSpotNum < 40 )
 	{
-		y_height_value = 7 ;
+		y_height_value = 10 ;
 	}
 	//if (TrackObject[i].bObjDistanceFlg)
 	//{
@@ -3999,7 +3999,7 @@ bool CParabolaLineTwoSide::TrackAlarmObject(uint16_t i)
 
 	if (TrackObject[i].iWhiteSpotNum < 40 )
 	{
-		y_height_value = 7 ;
+		y_height_value = 10 ;
 	}
 
 	//if (TrackObject[i].bObjDistanceFlg)
