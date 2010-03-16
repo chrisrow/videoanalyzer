@@ -14,13 +14,13 @@
             <!-- 0_正常 1_镜像 -->
             <bBinarizeSubThreshold value="40" />
             <!-- 二值化阈值 (30 ~ 50) -->
-            <bNightSubThreshold value="70" />
+            <bNightSubThreshold value="60" />
             <!-- 夜间二值化阈值 (40 ~ 70) -->
             <iImfilterSingleThreshold value="1" />
             <!-- 去小点阈值 (1 ~ 5) -->
             <iImdilateThreshold value="2" />
             <!-- 膨胀阈值 (1 ~ 5) -->
-            <iWhiteSpotNumMax value="1200" />
+            <iWhiteSpotNumMax value="1500" />
             <!-- 最大白点数 (500 ~ 2000) -->
             <iWhiteSpotNumMin value="20" />
             <!-- 最小白点数 (1 ~ 50) -->
@@ -56,29 +56,29 @@
                 <!-- 小区域的高度线 -->
             </tLittleRegionYLine>
             <tLineCurverRange>
-                <LineSet bFlag="1" BeginPointX="182" BeginPointY="64" EndPointX="312" EndPointY="193" />
+                <LineSet bFlag="1" BeginPointX="175" BeginPointY="60" EndPointX="324" EndPointY="163" />
                 <!-- 拟合曲线范围 -->
             </tLineCurverRange>
             <tLineStraightFirst>
-                <LineSet bFlag="1" BeginPointX="178" BeginPointY="61" EndPointX="284" EndPointY="249" />
+                <LineSet bFlag="1" BeginPointX="166" BeginPointY="55" EndPointX="313" EndPointY="218" />
                 <!-- 两条轨迹经过区域线中的第一条线 -->
             </tLineStraightFirst>
             <tLineStraightSecond>
-                <LineSet bFlag="1" BeginPointX="197" BeginPointY="45" EndPointX="329" EndPointY="183" />
+                <LineSet bFlag="1" BeginPointX="185" BeginPointY="37" EndPointX="328" EndPointY="149" />
                 <!-- 两条轨迹经过区域线中的第二条线 -->
             </tLineStraightSecond>
             <tLineBlackLeft>
-                <LineSet bFlag="1" BeginPointX="180" BeginPointY="1" EndPointX="0" EndPointY="173" />
+                <LineSet bFlag="1" BeginPointX="145" BeginPointY="5" EndPointX="38" EndPointY="280" />
                 <!-- 加入的黑色直线中的左边为黑  -->
             </tLineBlackLeft>
             <tLineBlackRight>
-                <LineSet bFlag="1" BeginPointX="204" BeginPointY="1" EndPointX="349" EndPointY="93" />
+                <LineSet bFlag="1" BeginPointX="192" BeginPointY="5" EndPointX="338" EndPointY="75" />
                 <!-- 加入的黑色直线中的右边为黑  -->
             </tLineBlackRight>
             <tRectBlackBlock>
-                <LineSet bFlag="1" BeginPointX="267" BeginPointY="199" EndPointX="349" EndPointY="283" />
+                <LineSet bFlag="0" BeginPointX="0" BeginPointY="0" EndPointX="0" EndPointY="0" />
                 <!-- 加入的黑色块范围  -->
-                <LineSet bFlag="1" BeginPointX="257" BeginPointY="154" EndPointX="314" EndPointY="207" />
+                <LineSet bFlag="0" BeginPointX="0" BeginPointY="0" EndPointX="0" EndPointY="0" />
                 <!-- 加入的黑色块范围  -->
                 <LineSet bFlag="0" BeginPointX="0" BeginPointY="0" EndPointX="0" EndPointY="0" />
                 <!-- 加入的黑色块范围  -->
@@ -88,17 +88,17 @@
                 <!-- 加入的黑色块范围  -->
             </tRectBlackBlock>
             <tNightRange>
-                <LineSet bFlag="1" BeginPointX="320" BeginPointY="86" EndPointX="345" EndPointY="120" />
+                <LineSet bFlag="1" BeginPointX="113" BeginPointY="3" EndPointX="158" EndPointY="23" />
                 <!-- 小区域范围 -->
-                <LineSet bFlag="1" BeginPointX="252" BeginPointY="70" EndPointX="304" EndPointY="83" />
+                <LineSet bFlag="1" BeginPointX="13" BeginPointY="25" EndPointX="35" EndPointY="47" />
                 <!-- 小区域范围 -->
             </tNightRange>
             <iPersonRange>
-                <LineSet bFlag="1" BeginPointX="131" BeginPointY="91" EndPointX="14" EndPointY="279" />
+                <LineSet bFlag="1" BeginPointX="130" BeginPointY="62" EndPointX="16" EndPointY="280" />
                 <!--  -->
-                <LineSet bFlag="1" BeginPointX="172" BeginPointY="98" EndPointX="198" EndPointY="281" />
+                <LineSet bFlag="1" BeginPointX="258" BeginPointY="43" EndPointX="346" EndPointY="287" />
                 <!--  -->
-                <LineSet bFlag="1" BeginPointX="143" BeginPointY="70" EndPointX="174" EndPointY="70" />
+                <LineSet bFlag="1" BeginPointX="142" BeginPointY="55" EndPointX="186" EndPointY="57" />
                 <!--  -->
             </iPersonRange>
             <iPersonTopVal value="1" />

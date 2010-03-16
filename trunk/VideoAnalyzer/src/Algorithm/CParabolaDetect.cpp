@@ -602,7 +602,7 @@ CParabolaDetect::DetectedTrackedObject(const CFrameContainer* const pFrame_in, C
 	uint16_t frame_width  = m_iFrameWidth ;  
 	uint16_t frame_height = m_iFrameHeight ;
 
-	uint16_t vi_temp_hight = 0 ;
+	uint16_t vi_temp_hight = 6 ;
 	bool     find_flag = FALSE;
 
 	int16_t detect_x = 10 + pTrackObjInfo->iLostFrameNum*2 ;
@@ -821,13 +821,13 @@ ErrVal CParabolaDetect::ChangeObjectValue(const CFrameContainer* const pFrame_in
 
 		if (1 == pTrackObjInfo->iTrackDirection[0] )
 		{
-			if (pTrackObjInfo->iCurFrameCenter[0] >= pTrackObjInfo->iPreFrameCenter[0] + ParamSet.iXTrackContinueThreshold)
+			if (pTrackObjInfo->iCurFrameCenter[0] >= pTrackObjInfo->iPreFrameCenter[0] )//+ ParamSet.iXTrackContinueThreshold)
 			{
 				pTrackObjInfo->iXContinueNum[0]++;
 			}
 			else
 			{
-				if (pTrackObjInfo->iXContinueNum[0] < 5 )
+				if (pTrackObjInfo->iXContinueNum[0] < 3 )
 				{
 					pTrackObjInfo->iXContinueNum[0] = 0 ;
 				}
@@ -840,13 +840,13 @@ ErrVal CParabolaDetect::ChangeObjectValue(const CFrameContainer* const pFrame_in
 		}
 		else
 		{
-			if (pTrackObjInfo->iCurFrameCenter[0]+ParamSet.iXTrackContinueThreshold <= pTrackObjInfo->iPreFrameCenter[0])
+			if (pTrackObjInfo->iCurFrameCenter[0] <= pTrackObjInfo->iPreFrameCenter[0])
 			{
 				pTrackObjInfo->iXContinueNum[0]++;
 			}
 			else
 			{
-				if (pTrackObjInfo->iXContinueNum[0] < 5 )
+				if (pTrackObjInfo->iXContinueNum[0] < 3 )
 				{
 					pTrackObjInfo->iXContinueNum[0] = 0 ;
 				}
@@ -3494,6 +3494,10 @@ bool CParabolaInnerCurve::TrackAlarmObject(uint16_t i)
 		y_height_value = 30 ;
 	}
 
+	if (TrackObject[i].iWhiteSpotNum < 40 )
+	{
+		y_height_value = 7 ;
+	}
 	//if (TrackObject[i].bObjDistanceFlg)
 	//{
 	//	y_height_value = 30 ;
@@ -3576,7 +3580,7 @@ bool CParabolaInnerCurve::TrackAlarmObject(uint16_t i)
 		} 
 	}
 
-	if (TrackObject[i].iWhiteSpotNum < 50  )
+	if (TrackObject[i].iWhiteSpotNum <= 40  )
 	{
 		if ( TrackObject[i].bLineRangeFlag[0]
 		&& TrackObject[i].bLineRangeFlag[1]
@@ -3993,6 +3997,11 @@ bool CParabolaLineTwoSide::TrackAlarmObject(uint16_t i)
 		y_height_value = 30 ;
 	}
 
+	if (TrackObject[i].iWhiteSpotNum < 40 )
+	{
+		y_height_value = 7 ;
+	}
+
 	//if (TrackObject[i].bObjDistanceFlg)
 	//{
 	//	y_height_value = 30 ;
@@ -4075,7 +4084,7 @@ bool CParabolaLineTwoSide::TrackAlarmObject(uint16_t i)
 		} 
 	}
 
-	if (TrackObject[i].iWhiteSpotNum < 50  )
+	if (TrackObject[i].iWhiteSpotNum <= 40  )
 	{
 		if ( TrackObject[i].bLineRangeFlag[0]
 		&& TrackObject[i].bLineRangeFlag[1]
