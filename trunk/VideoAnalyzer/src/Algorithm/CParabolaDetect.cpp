@@ -821,7 +821,7 @@ ErrVal CParabolaDetect::ChangeObjectValue(const CFrameContainer* const pFrame_in
 
 		if (1 == pTrackObjInfo->iTrackDirection[0] )
 		{
-			if (pTrackObjInfo->iCurFrameCenter[0] >= pTrackObjInfo->iPreFrameCenter[0] )//+ ParamSet.iXTrackContinueThreshold)
+			if (pTrackObjInfo->iCurFrameCenter[0] >= pTrackObjInfo->iPreFrameCenter[0] + ParamSet.iXTrackContinueThreshold)
 			{
 				pTrackObjInfo->iXContinueNum[0]++;
 			}
@@ -840,7 +840,7 @@ ErrVal CParabolaDetect::ChangeObjectValue(const CFrameContainer* const pFrame_in
 		}
 		else
 		{
-			if (pTrackObjInfo->iCurFrameCenter[0] <= pTrackObjInfo->iPreFrameCenter[0])
+			if (pTrackObjInfo->iCurFrameCenter[0]+ ParamSet.iXTrackContinueThreshold <= pTrackObjInfo->iPreFrameCenter[0])
 			{
 				pTrackObjInfo->iXContinueNum[0]++;
 			}
