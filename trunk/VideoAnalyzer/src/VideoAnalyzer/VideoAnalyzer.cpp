@@ -4,7 +4,6 @@
 #include "stdafx.h"
 #include "VideoAnalyzer.h"
 #include "VideoAnalyzerDlg.h"
-#include "Option.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -50,6 +49,8 @@ BOOL CVideoAnalyzerApp::InitInstance()
 
 	AfxEnableControlContainer();
 
+
+
 	// 标准初始化
 	// 如果未使用这些功能并希望减小
 	// 最终可执行文件的大小，则应移除下列
@@ -57,13 +58,16 @@ BOOL CVideoAnalyzerApp::InitInstance()
 	// 更改用于存储设置的注册表项
 	// TODO: 应适当修改该字符串，
 	// 例如修改为公司或组织名
-	SetRegistryKey(_T("wsn.cn"));
-
-    //命令行解析测试
-    COption::Instance().init(__argc, __argv);
+	SetRegistryKey(_T("应用程序向导生成的本地应用程序"));
 
 	CVideoAnalyzerDlg dlg;
 	m_pMainWnd = &dlg;
+
+    if (3 == __argc && (strcmp(__argv[1], "-c") == 0 || strcmp(__argv[1], "-C") == 0))
+    {
+        dlg.autoStart(atoi(__argv[2]));
+    }
+
 	INT_PTR nResponse = dlg.DoModal();
 	if (nResponse == IDOK)
 	{

@@ -8,7 +8,6 @@
 #include "UDPAlerter.h"
 #include "Algorithm/ParabolaWarpper.h"
 #include "Algorithm/Macro.h"
-#include "Option.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -67,10 +66,9 @@ CVideoAnalyzerDlg::CVideoAnalyzerDlg(CWnd* pParent /*=NULL*/)
     m_bPause = false;
     m_uCurrentFrame = 0;
     m_uAlert = 0;
+    m_bAutoStart = false;
     m_bRecord = false;
     m_pVideoRecoder = NULL;
-    m_iWidth = 352;
-    m_iHeight = 288;
 }
 
 void CVideoAnalyzerDlg::DoDataExchange(CDataExchange* pDX)
@@ -103,25 +101,25 @@ BEGIN_MESSAGE_MAP(CVideoAnalyzerDlg, CDialog)
 	//}}AFX_MSG_MAP
     ON_CBN_DROPDOWN(IDC_COMBO_CAMERA, &CVideoAnalyzerDlg::OnCbnDropdownComboCamera)
     ON_CBN_SELCHANGE(IDC_COMBO_CAMERA, &CVideoAnalyzerDlg::OnCbnSelchangeComboCamera)
-    ON_CBN_SELCHANGE(IDC_COMBO_AYALYZER, &CVideoAnalyzerDlg::OnCbnSelchangeComboAyalyzer)
     ON_BN_CLICKED(IDC_CHECK_PREVIEW, &CVideoAnalyzerDlg::OnBnClickedCheckPreview)
     ON_BN_CLICKED(IDC_BUTTON_OPEN_FILE, &CVideoAnalyzerDlg::OnBnClickedButtonOpenFile)
     ON_BN_CLICKED(IDC_BUTTON_CLOSE, &CVideoAnalyzerDlg::OnBnClickedButtonClose)
     ON_BN_CLICKED(IDC_BUTTON_RESTART, &CVideoAnalyzerDlg::OnBnClickedButtonRestart)
     ON_BN_CLICKED(IDC_BUTTON_PAUSE, &CVideoAnalyzerDlg::OnBnClickedButtonPause)
     ON_BN_CLICKED(IDC_BUTTON_STEP, &CVideoAnalyzerDlg::OnBnClickedButtonStep)
+    ON_MESSAGE(WM_VIDEO_END, OnMsgVideoEnd)
     ON_BN_CLICKED(IDC_BUTTON_APPLY_RES, &CVideoAnalyzerDlg::OnBnClickedButtonApplyRes)
     ON_BN_CLICKED(IDC_BUTTON_APPLY_FR, &CVideoAnalyzerDlg::OnBnClickedButtonApplyFr)
-    ON_BN_CLICKED(IDC_BUTTON_SETUP, &CVideoAnalyzerDlg::OnBnClickedButtonSetup)
-    ON_BN_CLICKED(IDC_CHECK_DEBUG, &CVideoAnalyzerDlg::OnBnClickedCheckDebug)
-    ON_BN_CLICKED(IDC_BUTTON_REC_OPEN, &CVideoAnalyzerDlg::OnBnClickedButtonRecOpen)
-    ON_BN_CLICKED(IDC_BUTTON_REC_START, &CVideoAnalyzerDlg::OnBnClickedButtonRecStart)
-    ON_MESSAGE(WM_VIDEO_END, OnMsgVideoEnd)
+    ON_CBN_SELCHANGE(IDC_COMBO_AYALYZER, &CVideoAnalyzerDlg::OnCbnSelchangeComboAyalyzer)
     ON_NOTIFY(NM_RCLICK, IDC_LIST_STATUS, &CVideoAnalyzerDlg::OnNMRClickListStatus)
     ON_COMMAND(ID_MENU_CLEAR, &CVideoAnalyzerDlg::OnMenuClear)
+    ON_BN_CLICKED(IDC_BUTTON_SETUP, &CVideoAnalyzerDlg::OnBnClickedButtonSetup)
+    ON_BN_CLICKED(IDC_CHECK_DEBUG, &CVideoAnalyzerDlg::OnBnClickedCheckDebug)
     ON_WM_CLOSE()
     ON_EN_SETFOCUS(IDC_EDIT_START_FRAME, &CVideoAnalyzerDlg::OnEnSetfocusEditStartFrame)
     ON_EN_SETFOCUS(IDC_EDIT_START_TIME, &CVideoAnalyzerDlg::OnEnSetfocusEditStartTime)
+    ON_BN_CLICKED(IDC_BUTTON_REC_OPEN, &CVideoAnalyzerDlg::OnBnClickedButtonRecOpen)
+    ON_BN_CLICKED(IDC_BUTTON_REC_START, &CVideoAnalyzerDlg::OnBnClickedButtonRecStart)
 END_MESSAGE_MAP()
 
 
@@ -171,14 +169,9 @@ BOOL CVideoAnalyzerDlg::OnInitDialog()
     g_debug = 0;
     
     //选择视频属性
-    CString strWidth, strHeight, strFR;
-    strWidth.Format("%d", m_iWidth);
-    strHeight.Format("%d", m_iHeight);
-    strFR.Format("%d", 100);
-    m_edtWidth.SetWindowText(strWidth);
-    m_edtHeight.SetWindowText(strHeight);
-    m_edtFrameRate.SetWindowText(strFR);
-    m_ctlVideo.SetWindowPos(NULL, 0, 0, m_iWidth, m_iHeight, SWP_NOMOVE | SWP_NOZORDER);
+    m_edtWidth.SetWindowText("352");
+    m_edtHeight.SetWindowText("288");
+    m_edtFrameRate.SetWindowText("100");
 
     //选择摄像机
     OnCbnDropdownComboCamera();
@@ -223,9 +216,22 @@ BOOL CVideoAnalyzerDlg::OnInitDialog()
 
     this->AddRunStatus("程序启动");
 
-    this->autoStart();
+    if (m_bAutoStart)
+    {
+        this->OnCbnDropdownComboCamera();
+        m_cbCamera.SetCurSel(m_tSource.iCamID);
+        if(!this->openSource(m_tSource))
+        {
+            CString str;
+            str.Format(_T("打开摄像机%d失败"), m_tSource.iCamID);
+            AfxMessageBox(str);
+            return false;
+        }
+        m_chkPreview.SetCheck(BST_UNCHECKED);
+        ExpandDialog (IDC_VIDEO, m_chkPreview.GetCheck());
+    }
 
-    return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
+	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
 
 void CVideoAnalyzerDlg::OnSysCommand(UINT nID, LPARAM lParam)
@@ -438,106 +444,14 @@ void CVideoAnalyzerDlg::EnableVisibleChildren()
     }
 } 
 
-bool CVideoAnalyzerDlg::autoStart()
+bool CVideoAnalyzerDlg::autoStart(int iCamera)
 {
-    bool bAutoStart = false;
-    COption& option = COption::Instance();
-    if (option.getFileName() != NULL)
-    {
-        m_tSource.eType = TYPE_FILE;
-        m_tSource.strFileName = option.getFileName();
-        bAutoStart = true;
-    } 
-    else if(option.getCameraID() >= 0)
-    {
-        m_tSource.eType = TYPE_CAMERA;
-        m_tSource.iCamID = option.getCameraID();
-        this->OnCbnDropdownComboCamera();
-        m_cbCamera.SetCurSel(m_tSource.iCamID);
-        bAutoStart = true;
-    }
-    else if (0 /* option.getURL() != NULL */)
-    {
-        // imcomplete
-    }
-
-    //最简界面模式，并设置窗口大小和窗口位置
-    const char* pszSimple = option.getSimple();
-    if (pszSimple)
-    {
-        int iWidth = -1, iHeight = -1, iPosX = -1, iPosY = -1;
-        sscanf(pszSimple, "%dx%d;(%d,%d)", &iWidth, &iHeight, &iPosX, &iPosY);
-
-        //窗口大小
-        if (iWidth < 0 || iHeight < 0)
-        {
-            iWidth = m_iWidth;
-            iHeight = m_iHeight;
-        }
-        else
-        {
-            m_iWidth = iWidth;
-            m_iHeight = iHeight;
-        }
-        m_ctlVideo.MoveWindow(0, 0, iWidth, iHeight);
-        SetWindowPos(NULL, 0, 0, iWidth, iHeight, SWP_NOMOVE | SWP_NOZORDER);
-
-        //窗口位置
-        if (iPosX >= 0 && iPosY >= 0)
-        {
-            SetWindowPos(NULL, iPosX, iPosY, 0, 0, SWP_NOSIZE |SWP_NOZORDER);
-        }
-
-        //去掉标题栏
-        SetWindowLong(m_hWnd, GWL_STYLE, WS_VISIBLE);
-        //去掉没有显示的对话框的控件的功能和快捷键。
-        //得到第一个窗口
-        CWnd *pWndCtl = NULL;
-        CRect rcTest;
-        CRect rcControl;
-        CRect rcVideo;
-        m_ctlVideo.GetWindowRect(rcVideo);
-        pWndCtl = m_ctlVideo.GetWindow (GW_HWNDNEXT);
-        while (pWndCtl != NULL)
-        {
-            pWndCtl->GetWindowRect (rcControl);
-            if (rcTest.IntersectRect (rcVideo, rcControl)) //获取两者的重叠区域，如果不重叠，则为0
-            {
-                pWndCtl->ShowWindow(FALSE);
-            }
-
-            pWndCtl = pWndCtl->GetWindow (GW_HWNDNEXT);
-        }
-
-        //临时
-        GetDlgItem(IDC_BUTTON_OPEN_FILE)->ShowWindow(FALSE);
-        m_cbCamera.ShowWindow(FALSE);
-    }
-
-    //设置视频分辨率
-    CString strWidth, strHeight;
-    strWidth.Format("%d", m_iWidth);
-    strHeight.Format("%d", m_iHeight);
-    m_edtWidth.SetWindowText(strWidth);
-    m_edtHeight.SetWindowText(strHeight);
-
-    //如果是自启动，则不显示预览
-    if (bAutoStart)
-    {
-        if(this->openSource(m_tSource))
-        {
-            // -p 显示预览
-            if (!option.isPreview())
-            {
-                m_chkPreview.SetCheck(BST_UNCHECKED);
-                ExpandDialog (IDC_VIDEO, m_chkPreview.GetCheck());
-            }
-        }
-    }
+    m_tSource.eType = TYPE_CAMERA;
+    m_tSource.iCamID = iCamera;
+    m_bAutoStart = true;
 
     return true;
 }
-
 
 bool CVideoAnalyzerDlg::openSource(TVideoSource& tSource)
 {

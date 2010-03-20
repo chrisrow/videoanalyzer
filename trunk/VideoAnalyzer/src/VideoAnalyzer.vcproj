@@ -313,27 +313,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\VideoAnalyzer\getopt.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\VideoAnalyzer\getopt.h"
-				>
-			</File>
-			<File
 				RelativePath=".\VideoAnalyzer\GraphicsStatic.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\VideoAnalyzer\GraphicsStatic.h"
-				>
-			</File>
-			<File
-				RelativePath=".\VideoAnalyzer\Option.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\VideoAnalyzer\Option.h"
 				>
 			</File>
 			<File
