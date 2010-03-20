@@ -93,7 +93,9 @@ protected:
     bool m_bPause;
     unsigned int m_uCurrentFrame;
     unsigned int m_uAlert;
+    bool m_bAutoStart;
     bool m_bRecord;
+    void (CVideoAnalyzerDlg::*m_fDoFunc)();
 
     CButton m_btnRestart;
     CButton m_btnPause;
@@ -124,7 +126,7 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
     void setVideoControl(VIDEO_CONTROL c);
-    bool autoStart();
+    bool autoStart(int iCamera);
 
     afx_msg void OnBnClickedCheckPreview();
     afx_msg void OnCbnDropdownComboCamera();
