@@ -98,4 +98,5 @@ public:
 	afx_msg void OnEnChangeEditAlarm();
 	afx_msg void OnEnChangeEditAlarmDelay();
     afx_msg void OnBnClickedButtonNext();
+	afx_msg void OnBnClickedCheckNight();
 };
