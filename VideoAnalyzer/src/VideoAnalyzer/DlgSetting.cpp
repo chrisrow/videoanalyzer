@@ -86,6 +86,7 @@ BEGIN_MESSAGE_MAP(CDlgSetting, CDialog)
 	ON_EN_CHANGE(IDC_EDIT_ALARM, &CDlgSetting::OnEnChangeEditAlarm)
 	ON_EN_CHANGE(IDC_EDIT_ALARM_DELAY, &CDlgSetting::OnEnChangeEditAlarmDelay)
     ON_BN_CLICKED(IDC_BUTTON_NEXT, &CDlgSetting::OnBnClickedButtonNext)
+	ON_BN_CLICKED(IDC_CHECK_NIGHT, &CDlgSetting::OnBnClickedCheckNight)
 END_MESSAGE_MAP()
 
 
@@ -159,6 +160,11 @@ BOOL CDlgSetting::OnInitDialog()
     {
         ((CButton *)GetDlgItem(IDC_CHECK_PERSON))->SetCheck(TRUE);
     }
+
+	if (ParamDsting.FindObjValMax.FirstValue == 1)
+	{
+		((CButton *)GetDlgItem(IDC_CHECK_NIGHT))->SetCheck(TRUE);
+	}
 
     if (ParamSet.bTransLensImage)
     {
@@ -1093,4 +1099,17 @@ void CDlgSetting::OnBnClickedButtonNext()
     m_ComboChangeNum++;
     m_cbGraphicsType.SetCurSel(m_ComboChangeNum);
     this->OnCbnSelchangeComboControl();
+}
+
+void CDlgSetting::OnBnClickedCheckNight()
+{
+	// TODO: Add your control notification handler code here
+	if( ((CButton*)GetDlgItem(IDC_CHECK_NIGHT))->GetCheck() == BST_UNCHECKED )
+	{
+		ParamDsting.FindObjValMax.FirstValue = 0 ; 
+	}
+	else
+	{
+		ParamDsting.FindObjValMax.FirstValue = 1 ;
+	}
 }
