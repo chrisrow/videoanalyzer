@@ -1,0 +1,323 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#ifndef APSTUDIO_INVOKED
+#include "targetver.h"
+#endif
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// Chinese (P.R.C.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
+#ifdef _WIN32
+LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
+#pragma code_page(936)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#ifndef APSTUDIO_INVOKED\r\n"
+    "#include ""targetver.h""\r\n"
+    "#endif\r\n"
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "#define _AFX_NO_SPLITTER_RESOURCES\r\n"
+    "#define _AFX_NO_OLE_RESOURCES\r\n"
+    "#define _AFX_NO_TRACKER_RESOURCES\r\n"
+    "#define _AFX_NO_PROPERTY_RESOURCES\r\n"
+    "\r\n"
+    "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)\r\n"
+    "LANGUAGE 4, 2\r\n"
+    "#pragma code_page(936)\r\n"
+    "#include ""res\\VideoAnalyzer.rc2""  // 非 Microsoft Visual C++ 编辑的资源\r\n"
+    "#include ""l.CHS\\afxres.rc""      // 标准组件\r\n"
+    "#endif\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_MAINFRAME           ICON                    "res\\VideoAnalyzer.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_ABOUTBOX DIALOGEX 0, 0, 170, 62
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "关于 VideoAnalyzer"
+FONT 9, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    ICON            IDR_MAINFRAME,IDC_STATIC,14,14,21,20
+    LTEXT           "VideoAnalyzer，1.0 版",IDC_STATIC,42,14,114,8,SS_NOPREFIX
+    LTEXT           "Copyright (C) 2010",IDC_STATIC,42,26,114,8
+    DEFPUSHBUTTON   "确定",IDOK,113,41,50,14,WS_GROUP
+END
+
+IDD_VIDEOANALYZER_DIALOG DIALOGEX 0, 0, 342, 334
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
+EXSTYLE WS_EX_APPWINDOW
+CAPTION "VideoAnalyzer"
+FONT 9, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    PUSHBUTTON      "打开",IDC_BUTTON_OPEN_FILE,46,11,43,16
+    COMBOBOX        IDC_COMBO_CAMERA,46,32,77,86,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    CONTROL         "",IDC_VIDEO,"Static",SS_OWNERDRAW,139,123,200,162,WS_EX_STATICEDGE
+    PUSHBUTTON      "暂停",IDC_BUTTON_PAUSE,52,87,33,16
+    LTEXT           "摄像机:",IDC_STATIC,9,33,30,10,0,WS_EX_RIGHT
+    LTEXT           "文件:",IDC_STATIC,9,14,30,10,0,WS_EX_RIGHT
+    GROUPBOX        "视频源",IDC_STATIC,2,2,132,68
+    GROUPBOX        "视频控制",IDC_STATIC,2,73,132,36
+    PUSHBUTTON      "关闭",IDC_BUTTON_CLOSE,46,49,43,16
+    PUSHBUTTON      "单帧",IDC_BUTTON_STEP,93,87,33,16
+    EDITTEXT        IDC_EDIT_WIDTH,58,123,24,13,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_HEIGHT,92,123,24,13,ES_AUTOHSCROLL
+    LTEXT           "×",IDC_STATIC,84,125,8,8
+    LTEXT           "分辨率:",IDC_STATIC,13,125,42,9,0,WS_EX_RIGHT
+    CONTROL         "起始帧数",IDC_RADIO_START_FRAME,"Button",BS_AUTORADIOBUTTON,10,157,45,12
+    CONTROL         "起始时间",IDC_RADIO_START_TIME,"Button",BS_AUTORADIOBUTTON,10,173,43,13
+    EDITTEXT        IDC_EDIT_START_FRAME,58,157,58,13,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_START_TIME,58,174,58,13,ES_AUTOHSCROLL
+    LTEXT           "帧率:",IDC_STATIC,13,142,42,9,0,WS_EX_RIGHT
+    EDITTEXT        IDC_EDIT_FRAME_RATE,58,140,58,13,ES_AUTOHSCROLL
+    GROUPBOX        "视频属性",IDC_STATIC,2,112,132,80
+    PUSHBUTTON      "重启",IDC_BUTTON_RESTART,11,87,33,16
+    GROUPBOX        "分析器",IDC_STATIC,2,195,132,50
+    CONTROL         "调测",IDC_CHECK_DEBUG,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,56,316,26,12
+    CONTROL         "日志",IDC_CHECK_LOG,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,95,316,26,12
+    CONTROL         "预览",IDC_CHECK_PREVIEW,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,16,316,26,12
+    GROUPBOX        "选项",IDC_STATIC,2,305,132,27
+    COMBOBOX        IDC_COMBO_AYALYZER,10,207,69,42,CBS_DROPDOWNLIST | CBS_SORT | WS_DISABLED | WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON      "配置",IDC_BUTTON_SETUP,90,205,39,16
+    GROUPBOX        "运行信息",IDC_STATIC,139,2,200,29
+    LTEXT           "帧数:",IDC_STATIC,150,15,25,10
+    LTEXT           "0",IDC_STATIC_CURRENT_FRAME,179,15,43,10
+    PUSHBUTTON      "→",IDC_BUTTON_APPLY_FR,119,141,12,12
+    PUSHBUTTON      "→",IDC_BUTTON_APPLY_RES,119,124,12,12
+    LTEXT           "报警数:",IDC_STATIC,232,15,29,10
+    LTEXT           "0",IDC_STATIC_CURRENT_ALERT,266,15,25,10
+    CONTROL         "",IDC_LIST_STATUS,"SysListView32",LVS_REPORT | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,139,38,200,78
+    COMBOBOX        IDC_COMBO_CONFIG_FILE,10,226,69,44,CBS_DROPDOWN | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    COMBOBOX        IDC_COMBO_CHANNEL,105,226,23,51,CBS_DROPDOWN | CBS_SORT | WS_DISABLED | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "CH",IDC_STATIC,92,228,10,10
+    GROUPBOX        "录像",IDC_STATIC,2,248,132,53
+    PUSHBUTTON      "开始",IDC_BUTTON_REC_START,86,279,36,16
+    PUSHBUTTON      "另存为",IDC_BUTTON_REC_OPEN,37,279,36,16
+    LTEXT           "路径：",IDC_STATIC,3,262,28,10,0,WS_EX_RIGHT
+    EDITTEXT        IDC_EDIT_REC_PATH,38,260,83,12,ES_AUTOHSCROLL
+END
+
+IDD_SETTING DIALOGEX 0, 0, 521, 285
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "配置"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    CONTROL         "",IDC_IMAGE,"Static",SS_OWNERDRAW | SS_NOTIFY,7,7,251,178
+    PUSHBUTTON      "清除线条",IDC_BUTTON_CLEAR,434,49,45,16
+    COMBOBOX        IDC_COMBO_CONTROL,280,50,75,19,CBS_DROPDOWN | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    EDITTEXT        IDC_EDIT_TWO_VALUE,60,199,33,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_FILTER_VALUE,60,217,33,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_IMDILATE_VALUE,60,237,33,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_WHITE_SPOT_MAX,60,257,33,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_WHITE_SPOT_MIN,187,256,34,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_ALARM,188,217,34,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_NIGHT_THR,188,198,34,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_ALARM_DELAY,187,236,34,14,ES_AUTOHSCROLL
+    LTEXT           "白天阈值：",IDC_STATIC,15,201,42,11
+    LTEXT           "滤波阈值：",IDC_STATIC,15,220,41,11
+    LTEXT           "膨胀系数：",IDC_STATIC,15,239,40,11
+    LTEXT           "最大个数：",IDC_STATIC,15,259,41,11
+    LTEXT           "最小个数：",IDC_STATIC,135,258,40,11
+    LTEXT           "报警帧数：",IDC_STATIC,136,220,40,11
+    LTEXT           "夜间阈值：",IDC_STATIC,136,201,41,11
+    LTEXT           "报警延时：",IDC_STATIC,135,239,46,11
+    CONTROL         "镜像",IDC_CHECK_LENS,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,275,14,32,16
+    CONTROL         "直线(单面)",IDC_RADIO_NATURAL,"Button",BS_AUTORADIOBUTTON | WS_GROUP,286,91,55,14
+    CONTROL         "直线(双面)",IDC_RADIO_TREE,"Button",BS_AUTORADIOBUTTON,370,92,52,14
+    CONTROL         "直线(+直线)",IDC_RADIO_CURVER,"Button",BS_AUTORADIOBUTTON | WS_DISABLED,454,92,60,14
+    CONTROL         "圆弧(内弧线)",IDC_RADIO_NATUARL_CURVER,"Button",BS_AUTORADIOBUTTON,286,116,59,14
+    CONTROL         "圆弧(外弧线)",IDC_RADIO_NATUARL_NATUARL,"Button",BS_AUTORADIOBUTTON,369,116,61,14
+    CONTROL         "预留",IDC_RADIO_TREE_CURVER,"Button",BS_AUTORADIOBUTTON | WS_DISABLED,454,116,52,14
+    CONTROL         "高",IDC_RADIO_SENSITIVE1,"Button",BS_AUTORADIOBUTTON | WS_GROUP,286,196,52,14
+    CONTROL         "正常",IDC_RADIO_SENSITIVE2,"Button",BS_AUTORADIOBUTTON,369,197,52,14
+    CONTROL         "低",IDC_RADIO_SENSITIVE3,"Button",BS_AUTORADIOBUTTON,454,196,52,14
+    GROUPBOX        "精度选择",IDC_STATIC,274,183,240,37
+    GROUPBOX        "画线",IDC_STATIC,273,37,241,38
+    CONTROL         "近景",IDC_RADIO_DEPTH1,"Button",BS_AUTORADIOBUTTON | WS_GROUP,286,153,52,14
+    CONTROL         "中景",IDC_RADIO_DEPTH2,"Button",BS_AUTORADIOBUTTON,370,154,52,14
+    CONTROL         "远景",IDC_RADIO_DEPTH3,"Button",BS_AUTORADIOBUTTON,455,153,52,14
+    GROUPBOX        "景深选择",IDC_STATIC,274,141,240,37
+    PUSHBUTTON      "清空数据",IDC_BUTTON_CANCEL,464,16,41,16,NOT WS_VISIBLE
+    CONTROL         "人员检测",IDC_CHECK_PERSON,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,326,14,52,16
+    PUSHBUTTON      "确定",IDOK,281,242,70,26
+    PUSHBUTTON      "取消",IDCANCEL,391,242,66,26
+    LTEXT           "(30-60)",IDC_STATIC,97,201,28,11
+    LTEXT           "( 0 - 3 )",IDC_STATIC,97,219,28,11
+    LTEXT           "( 0 - 5 )",IDC_STATIC,97,239,28,11
+    LTEXT           "(1000+)",IDC_STATIC,97,259,28,11
+    LTEXT           "(10-50)",IDC_STATIC,225,257,28,11
+    LTEXT           "(5 -10 )",IDC_STATIC,226,219,28,11
+    LTEXT           "(40-80)",IDC_STATIC,226,200,28,11
+    LTEXT           "(1 -30 )",IDC_STATIC,225,238,28,11
+    GROUPBOX        "",IDC_STATIC,274,80,240,55
+    PUSHBUTTON      "下一项",IDC_BUTTON_NEXT,369,49,46,16
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,1
+ PRODUCTVERSION 1,0,0,1
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "080403a8"
+        BEGIN
+            VALUE "CompanyName", "WSN"
+            VALUE "FileDescription", "Video Analyzer"
+            VALUE "FileVersion", "1.0.0.1"
+            VALUE "InternalName", "VideoAnalyzer.exe"
+            VALUE "LegalCopyright", " (C) WSN。保留所有权利。"
+            VALUE "OriginalFilename", "VideoAnalyzer.exe"
+            VALUE "ProductName", "Video Analyzer"
+            VALUE "ProductVersion", "1.0.0.1"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x804, 936
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    IDD_ABOUTBOX, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 163
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 55
+    END
+
+    IDD_VIDEOANALYZER_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 2
+        RIGHTMARGIN, 340
+        TOPMARGIN, 2
+        BOTTOMMARGIN, 332
+    END
+
+    IDD_SETTING, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 514
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 278
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_MENU_LIST MENU 
+BEGIN
+    POPUP "列表框菜单"
+    BEGIN
+        MENUITEM "清空(&D)",                      ID_MENU_CLEAR
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE 
+BEGIN
+    IDS_ABOUTBOX            "关于 VideoAnalyzer(&A)..."
+END
+
+#endif    // Chinese (P.R.C.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#define _AFX_NO_SPLITTER_RESOURCES
+#define _AFX_NO_OLE_RESOURCES
+#define _AFX_NO_TRACKER_RESOURCES
+#define _AFX_NO_PROPERTY_RESOURCES
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
+LANGUAGE 4, 2
+#pragma code_page(936)
+#include "res\VideoAnalyzer.rc2"  // 非 Microsoft Visual C++ 编辑的资源
+#include "l.CHS\afxres.rc"      // 标准组件
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+
