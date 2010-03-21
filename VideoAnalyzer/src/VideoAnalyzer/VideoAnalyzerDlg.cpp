@@ -463,9 +463,9 @@ bool CVideoAnalyzerDlg::autoStart()
 
     //最简界面模式，并设置窗口大小和窗口位置
     const char* pszSimple = option.getSimple();
+    int iWidth = -1, iHeight = -1, iPosX = -1, iPosY = -1;
     if (pszSimple)
     {
-        int iWidth = -1, iHeight = -1, iPosX = -1, iPosY = -1;
         sscanf(pszSimple, "%dx%d;(%d,%d)", &iWidth, &iHeight, &iPosX, &iPosY);
 
         //窗口大小
@@ -531,6 +531,13 @@ bool CVideoAnalyzerDlg::autoStart()
             {
                 m_chkPreview.SetCheck(BST_UNCHECKED);
                 ExpandDialog (IDC_VIDEO, m_chkPreview.GetCheck());
+            }
+
+            //由于openSource中会根据视频属性重新设置图片控件的大小
+            //所以这里需要按照输入参数将图片控件的大小改回来
+            if (pszSimple)
+            {
+                m_ctlVideo.MoveWindow(0, 0, iWidth, iHeight);
             }
         }
     }
