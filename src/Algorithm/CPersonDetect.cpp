@@ -11,6 +11,8 @@
 *    - Tianxiao YE                    <ytxjonathan@gmail.com>
 ************************************************************************
 */
+#include "stdafx.h"
+
 #include "CPersonDetect.h"
 
 #if (1 == SY)
@@ -120,7 +122,8 @@ CPersonDetect::generateRgbBkgnd_fromRgbFrames( CFrameContainer*   frame_bkDetect
   {
     for( m = 0; m < imRgbByteSize; ++m )
     {
-      frame_bkDetected->m_BmpBuffer[m] = ((float)frame_bkDetected->m_BmpBuffer[m])*6/7 + (float)pFrame_curr_in->m_BmpBuffer[m]*1/7 + 0.5;
+      frame_bkDetected->m_BmpBuffer[m] = (uint8_t)(((float)frame_bkDetected->m_BmpBuffer[m])*6/7 
+                                                 + (float)pFrame_curr_in->m_BmpBuffer[m]*1/7 + 0.5);
     }
 
     //     for( m=0; m<imRByteSize; ++m )//打补丁
@@ -440,9 +443,9 @@ CPersonDetect::binarizeRgbtoY( CFrameContainer* pFrame_RgbtoYBinarized_inout ,
 
     if(bottom_y > 180)//下部RgbThreshold
     {
-      for( j = top_y; j < bottom_y; j++)
+      for( j = top_y; j < (uint32_t)bottom_y; j++)
       {
-        for( i = top_x; i < bottom_x; i++)
+        for( i = top_x; i < (uint32_t)bottom_x; i++)
         {
           Temp_B = ABS(pRgb_bkgnd[3*j * imWidth + 3*i + 0] , pRgb_curr[3*j * imWidth + 3*i + 0]);
           Temp_G = ABS(pRgb_bkgnd[3*j * imWidth + 3*i + 1] , pRgb_curr[3*j * imWidth + 3*i + 1]);
@@ -454,9 +457,9 @@ CPersonDetect::binarizeRgbtoY( CFrameContainer* pFrame_RgbtoYBinarized_inout ,
     }
     else
     {
-      for( j=top_y; j<bottom_y; j++)
+      for( j=top_y; j<(uint32_t)bottom_y; j++)
       {
-        for( i=top_x; i<bottom_x; i++)
+        for( i=top_x; i<(uint32_t)bottom_x; i++)
         {
           Temp_B = ABS(pRgb_bkgnd[3*j * imWidth + 3*i + 0] , pRgb_curr[3*j * imWidth + 3*i + 0]);
           Temp_G = ABS(pRgb_bkgnd[3*j * imWidth + 3*i + 1] , pRgb_curr[3*j * imWidth + 3*i + 1]);
@@ -468,7 +471,7 @@ CPersonDetect::binarizeRgbtoY( CFrameContainer* pFrame_RgbtoYBinarized_inout ,
       }
     }
   }
-  if (sumDot >imWidth*imHeight*WHITERATIO/100)
+  if (sumDot >(uint32_t)(imWidth*imHeight*WHITERATIO/100))
   {
     m_nRefreshFrameNum = 0;
   }
@@ -543,9 +546,9 @@ CPersonDetect::binRgbtoY_LowtoHigh( CFrameContainer* pFrame_RgbtoYBinarized_inou
 
     if(bottom_y > demarcation_line)//下部Large_RgbThreshold
     {
-      for( j = top_y; j < bottom_y; j++)
+      for( j = top_y; j < (uint32_t)bottom_y; j++)
       {
-        for( i = top_x; i < bottom_x; i++)
+        for( i = top_x; i < (uint32_t)bottom_x; i++)
         {
           Temp_B = ABS(pRgb_bkgnd[3*j * imWidth + 3*i + 0] , pRgb_curr[3*j * imWidth + 3*i + 0]);
           Temp_G = ABS(pRgb_bkgnd[3*j * imWidth + 3*i + 1] , pRgb_curr[3*j * imWidth + 3*i + 1]);
@@ -558,9 +561,9 @@ CPersonDetect::binRgbtoY_LowtoHigh( CFrameContainer* pFrame_RgbtoYBinarized_inou
     }
     else//上部Small_RgbThreshold
     {
-      for( j=top_y; j<bottom_y; j++)
+      for( j=top_y; j<(uint32_t)bottom_y; j++)
       {
-        for( i=top_x; i<bottom_x; i++)
+        for( i=top_x; i<(uint32_t)bottom_x; i++)
         {
           Temp_B = ABS(pRgb_bkgnd[3*j * imWidth + 3*i + 0] , pRgb_curr[3*j * imWidth + 3*i + 0]);
           Temp_G = ABS(pRgb_bkgnd[3*j * imWidth + 3*i + 1] , pRgb_curr[3*j * imWidth + 3*i + 1]);
@@ -571,7 +574,7 @@ CPersonDetect::binRgbtoY_LowtoHigh( CFrameContainer* pFrame_RgbtoYBinarized_inou
       }
     }
   }
-  if (sumDot >imWidth*imHeight*WHITERATIO/100)
+  if (sumDot >(uint32_t)(imWidth*imHeight*WHITERATIO/100))
   {
     m_nRefreshFrameNum = 0;
   }
@@ -981,7 +984,7 @@ void  CPersonDetect::deletminobj(CDList< CObjLabeled*, CPointerDNode >* objDList
     return; //return ?
   uint32_t i = 0 , j = 0, k = 0;
 
-  for (k = 1; k <= objDList_inout->GetCount(); )
+  for (k = 1; k <= (uint32_t)objDList_inout->GetCount(); )
   {
     if (objDList_inout->GetAt(k)->m_nOuterRect[1] + objDList_inout->GetAt(k)->m_nOuterRect[3] > demarcation_line   \
       &&(objDList_inout->GetAt(k)->m_nOuterRect[2] < PARABOLAWIDTHNEAR                                             \
@@ -2619,44 +2622,44 @@ void CPersonDetect::SavetoFile(int channel)
 void CPersonDetect::SaveJpeg_File_color(const CFrameContainer* const pFrame_in,
                                         const  int channel)
 {
-  ASSERT(pFrame_in);
-  SYSTEMTIME Systemtime ;
-  GetLocalTime(&Systemtime);
-  CString   name;
-  int size ;
-  int wide = pFrame_in->getWidth();
-  int height = pFrame_in->getHeight();
-  unsigned  char * jpeg_data, *RGB_data,*rgbbuftemp;
-  rgbbuftemp = pFrame_in->m_BmpBuffer ;
-  RGB_data = new BYTE[3*wide * height];
-  jpeg_data = new BYTE[3*wide * height];
-  for(int i = 0 ; i < height ; i ++ )
-  {
-    memcpy(RGB_data + i *wide*3 , rgbbuftemp + (height - i -1)*wide*3 ,3*wide);
-  }
-  CTonyJpegEncoder  jpeg;
-  jpeg.CompressImage(RGB_data,jpeg_data,wide,	height,	size);
-
-  char AviFileName[256];
-  if( DEFAULTCHANNELMODE == channel )
-  {
-    //     name.Format(_T("f:\\desktop\\%d月%d日"),Systemtime.wMonth,Systemtime.wDay);
-    //     sprintf(AviFileName,"f:\\desktop\\%d月%d日\\%d_%d_%d_%d.jpg",Systemtime.wMonth,Systemtime.wDay,channel,Systemtime.wHour,Systemtime.wMinute,Systemtime.wSecond );
-    name.Format(_T("C:\\%d月%d日_单路调试"),Systemtime.wMonth,Systemtime.wDay);
-    sprintf(AviFileName,"C:\\%d月%d日_单路调试\\%d_%d_%d_%d_%d.jpg",Systemtime.wMonth,Systemtime.wDay,channel,Systemtime.wHour,Systemtime.wMinute,Systemtime.wSecond ,Systemtime.wMilliseconds);
-  }
-  else
-  {
-    name.Format(_T("C:\\%d月%d日_多路调试"),Systemtime.wMonth,Systemtime.wDay);
-    sprintf(AviFileName,"C:\\%d月%d日_多路调试\\%d_%d_%d_%d_%d.jpg",Systemtime.wMonth,Systemtime.wDay,channel,Systemtime.wHour,Systemtime.wMinute,Systemtime.wSecond ,Systemtime.wMilliseconds);
-  }
-  CreateDirectory(name,NULL);
-  FILE *pFile1=fopen(AviFileName,"wb+");
-  fwrite(jpeg_data,1,size,pFile1);
-  fclose(pFile1);
-
-  SAFEDELETEARRAY(jpeg_data);
-  SAFEDELETEARRAY(RGB_data);
+//   ASSERT(pFrame_in);
+//   SYSTEMTIME Systemtime ;
+//   GetLocalTime(&Systemtime);
+//   CString   name;
+//   int size ;
+//   int wide = pFrame_in->getWidth();
+//   int height = pFrame_in->getHeight();
+//   unsigned  char * jpeg_data, *RGB_data,*rgbbuftemp;
+//   rgbbuftemp = pFrame_in->m_BmpBuffer ;
+//   RGB_data = new BYTE[3*wide * height];
+//   jpeg_data = new BYTE[3*wide * height];
+//   for(int i = 0 ; i < height ; i ++ )
+//   {
+//     memcpy(RGB_data + i *wide*3 , rgbbuftemp + (height - i -1)*wide*3 ,3*wide);
+//   }
+//   CTonyJpegEncoder  jpeg;
+//   jpeg.CompressImage(RGB_data,jpeg_data,wide,	height,	size);
+// 
+//   char AviFileName[256];
+//   if( DEFAULTCHANNELMODE == channel )
+//   {
+//     //     name.Format(_T("f:\\desktop\\%d月%d日"),Systemtime.wMonth,Systemtime.wDay);
+//     //     sprintf(AviFileName,"f:\\desktop\\%d月%d日\\%d_%d_%d_%d.jpg",Systemtime.wMonth,Systemtime.wDay,channel,Systemtime.wHour,Systemtime.wMinute,Systemtime.wSecond );
+//     name.Format(_T("C:\\%d月%d日_单路调试"),Systemtime.wMonth,Systemtime.wDay);
+//     sprintf(AviFileName,"C:\\%d月%d日_单路调试\\%d_%d_%d_%d_%d.jpg",Systemtime.wMonth,Systemtime.wDay,channel,Systemtime.wHour,Systemtime.wMinute,Systemtime.wSecond ,Systemtime.wMilliseconds);
+//   }
+//   else
+//   {
+//     name.Format(_T("C:\\%d月%d日_多路调试"),Systemtime.wMonth,Systemtime.wDay);
+//     sprintf(AviFileName,"C:\\%d月%d日_多路调试\\%d_%d_%d_%d_%d.jpg",Systemtime.wMonth,Systemtime.wDay,channel,Systemtime.wHour,Systemtime.wMinute,Systemtime.wSecond ,Systemtime.wMilliseconds);
+//   }
+//   CreateDirectory(name,NULL);
+//   FILE *pFile1=fopen(AviFileName,"wb+");
+//   fwrite(jpeg_data,1,size,pFile1);
+//   fclose(pFile1);
+// 
+//   SAFEDELETEARRAY(jpeg_data);
+//   SAFEDELETEARRAY(RGB_data);
 }
 
 
@@ -2664,47 +2667,47 @@ void CPersonDetect::SaveJpeg_File_bin(const CFrameContainer* const pFrame_in,
                                       const uint32_t framenum,
                                       const uint32_t whitedots/*,const  int channel*/)
 {
-  ASSERT(pFrame_in);
-  CFrameContainer* pframe_temp    = new CFrameContainer(pFrame_in->getWidth(),pFrame_in->getHeight(),pFrame_in->getYuvType());
-  *pframe_temp =  *pFrame_in;
-  pframe_temp->setChromaTo128();
-  pframe_temp->cvtY1toY255();
-  pframe_temp->updateRGB24FromYUV444();
-  SYSTEMTIME Systemtime ;
-  GetLocalTime(&Systemtime);
-  CString   name;
-  int size ;
-  int wide = pFrame_in->getWidth();
-  int height = pFrame_in->getHeight();
-  unsigned  char * jpeg_data, *RGB_data,*rgbbuftemp;
-  rgbbuftemp = pframe_temp->m_YuvPlane[0];
-  RGB_data = new BYTE[3*wide * height];
-  jpeg_data = new BYTE[wide * height];
-  for (int i = 0; i<wide; i ++) 
-  {
-    for (int j = 0; j < height; j++)
-    {
-      RGB_data[3*wide*j + 3*i + 0] =    \
-        RGB_data[3*wide*j + 3*i + 1] =    \
-        RGB_data[3*wide*j + 3*i + 2] =    \
-        rgbbuftemp[wide*(height - j - 1) + i ];
-    }
-  }
-  CTonyJpegEncoder  jpeg;
-  jpeg.CompressImage(	RGB_data,jpeg_data,wide,height,size);
-  // name.Format(_T("C:\\%d月%d日"),Systemtime.wMonth,Systemtime.wDay);
-  name.Format(_T("f:\\desktop\\%d月%d日"),Systemtime.wMonth,Systemtime.wDay);
-  CreateDirectory(name,   NULL);
-  char AviFileName[256];
-  //   sprintf(AviFileName,"C:\\%d月%d日\\%d_%d_%d_%d.jpg",Systemtime.wMonth,Systemtime.wDay,channel,Systemtime.wHour,Systemtime.wMinute,Systemtime.wSecond );
-  sprintf(AviFileName,"f:\\desktop\\%d月%d日\\%d_%d.jpg",Systemtime.wMonth,Systemtime.wDay,/*channel,*/framenum,whitedots );
-  FILE *pFile1=fopen(AviFileName,"wb+");
-  fwrite(jpeg_data,1,size,pFile1);
-  fclose(pFile1);
-
-  SAFEDELETEARRAY(jpeg_data);
-  SAFEDELETEARRAY(RGB_data);
-  SAFEDELETE(pframe_temp);
+//   ASSERT(pFrame_in);
+//   CFrameContainer* pframe_temp    = new CFrameContainer(pFrame_in->getWidth(),pFrame_in->getHeight(),pFrame_in->getYuvType());
+//   *pframe_temp =  *pFrame_in;
+//   pframe_temp->setChromaTo128();
+//   pframe_temp->cvtY1toY255();
+//   pframe_temp->updateRGB24FromYUV444();
+//   SYSTEMTIME Systemtime ;
+//   GetLocalTime(&Systemtime);
+//   CString   name;
+//   int size ;
+//   int wide = pFrame_in->getWidth();
+//   int height = pFrame_in->getHeight();
+//   unsigned  char * jpeg_data, *RGB_data,*rgbbuftemp;
+//   rgbbuftemp = pframe_temp->m_YuvPlane[0];
+//   RGB_data = new BYTE[3*wide * height];
+//   jpeg_data = new BYTE[wide * height];
+//   for (int i = 0; i<wide; i ++) 
+//   {
+//     for (int j = 0; j < height; j++)
+//     {
+//       RGB_data[3*wide*j + 3*i + 0] =    \
+//         RGB_data[3*wide*j + 3*i + 1] =    \
+//         RGB_data[3*wide*j + 3*i + 2] =    \
+//         rgbbuftemp[wide*(height - j - 1) + i ];
+//     }
+//   }
+//   CTonyJpegEncoder  jpeg;
+//   jpeg.CompressImage(	RGB_data,jpeg_data,wide,height,size);
+//   // name.Format(_T("C:\\%d月%d日"),Systemtime.wMonth,Systemtime.wDay);
+//   name.Format(_T("f:\\desktop\\%d月%d日"),Systemtime.wMonth,Systemtime.wDay);
+//   CreateDirectory(name,   NULL);
+//   char AviFileName[256];
+//   //   sprintf(AviFileName,"C:\\%d月%d日\\%d_%d_%d_%d.jpg",Systemtime.wMonth,Systemtime.wDay,channel,Systemtime.wHour,Systemtime.wMinute,Systemtime.wSecond );
+//   sprintf(AviFileName,"f:\\desktop\\%d月%d日\\%d_%d.jpg",Systemtime.wMonth,Systemtime.wDay,/*channel,*/framenum,whitedots );
+//   FILE *pFile1=fopen(AviFileName,"wb+");
+//   fwrite(jpeg_data,1,size,pFile1);
+//   fclose(pFile1);
+// 
+//   SAFEDELETEARRAY(jpeg_data);
+//   SAFEDELETEARRAY(RGB_data);
+//   SAFEDELETE(pframe_temp);
 }
 ErrVal CPersonDetect::ImgMoveObjectDetect(CFrameContainer* p_frame_in_out)
 {
@@ -2737,53 +2740,53 @@ ErrVal CPersonDetect::ImgMoveObjectDetect(CFrameContainer* p_frame_in_out)
       tmp_right = ( TrackObject[i].m_nObjRect[0] + TrackObject[i].m_nObjRect[2] )*3 ;// /3 * 9;
       for (j = rect[1]; j < tmp_top; j++ ) //left 
       {
-        p_data_out[img_width * j + rect[0]   ] = v_R ;
-        p_data_out[img_width * j + rect[0]+1 ] = v_G ;
-        p_data_out[img_width * j + rect[0]+2 ] = v_B ;
+        p_data_out[img_width * j + rect[0]   ] = (uint8_t)v_R ;
+        p_data_out[img_width * j + rect[0]+1 ] = (uint8_t)v_G ;
+        p_data_out[img_width * j + rect[0]+2 ] = (uint8_t)v_B ;
       }
       for (j = rect[1]; j < tmp_top; j++ ) //right
       {
-        p_data_out[img_width * j + tmp_right   ] = v_R ;
-        p_data_out[img_width * j + tmp_right+1 ] = v_G ;
-        p_data_out[img_width * j + tmp_right+2 ] = v_B ;
+        p_data_out[img_width * j + tmp_right   ] = (uint8_t)v_R ;
+        p_data_out[img_width * j + tmp_right+1 ] = (uint8_t)v_G ;
+        p_data_out[img_width * j + tmp_right+2 ] = (uint8_t)v_B ;
       }
       for (j = rect[0]; j < tmp_right; j+=3 ) //top
       {
-        p_data_out[img_width * tmp_top + j   ] = v_R ;
-        p_data_out[img_width * tmp_top + j+1 ] = v_G ;
-        p_data_out[img_width * tmp_top + j+2 ] = v_B ;
+        p_data_out[img_width * tmp_top + j   ] = (uint8_t)v_R ;
+        p_data_out[img_width * tmp_top + j+1 ] = (uint8_t)v_G ;
+        p_data_out[img_width * tmp_top + j+2 ] = (uint8_t)v_B ;
       }
       for (j = rect[0]; j < tmp_right; j+=3 ) //bottom
       {
-        p_data_out[img_width * rect[1] + j   ] = v_R ;
-        p_data_out[img_width * rect[1] + j+1 ] = v_G ;
-        p_data_out[img_width * rect[1] + j+2 ] = v_B ;
+        p_data_out[img_width * rect[1] + j   ] = (uint8_t)v_R ;
+        p_data_out[img_width * rect[1] + j+1 ] = (uint8_t)v_G ;
+        p_data_out[img_width * rect[1] + j+2 ] = (uint8_t)v_B ;
       }
 
       /*double lines*/
       for (j = rect[1]; j < tmp_top; j++ ) //left 
       {
-        p_data_out[img_width * j + MIN(rect[0] + 3 , img_width - 3)] = v_R ;
-        p_data_out[img_width * j + MIN(rect[0] + 4 , img_width - 3)] = v_G ;
-        p_data_out[img_width * j + MIN(rect[0] + 5 , img_width - 3)] = v_B ;
+        p_data_out[img_width * j + MIN(rect[0] + 3 , img_width - 3)] = (uint8_t)v_R ;
+        p_data_out[img_width * j + MIN(rect[0] + 4 , img_width - 3)] = (uint8_t)v_G ;
+        p_data_out[img_width * j + MIN(rect[0] + 5 , img_width - 3)] = (uint8_t)v_B ;
       }
       for (j = rect[1]; j < tmp_top; j++ ) //right
       {
-        p_data_out[img_width * j + MAX(0 , tmp_right - 3)] = v_R ;
-        p_data_out[img_width * j + MAX(0 , tmp_right - 2)] = v_G ;
-        p_data_out[img_width * j + MAX(0 , tmp_right - 1)] = v_B ;
+        p_data_out[img_width * j + MAX(0 , tmp_right - 3)] = (uint8_t)v_R ;
+        p_data_out[img_width * j + MAX(0 , tmp_right - 2)] = (uint8_t)v_G ;
+        p_data_out[img_width * j + MAX(0 , tmp_right - 1)] = (uint8_t)v_B ;
       }
       for (j = rect[0]; j < tmp_right; j+=3 ) //top
       {
-        p_data_out[img_width * MIN(img_height - 1 , tmp_top + 1) + j    ] = v_R ;
-        p_data_out[img_width * MIN(img_height - 1 , tmp_top + 1) + j + 1] = v_G ;
-        p_data_out[img_width * MIN(img_height - 1 , tmp_top + 1) + j + 2] = v_B ;
+        p_data_out[img_width * MIN(img_height - 1 , tmp_top + 1) + j    ] = (uint8_t)v_R ;
+        p_data_out[img_width * MIN(img_height - 1 , tmp_top + 1) + j + 1] = (uint8_t)v_G ;
+        p_data_out[img_width * MIN(img_height - 1 , tmp_top + 1) + j + 2] = (uint8_t)v_B ;
       }
       for (j = rect[0]; j < tmp_right; j+=3 ) //bottom
       {
-        p_data_out[img_width * MAX(0 , rect[1] - 1) + j    ] = v_R ;
-        p_data_out[img_width * MAX(0 , rect[1] - 1) + j + 1] = v_G ;
-        p_data_out[img_width * MAX(0 , rect[1] - 1) + j + 2] = v_B ;
+        p_data_out[img_width * MAX(0 , rect[1] - 1) + j    ] = (uint8_t)v_R ;
+        p_data_out[img_width * MAX(0 , rect[1] - 1) + j + 1] = (uint8_t)v_G ;
+        p_data_out[img_width * MAX(0 , rect[1] - 1) + j + 2] = (uint8_t)v_B ;
       }
     }
   }
@@ -2858,7 +2861,7 @@ float CPersonDetect::ComputeObjHeigth(int ObjCoordinate,float slope1,
                        float pitch2)
 {
   float referLength = 3.0; //参照物的长度
-  float factLength = 1.8; //人的实际长度
+  float factLength = 1.8f; //人的实际长度
 
   float objLength = (factLength / referLength) 
     *((slope1 - slope2)*ObjCoordinate

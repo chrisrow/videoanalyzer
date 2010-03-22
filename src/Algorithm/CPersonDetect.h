@@ -16,14 +16,15 @@
 #define _CPERSONDETECT_H__261F00FA_6095_4a4f_81E1_61D01B095E1A
 #include <afx.h>
 
-#include "..\..\CommonLibStatic\src\teamDebug.h"
 #include "matlabFunc.h"
+
+#define SY 1
 
 #if (1 == SY)
 #include <math.h>
-#include "..\\..\\..\\MultiThreadTestGUI\\src\\TonyJpegEncoder.h" 
+// #include "..\\..\\..\\MultiThreadTestGUI\\src\\TonyJpegEncoder.h" 
 #include <Winsock2.h>
-#pragma comment(lib,Ws2_32.lib)
+// #pragma comment(lib,Ws2_32.lib)
 
 class CPersonDetect
 {
@@ -356,9 +357,9 @@ public:
 
 
     inline uint16_t const& getTrackNum()             const { return m_TrackNum; }
-    inline uint16_t const& getFirst_Alarm_State()    const { return b_First_Alarm; }
-    inline uint16_t const& getSecond_Alarm_State()   const { return b_Second_Alarm; }
-    inline uint16_t const& getDelay_counter()        const { return delay_counter; }
+//     inline uint16_t const& getFirst_Alarm_State()    const { return b_First_Alarm; }
+//     inline uint16_t const& getSecond_Alarm_State()   const { return b_Second_Alarm; }
+//     inline uint16_t const& getDelay_counter()        const { return delay_counter; }
     void   setDelay_counter()                              { delay_counter = 0; }
 
   /*保存数据文件，调试用。channel用于区分文件名。channel = DEFAULTCHANNELMODE，单路调试模式用；channel = other ,多路调试模式用 */
