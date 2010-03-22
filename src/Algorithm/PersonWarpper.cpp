@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "PersonWarpper.h"
+#include "CPersonDetect.h"
 
 CPersonWarpper::CPersonWarpper()
 : m_pFrameContainer(NULL)
@@ -53,9 +54,7 @@ const IplImage* CPersonWarpper::analysis(const IplImage *pFrame)
 
 ALERTTYPE CPersonWarpper::haveAlert()
 {
-    // TODO: 判断是否需要报警
-//     return (m_pDetector->m_AlarmFlg == 0) ? AT_NONE : AT_WARNING;
-    return AT_NONE;
+    return m_pDetector->b_First_Alarm ? AT_WARNING : AT_NONE;
 }
 
 void CPersonWarpper::updateFrame(const IplImage *pFrame)
