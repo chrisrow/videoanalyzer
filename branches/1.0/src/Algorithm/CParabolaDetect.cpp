@@ -819,44 +819,89 @@ ErrVal CParabolaDetect::ChangeObjectValue(const CFrameContainer* const pFrame_in
 			TrackObject[m_iTrackNum].bObjDistanceFlg = true ;
 		}
 
-		if (1 == pTrackObjInfo->iTrackDirection[0] )
+		if( ParamSet.bSensitiveFlag == 0 )
 		{
-			if (pTrackObjInfo->iCurFrameCenter[0] >= pTrackObjInfo->iPreFrameCenter[0] + ParamSet.iXTrackContinueThreshold)
+			if (1 == pTrackObjInfo->iTrackDirection[0] )
 			{
-				pTrackObjInfo->iXContinueNum[0]++;
+				if (pTrackObjInfo->iCurFrameCenter[0] >= pTrackObjInfo->iPreFrameCenter[0] )
+				{
+					pTrackObjInfo->iXContinueNum[0]++;
+				}
+				else
+				{
+					if (pTrackObjInfo->iXContinueNum[0] < 3 )
+					{
+						pTrackObjInfo->iXContinueNum[0] = 0 ;
+					}
+				}
+				pTrackObjInfo->iForecastFrmCenter[0] = pTrackObjInfo->iCurFrameCenter[0] + pTrackObjInfo->iMigrationDiff[0] ;
+				if (pTrackObjInfo->iForecastFrmCenter[0] > m_iFrameWidth )
+				{
+					pTrackObjInfo->bContinueTrackFlag = false ;
+				}
 			}
 			else
 			{
-				if (pTrackObjInfo->iXContinueNum[0] < 5 )
+				if (pTrackObjInfo->iCurFrameCenter[0] <= pTrackObjInfo->iPreFrameCenter[0])
 				{
-					pTrackObjInfo->iXContinueNum[0] = 0 ;
+					pTrackObjInfo->iXContinueNum[0]++;
 				}
-			}
-			pTrackObjInfo->iForecastFrmCenter[0] = pTrackObjInfo->iCurFrameCenter[0] + pTrackObjInfo->iMigrationDiff[0] ;
-			if (pTrackObjInfo->iForecastFrmCenter[0] > m_iFrameWidth )
-			{
-				pTrackObjInfo->bContinueTrackFlag = false ;
+				else
+				{
+					if (pTrackObjInfo->iXContinueNum[0] < 3 )
+					{
+						pTrackObjInfo->iXContinueNum[0] = 0 ;
+					}
+				}
+
+				if (pTrackObjInfo->iCurFrameCenter[0] <= pTrackObjInfo->iMigrationDiff[0])  
+					pTrackObjInfo->bContinueTrackFlag = false ;
+				else
+					pTrackObjInfo->iForecastFrmCenter[0] = pTrackObjInfo->iCurFrameCenter[0] - pTrackObjInfo->iMigrationDiff[0] ;
 			}
 		}
 		else
 		{
-			if (pTrackObjInfo->iCurFrameCenter[0]+ ParamSet.iXTrackContinueThreshold <= pTrackObjInfo->iPreFrameCenter[0])
+			if (1 == pTrackObjInfo->iTrackDirection[0] )
 			{
-				pTrackObjInfo->iXContinueNum[0]++;
-			}
-			else
-			{
-				if (pTrackObjInfo->iXContinueNum[0] < 5 )
+				if (pTrackObjInfo->iCurFrameCenter[0] >= pTrackObjInfo->iPreFrameCenter[0] + ParamSet.iXTrackContinueThreshold)
 				{
-					pTrackObjInfo->iXContinueNum[0] = 0 ;
+					pTrackObjInfo->iXContinueNum[0]++;
+				}
+				else
+				{
+					if (pTrackObjInfo->iXContinueNum[0] < 5 )
+					{
+						pTrackObjInfo->iXContinueNum[0] = 0 ;
+					}
+				}
+				pTrackObjInfo->iForecastFrmCenter[0] = pTrackObjInfo->iCurFrameCenter[0] + pTrackObjInfo->iMigrationDiff[0] ;
+				if (pTrackObjInfo->iForecastFrmCenter[0] > m_iFrameWidth )
+				{
+					pTrackObjInfo->bContinueTrackFlag = false ;
 				}
 			}
-
-			if (pTrackObjInfo->iCurFrameCenter[0] <= pTrackObjInfo->iMigrationDiff[0])  
-				pTrackObjInfo->bContinueTrackFlag = false ;
 			else
-				pTrackObjInfo->iForecastFrmCenter[0] = pTrackObjInfo->iCurFrameCenter[0] - pTrackObjInfo->iMigrationDiff[0] ;
+			{
+				if (pTrackObjInfo->iCurFrameCenter[0]+ ParamSet.iXTrackContinueThreshold <= pTrackObjInfo->iPreFrameCenter[0])
+				{
+					pTrackObjInfo->iXContinueNum[0]++;
+				}
+				else
+				{
+					if (pTrackObjInfo->iXContinueNum[0] < 5 )
+					{
+						pTrackObjInfo->iXContinueNum[0] = 0 ;
+					}
+				}
+
+				if (pTrackObjInfo->iCurFrameCenter[0] <= pTrackObjInfo->iMigrationDiff[0])  
+					pTrackObjInfo->bContinueTrackFlag = false ;
+				else
+					pTrackObjInfo->iForecastFrmCenter[0] = pTrackObjInfo->iCurFrameCenter[0] - pTrackObjInfo->iMigrationDiff[0] ;
+			}
 		}
+
 		//----判断方向改变次数
 		if (1 == pTrackObjInfo->iTrackDirection[1] && pTrackObjInfo->iCurFrameCenter[1] > pTrackObjInfo->iPreFrameCenter[1] + 1)
 		{
@@ -2141,10 +2186,18 @@ CParabolaDetect::ParaDetectTwo( const CFrameContainer* const pFrame_in,CFrameCon
 		}
 	}
 
+	if ( m_NightFlag && ParamDsting.FindObjValMax.FirstValue == 0 )//不处理夜间
+	{
+		ROK();
+	}
+
 	if (m_NightFlag)
 	{
+
+		averageSmoothRgb(pFrame_in, 2 );
+
 		m_BinarizeSubThreshold =  ParamSet.iBinarizeSubThreshold ;
-		m_ImfilterSingleThreshold = ParamSet.iImfilterSingleThreshold + 1 ;
+		m_ImfilterSingleThreshold = ParamSet.iImfilterSingleThreshold + 2 ;
 
 	}
 	else
@@ -3265,52 +3318,107 @@ bool CParabolaLineOneSide::TrackAlarmObject(uint16_t i)
 	{
 		long v_line_y = (long)( m_fCurveLineLocation[0]*TrackObject[i].iTrackTopPoint[0] + m_fCurveLineLocation[1] );
 
-		if ( TrackObject[i].iFindObjNumber >= ParamDsting.FindObjValue.FouthValue  && TrackObject[i].iFindObjNumber <= 14 && TrackObject[i].iTrackFrameNum <= ParamDsting.TrackNumMax.FouthValue
-			&& TrackObject[i].iLittleRegionNum >= (TrackObject[i].iFindObjNumber-1) 
-			&& !TrackObject[i].bTrackAlarmFlag
-			&& TrackObject[i].iXContinueNum[1] <= 1
-			&& TrackObject[i].iLostFrameNum <= ParamDsting.LostNumVal.FouthValue 
-			&& ( TrackObject[i].iMatchNum[0] >= (int)(TrackObject[i].iFindObjNumber *  ParamDsting.fXMatchInverse.FouthValue  ) )
-			&& ( TrackObject[i].iMatchNum[1] >= (int)(TrackObject[i].iFindObjNumber *  ParamDsting.fXMatchInverse.FouthValue  ) )   
-			&& (TrackObject[i].iRiseFrameNum[0] >=ParamDsting.RiseNumVal.FouthValue || TrackObject[i].iRiseFrameNum[1] >=  ParamDsting.DownNumVal.FouthValue)
-			)
+		if (ParamSet.bSensitiveFlag == 1 || ParamSet.bSensitiveFlag == 0 )
 		{
-			if(ParamSet.iSceneDepth == 0)
+			if ( TrackObject[i].iFindObjNumber >= ParamDsting.FindObjValue.FouthValue  && TrackObject[i].iFindObjNumber <= 14 && TrackObject[i].iTrackFrameNum <= ParamDsting.TrackNumMax.FouthValue
+				&& TrackObject[i].iLittleRegionNum >= (TrackObject[i].iFindObjNumber-1) 
+				&& !TrackObject[i].bTrackAlarmFlag
+				&& TrackObject[i].iXContinueNum[1] <= 1
+				&& TrackObject[i].iLostFrameNum <= ParamDsting.LostNumVal.FouthValue 
+				&& ( TrackObject[i].iMatchNum[0] >= (int)(TrackObject[i].iFindObjNumber *  ParamDsting.fXMatchInverse.FouthValue  ) )
+				&& ( TrackObject[i].iMatchNum[1] >= (int)(TrackObject[i].iFindObjNumber *  ParamDsting.fXMatchInverse.FouthValue  ) )   
+				&& (TrackObject[i].iRiseFrameNum[0] >=ParamDsting.RiseNumVal.FouthValue || TrackObject[i].iRiseFrameNum[1] >=  ParamDsting.DownNumVal.FouthValue)
+				)
 			{
-				if ( TrackObject[i].iWhiteSpotNum <= ParamDsting.WhiteSpotVal.FirstValue  
-					&& TrackObject[i].iTrackBottomPoint[1] > v_line_y
-					&& TrackObject[i].iTrackTopPoint[1] < v_line_y
-					&& abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 10 
-					)
-
+				if(ParamSet.iSceneDepth == 0)
 				{
-					Temp_alarm = TRUE;
+					if ( TrackObject[i].iWhiteSpotNum <= ParamDsting.WhiteSpotVal.FirstValue  
+						&& TrackObject[i].iTrackBottomPoint[1] > v_line_y
+						&& TrackObject[i].iTrackTopPoint[1] < v_line_y
+						&& abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 10 
+						)
+
+					{
+						Temp_alarm = TRUE;
+					}
+				}
+
+				if(ParamSet.iSceneDepth == 1)
+				{
+					if ( TrackObject[i].iWhiteSpotNum > 30 
+						&& TrackObject[i].iWhiteSpotNum <= ParamDsting.WhiteSpotVal.SecondValue
+						&& TrackObject[i].iTrackBottomPoint[1] > v_line_y
+						&& TrackObject[i].iTrackTopPoint[1] < v_line_y
+						&& abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 15 
+						)
+					{
+						Temp_alarm = TRUE;
+					}
+				}
+
+				if(ParamSet.iSceneDepth == 2)
+				{
+					if ( TrackObject[i].iWhiteSpotNum > 50 
+						&& TrackObject[i].iWhiteSpotNum <= ParamDsting.WhiteSpotVal.ThirdValue
+						&& TrackObject[i].iTrackBottomPoint[1] > v_line_y
+						&& TrackObject[i].iTrackTopPoint[1] < v_line_y
+						&& abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 25 
+						)
+					{
+						Temp_alarm = TRUE;
+					}
 				}
 			}
-
-			if(ParamSet.iSceneDepth == 1)
+		}
+		else
+		{
+			if ( TrackObject[i].iFindObjNumber >= ParamDsting.FindObjValue.FouthValue+4  && TrackObject[i].iFindObjNumber <= 18 && TrackObject[i].iTrackFrameNum <= ParamDsting.TrackNumMax.FouthValue+2
+				&& TrackObject[i].iLittleRegionNum >= (TrackObject[i].iFindObjNumber-1) 
+				&& !TrackObject[i].bTrackAlarmFlag
+				&& TrackObject[i].iXContinueNum[1] <= 1
+				&& TrackObject[i].iLostFrameNum <= 0
+				&& ( TrackObject[i].iMatchNum[0] >= (int)(TrackObject[i].iFindObjNumber *  ParamDsting.fXMatchInverse.FouthValue  ) )
+				&& ( TrackObject[i].iMatchNum[1] >= (int)(TrackObject[i].iFindObjNumber *  ParamDsting.fXMatchInverse.FouthValue  ) )   
+				&& (TrackObject[i].iRiseFrameNum[0] >=ParamDsting.RiseNumVal.FouthValue && TrackObject[i].iRiseFrameNum[1] >=  ParamDsting.DownNumVal.FouthValue)
+				)
 			{
-				if ( TrackObject[i].iWhiteSpotNum > 30 
-					&& TrackObject[i].iWhiteSpotNum <= ParamDsting.WhiteSpotVal.SecondValue
-					&& TrackObject[i].iTrackBottomPoint[1] > v_line_y
-					&& TrackObject[i].iTrackTopPoint[1] < v_line_y
-					&& abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 15 
-					)
+				if(ParamSet.iSceneDepth == 0)
 				{
-					Temp_alarm = TRUE;
+					if ( TrackObject[i].iWhiteSpotNum <= ParamDsting.WhiteSpotVal.FirstValue  
+						&& TrackObject[i].iTrackBottomPoint[1] > v_line_y
+						&& TrackObject[i].iTrackTopPoint[1] < v_line_y
+						&& abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 10 
+						)
+
+					{
+						Temp_alarm = TRUE;
+					}
 				}
-			}
 
-			if(ParamSet.iSceneDepth == 2)
-			{
-				if ( TrackObject[i].iWhiteSpotNum > 50 
-					&& TrackObject[i].iWhiteSpotNum <= ParamDsting.WhiteSpotVal.ThirdValue
-					&& TrackObject[i].iTrackBottomPoint[1] > v_line_y
-					&& TrackObject[i].iTrackTopPoint[1] < v_line_y
-					&& abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 25 
-					)
+				if(ParamSet.iSceneDepth == 1)
 				{
-					Temp_alarm = TRUE;
+					if ( TrackObject[i].iWhiteSpotNum > 30 
+						&& TrackObject[i].iWhiteSpotNum <= ParamDsting.WhiteSpotVal.SecondValue
+						&& TrackObject[i].iTrackBottomPoint[1] > v_line_y
+						&& TrackObject[i].iTrackTopPoint[1] < v_line_y
+						&& abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 15 
+						)
+					{
+						Temp_alarm = TRUE;
+					}
+				}
+
+				if(ParamSet.iSceneDepth == 2)
+				{
+					if ( TrackObject[i].iWhiteSpotNum > 50 
+						&& TrackObject[i].iWhiteSpotNum <= ParamDsting.WhiteSpotVal.ThirdValue
+						&& TrackObject[i].iTrackBottomPoint[1] > v_line_y
+						&& TrackObject[i].iTrackTopPoint[1] < v_line_y
+						&& abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 25 
+						)
+					{
+						Temp_alarm = TRUE;
+					}
 				}
 			}
 		}
@@ -3355,22 +3463,23 @@ bool CParabolaLineOneSide::TrackAlarmObject(uint16_t i)
 		{
 			Temp_alarm = TRUE;
 		}
-	}
 
-	if ( TrackObject[i].bLineRangeFlag[0]
-		&& TrackObject[i].bLineRangeFlag[1]
-		&& !TrackObject[i].bTrackAlarmFlag
-		&& TrackObject[i].iLostFrameNum == ParamDsting.LostNumVal.SecondValue
-		&& ((TrackObject[i].iMigrationDiff[0] >= ParamDsting.MigrationDiff.SecondValue && abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) >= y_height_value ) || (abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) >=  y_height_value + 15))
-		&& (abs(TrackObject[i].iCurFrameCenter[0]-TrackObject[i].iOriginFrameCenter[0]) > ParamDsting.OriginCurrDis.SecondValue )
-		&& (TrackObject[i].iXContinueNum[0] >= (int)( TrackObject[i].iTrackFrameNum * ParamDsting.fXContInverse.SecondValue) || TrackObject[i].iXContinueNum[0] >= ParamDsting.XContValue.SecondValue )
-		&& (TrackObject[i].iMatchNum[0] >= (int)( TrackObject[i].iTrackFrameNum * ParamDsting.fXMatchInverse.SecondValue) && TrackObject[i].iMatchNum[0] >= ParamDsting.XMatchValue.SecondValue )
-		&& (TrackObject[i].iMatchNum[1] >= (int)( TrackObject[i].iTrackFrameNum * ParamDsting.fYMatchInverse.SecondValue) && TrackObject[i].iMatchNum[1] >= ParamDsting.YMatchValue.SecondValue)
-		&& (TrackObject[i].iFindObjNumber >= ParamDsting.FindObjValue.SecondValue  && TrackObject[i].iFindObjNumber >= (int)(TrackObject[i].iTrackFrameNum * ParamDsting.fFindObjInverse.SecondValue ) )
-		&& (TrackObject[i].iRiseFrameNum[0] >=ParamDsting.RiseNumVal.SecondValue || TrackObject[i].iRiseFrameNum[1] >= ParamDsting.DownNumVal.SecondValue ) 
-		)
-	{
-		Temp_alarm = TRUE;
+
+		if ( TrackObject[i].bLineRangeFlag[0]
+			&& TrackObject[i].bLineRangeFlag[1]
+			&& !TrackObject[i].bTrackAlarmFlag
+			&& TrackObject[i].iLostFrameNum == ParamDsting.LostNumVal.SecondValue
+			&& ((TrackObject[i].iMigrationDiff[0] >= ParamDsting.MigrationDiff.SecondValue && abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) >= y_height_value ) || (abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) >=  y_height_value + 15))
+			&& (abs(TrackObject[i].iCurFrameCenter[0]-TrackObject[i].iOriginFrameCenter[0]) > ParamDsting.OriginCurrDis.SecondValue )
+			&& (TrackObject[i].iXContinueNum[0] >= (int)( TrackObject[i].iTrackFrameNum * ParamDsting.fXContInverse.SecondValue) || TrackObject[i].iXContinueNum[0] >= ParamDsting.XContValue.SecondValue )
+			&& (TrackObject[i].iMatchNum[0] >= (int)( TrackObject[i].iTrackFrameNum * ParamDsting.fXMatchInverse.SecondValue) && TrackObject[i].iMatchNum[0] >= ParamDsting.XMatchValue.SecondValue )
+			&& (TrackObject[i].iMatchNum[1] >= (int)( TrackObject[i].iTrackFrameNum * ParamDsting.fYMatchInverse.SecondValue) && TrackObject[i].iMatchNum[1] >= ParamDsting.YMatchValue.SecondValue)
+			&& (TrackObject[i].iFindObjNumber >= ParamDsting.FindObjValue.SecondValue  && TrackObject[i].iFindObjNumber >= (int)(TrackObject[i].iTrackFrameNum * ParamDsting.fFindObjInverse.SecondValue ) )
+			&& (TrackObject[i].iRiseFrameNum[0] >=ParamDsting.RiseNumVal.SecondValue || TrackObject[i].iRiseFrameNum[1] >= ParamDsting.DownNumVal.SecondValue ) 
+			)
+		{
+			Temp_alarm = TRUE;
+		}
 	}
 
 	if ( TrackObject[i].bLineRangeFlag[0]
@@ -3507,52 +3616,107 @@ bool CParabolaInnerCurve::TrackAlarmObject(uint16_t i)
 	{
 		long v_line_y = (long)( m_fCurveLineLocation[0]*TrackObject[i].iTrackTopPoint[0] + m_fCurveLineLocation[1] );
 
-		if ( TrackObject[i].iFindObjNumber >= ParamDsting.FindObjValue.FouthValue  && TrackObject[i].iFindObjNumber <= 14 && TrackObject[i].iTrackFrameNum <= ParamDsting.TrackNumMax.FouthValue
-			&& TrackObject[i].iLittleRegionNum >= (TrackObject[i].iFindObjNumber-1) 
-			&& !TrackObject[i].bTrackAlarmFlag
-			&& TrackObject[i].iXContinueNum[1] <= 1
-			&& TrackObject[i].iLostFrameNum <= ParamDsting.LostNumVal.FouthValue 
-			&& ( TrackObject[i].iMatchNum[0] >= (int)(TrackObject[i].iFindObjNumber *  ParamDsting.fXMatchInverse.FouthValue  ) )
-			&& ( TrackObject[i].iMatchNum[1] >= (int)(TrackObject[i].iFindObjNumber *  ParamDsting.fXMatchInverse.FouthValue  ) )   
-			&& (TrackObject[i].iRiseFrameNum[0] >=ParamDsting.RiseNumVal.FouthValue || TrackObject[i].iRiseFrameNum[1] >=  ParamDsting.DownNumVal.FouthValue)
-			)
+		if (ParamSet.bSensitiveFlag == 1 || ParamSet.bSensitiveFlag == 0 )
 		{
-			if(ParamSet.iSceneDepth == 0)
+			if ( TrackObject[i].iFindObjNumber >= ParamDsting.FindObjValue.FouthValue  && TrackObject[i].iFindObjNumber <= 14 && TrackObject[i].iTrackFrameNum <= ParamDsting.TrackNumMax.FouthValue
+				&& TrackObject[i].iLittleRegionNum >= (TrackObject[i].iFindObjNumber-1) 
+				&& !TrackObject[i].bTrackAlarmFlag
+				&& TrackObject[i].iXContinueNum[1] <= 1
+				&& TrackObject[i].iLostFrameNum <= ParamDsting.LostNumVal.FouthValue 
+				&& ( TrackObject[i].iMatchNum[0] >= (int)(TrackObject[i].iFindObjNumber *  ParamDsting.fXMatchInverse.FouthValue  ) )
+				&& ( TrackObject[i].iMatchNum[1] >= (int)(TrackObject[i].iFindObjNumber *  ParamDsting.fXMatchInverse.FouthValue  ) )   
+				&& (TrackObject[i].iRiseFrameNum[0] >=ParamDsting.RiseNumVal.FouthValue || TrackObject[i].iRiseFrameNum[1] >=  ParamDsting.DownNumVal.FouthValue)
+				)
 			{
-				if ( TrackObject[i].iWhiteSpotNum <= ParamDsting.WhiteSpotVal.FirstValue  
-					&& TrackObject[i].iTrackBottomPoint[1] > v_line_y
-					&& TrackObject[i].iTrackTopPoint[1] < v_line_y
-					&& abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 10 
-					)
-
+				if(ParamSet.iSceneDepth == 0)
 				{
-					Temp_alarm = TRUE;
+					if ( TrackObject[i].iWhiteSpotNum <= ParamDsting.WhiteSpotVal.FirstValue  
+						&& TrackObject[i].iTrackBottomPoint[1] > v_line_y
+						&& TrackObject[i].iTrackTopPoint[1] < v_line_y
+						&& abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 10 
+						)
+
+					{
+						Temp_alarm = TRUE;
+					}
+				}
+
+				if(ParamSet.iSceneDepth == 1)
+				{
+					if ( TrackObject[i].iWhiteSpotNum > 30 
+						&& TrackObject[i].iWhiteSpotNum <= ParamDsting.WhiteSpotVal.SecondValue
+						&& TrackObject[i].iTrackBottomPoint[1] > v_line_y
+						&& TrackObject[i].iTrackTopPoint[1] < v_line_y
+						&& abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 15 
+						)
+					{
+						Temp_alarm = TRUE;
+					}
+				}
+
+				if(ParamSet.iSceneDepth == 2)
+				{
+					if ( TrackObject[i].iWhiteSpotNum > 50 
+						&& TrackObject[i].iWhiteSpotNum <= ParamDsting.WhiteSpotVal.ThirdValue
+						&& TrackObject[i].iTrackBottomPoint[1] > v_line_y
+						&& TrackObject[i].iTrackTopPoint[1] < v_line_y
+						&& abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 25 
+						)
+					{
+						Temp_alarm = TRUE;
+					}
 				}
 			}
-
-			if(ParamSet.iSceneDepth == 1)
+		}
+		else
+		{
+			if ( TrackObject[i].iFindObjNumber >= ParamDsting.FindObjValue.FouthValue+4  && TrackObject[i].iFindObjNumber <= 18 && TrackObject[i].iTrackFrameNum <= ParamDsting.TrackNumMax.FouthValue+2
+				&& TrackObject[i].iLittleRegionNum >= (TrackObject[i].iFindObjNumber-1) 
+				&& !TrackObject[i].bTrackAlarmFlag
+				&& TrackObject[i].iXContinueNum[1] <= 1
+				&& TrackObject[i].iLostFrameNum <= 0
+				&& ( TrackObject[i].iMatchNum[0] >= (int)(TrackObject[i].iFindObjNumber *  ParamDsting.fXMatchInverse.FouthValue  ) )
+				&& ( TrackObject[i].iMatchNum[1] >= (int)(TrackObject[i].iFindObjNumber *  ParamDsting.fXMatchInverse.FouthValue  ) )   
+				&& (TrackObject[i].iRiseFrameNum[0] >=ParamDsting.RiseNumVal.FouthValue && TrackObject[i].iRiseFrameNum[1] >=  ParamDsting.DownNumVal.FouthValue)
+				)
 			{
-				if ( TrackObject[i].iWhiteSpotNum > 30 
-					&& TrackObject[i].iWhiteSpotNum <= ParamDsting.WhiteSpotVal.SecondValue
-					&& TrackObject[i].iTrackBottomPoint[1] > v_line_y
-					&& TrackObject[i].iTrackTopPoint[1] < v_line_y
-					&& abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 15 
-					)
+				if(ParamSet.iSceneDepth == 0)
 				{
-					Temp_alarm = TRUE;
+					if ( TrackObject[i].iWhiteSpotNum <= ParamDsting.WhiteSpotVal.FirstValue  
+						&& TrackObject[i].iTrackBottomPoint[1] > v_line_y
+						&& TrackObject[i].iTrackTopPoint[1] < v_line_y
+						&& abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 10 
+						)
+
+					{
+						Temp_alarm = TRUE;
+					}
 				}
-			}
 
-			if(ParamSet.iSceneDepth == 2)
-			{
-				if ( TrackObject[i].iWhiteSpotNum > 50 
-					&& TrackObject[i].iWhiteSpotNum <= ParamDsting.WhiteSpotVal.ThirdValue
-					&& TrackObject[i].iTrackBottomPoint[1] > v_line_y
-					&& TrackObject[i].iTrackTopPoint[1] < v_line_y
-					&& abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 25 
-					)
+				if(ParamSet.iSceneDepth == 1)
 				{
-					Temp_alarm = TRUE;
+					if ( TrackObject[i].iWhiteSpotNum > 30 
+						&& TrackObject[i].iWhiteSpotNum <= ParamDsting.WhiteSpotVal.SecondValue
+						&& TrackObject[i].iTrackBottomPoint[1] > v_line_y
+						&& TrackObject[i].iTrackTopPoint[1] < v_line_y
+						&& abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 15 
+						)
+					{
+						Temp_alarm = TRUE;
+					}
+				}
+
+				if(ParamSet.iSceneDepth == 2)
+				{
+					if ( TrackObject[i].iWhiteSpotNum > 50 
+						&& TrackObject[i].iWhiteSpotNum <= ParamDsting.WhiteSpotVal.ThirdValue
+						&& TrackObject[i].iTrackBottomPoint[1] > v_line_y
+						&& TrackObject[i].iTrackTopPoint[1] < v_line_y
+						&& abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 25 
+						)
+					{
+						Temp_alarm = TRUE;
+					}
 				}
 			}
 		}
@@ -3580,28 +3744,27 @@ bool CParabolaInnerCurve::TrackAlarmObject(uint16_t i)
 		} 
 	}
 
-	if (TrackObject[i].iWhiteSpotNum <= 40  )
-	{
-		if ( TrackObject[i].bLineRangeFlag[0]
-		&& TrackObject[i].bLineRangeFlag[1]
-		&& !TrackObject[i].bTrackAlarmFlag
-			&& TrackObject[i].iLostFrameNum == ParamDsting.LostNumVal.FirstValue		
-			&& ((TrackObject[i].iMigrationDiff[0] >= ParamDsting.MigrationDiff.FirstValue && abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) >= y_height_value ) || (abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) >= y_height_value + 20 )  )
-			&& (abs(TrackObject[i].iCurFrameCenter[0]-TrackObject[i].iOriginFrameCenter[0]) > ParamDsting.OriginCurrDis.FirstValue )
-			&& (TrackObject[i].iXContinueNum[0] >= (int)( TrackObject[i].iTrackFrameNum * ParamDsting.fXContInverse.FirstValue )|| TrackObject[i].iXContinueNum[0] >= ParamDsting.XContValue.FirstValue )
-			&& (TrackObject[i].iMatchNum[0] >= (int)( TrackObject[i].iTrackFrameNum * ParamDsting.fXMatchInverse.FirstValue )&& TrackObject[i].iMatchNum[0] >= ParamDsting.XMatchValue.FirstValue )
-			&& (TrackObject[i].iMatchNum[1] >= (int)( TrackObject[i].iTrackFrameNum * ParamDsting.fYMatchInverse.FirstValue )&& TrackObject[i].iMatchNum[1] >= ParamDsting.YMatchValue.FirstValue )
-			&& (TrackObject[i].iFindObjNumber >= ParamDsting.FindObjValue.FirstValue  && TrackObject[i].iFindObjNumber >= (int)(TrackObject[i].iTrackFrameNum * ParamDsting.fFindObjInverse.FirstValue) )
-			&& (TrackObject[i].iRiseFrameNum[0] >=ParamDsting.RiseNumVal.FirstValue || TrackObject[i].iRiseFrameNum[1] >= ParamDsting.DownNumVal.FirstValue )
-			)
-		{
-			Temp_alarm = TRUE;
-		}
-	}
-
-
 	if (ParamSet.bSensitiveFlag == 1 || ParamSet.bSensitiveFlag == 0 )
 	{
+		if (TrackObject[i].iWhiteSpotNum <= 40  )
+		{
+			if ( TrackObject[i].bLineRangeFlag[0]
+			&& TrackObject[i].bLineRangeFlag[1]
+			&& !TrackObject[i].bTrackAlarmFlag
+				&& TrackObject[i].iLostFrameNum == ParamDsting.LostNumVal.FirstValue		
+				&& ((TrackObject[i].iMigrationDiff[0] >= ParamDsting.MigrationDiff.FirstValue && abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) >= y_height_value ) || (abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) >= y_height_value + 20 )  )
+				&& (abs(TrackObject[i].iCurFrameCenter[0]-TrackObject[i].iOriginFrameCenter[0]) > ParamDsting.OriginCurrDis.FirstValue )
+				&& (TrackObject[i].iXContinueNum[0] >= (int)( TrackObject[i].iTrackFrameNum * ParamDsting.fXContInverse.FirstValue )|| TrackObject[i].iXContinueNum[0] >= ParamDsting.XContValue.FirstValue )
+				&& (TrackObject[i].iMatchNum[0] >= (int)( TrackObject[i].iTrackFrameNum * ParamDsting.fXMatchInverse.FirstValue )&& TrackObject[i].iMatchNum[0] >= ParamDsting.XMatchValue.FirstValue )
+				&& (TrackObject[i].iMatchNum[1] >= (int)( TrackObject[i].iTrackFrameNum * ParamDsting.fYMatchInverse.FirstValue )&& TrackObject[i].iMatchNum[1] >= ParamDsting.YMatchValue.FirstValue )
+				&& (TrackObject[i].iFindObjNumber >= ParamDsting.FindObjValue.FirstValue  && TrackObject[i].iFindObjNumber >= (int)(TrackObject[i].iTrackFrameNum * ParamDsting.fFindObjInverse.FirstValue) )
+				&& (TrackObject[i].iRiseFrameNum[0] >=ParamDsting.RiseNumVal.FirstValue || TrackObject[i].iRiseFrameNum[1] >= ParamDsting.DownNumVal.FirstValue )
+				)
+			{
+				Temp_alarm = TRUE;
+			}
+		}
+
 		if ( TrackObject[i].bLineRangeFlag[0]
 		&& TrackObject[i].bLineRangeFlag[1]
 		&& !TrackObject[i].bTrackAlarmFlag
@@ -3619,26 +3782,25 @@ bool CParabolaInnerCurve::TrackAlarmObject(uint16_t i)
 		{
 			Temp_alarm = TRUE;
 		}
-	}
 
 
-
-	if ( TrackObject[i].bLineRangeFlag[0]
-	&& TrackObject[i].bLineRangeFlag[1]
-	&& !TrackObject[i].bTrackAlarmFlag
-		&& TrackObject[i].iLostFrameNum == ParamDsting.LostNumVal.SecondValue
-		&& ((TrackObject[i].iMigrationDiff[0] >= ParamDsting.MigrationDiff.SecondValue && abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) >= y_height_value ) || (abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) >=  y_height_value + 15))
-		&& (abs(TrackObject[i].iCurFrameCenter[0]-TrackObject[i].iOriginFrameCenter[0]) > ParamDsting.OriginCurrDis.SecondValue )
-		&& (TrackObject[i].iXContinueNum[0] >= (int)( TrackObject[i].iTrackFrameNum * ParamDsting.fXContInverse.SecondValue) || TrackObject[i].iXContinueNum[0] >= ParamDsting.XContValue.SecondValue )
-		&& (TrackObject[i].iMatchNum[0] >= (int)( TrackObject[i].iTrackFrameNum * ParamDsting.fXMatchInverse.SecondValue) && TrackObject[i].iMatchNum[0] >= ParamDsting.XMatchValue.SecondValue )
-		&& (TrackObject[i].iMatchNum[1] >= (int)( TrackObject[i].iTrackFrameNum * ParamDsting.fYMatchInverse.SecondValue) && TrackObject[i].iMatchNum[1] >= ParamDsting.YMatchValue.SecondValue)
-		&& (TrackObject[i].iFindObjNumber >= ParamDsting.FindObjValue.SecondValue  && TrackObject[i].iFindObjNumber >= (int)(TrackObject[i].iTrackFrameNum * ParamDsting.fFindObjInverse.SecondValue ) )
-		&& (  (TrackObject[i].iRiseFrameNum[0] >=4 && TrackObject[i].iRiseFrameNum[1] >= 2)
-			||(TrackObject[i].iRiseFrameNum[0] >=2 && TrackObject[i].iRiseFrameNum[1] >= 4)
-			||(TrackObject[i].iRiseFrameNum[0] >=3 && TrackObject[i].iRiseFrameNum[1] >= 3) )
-		)
-	{
-		Temp_alarm = TRUE;
+		if ( TrackObject[i].bLineRangeFlag[0]
+		&& TrackObject[i].bLineRangeFlag[1]
+		&& !TrackObject[i].bTrackAlarmFlag
+			&& TrackObject[i].iLostFrameNum == ParamDsting.LostNumVal.SecondValue
+			&& ((TrackObject[i].iMigrationDiff[0] >= ParamDsting.MigrationDiff.SecondValue && abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) >= y_height_value ) || (abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) >=  y_height_value + 15))
+			&& (abs(TrackObject[i].iCurFrameCenter[0]-TrackObject[i].iOriginFrameCenter[0]) > ParamDsting.OriginCurrDis.SecondValue )
+			&& (TrackObject[i].iXContinueNum[0] >= (int)( TrackObject[i].iTrackFrameNum * ParamDsting.fXContInverse.SecondValue) || TrackObject[i].iXContinueNum[0] >= ParamDsting.XContValue.SecondValue )
+			&& (TrackObject[i].iMatchNum[0] >= (int)( TrackObject[i].iTrackFrameNum * ParamDsting.fXMatchInverse.SecondValue) && TrackObject[i].iMatchNum[0] >= ParamDsting.XMatchValue.SecondValue )
+			&& (TrackObject[i].iMatchNum[1] >= (int)( TrackObject[i].iTrackFrameNum * ParamDsting.fYMatchInverse.SecondValue) && TrackObject[i].iMatchNum[1] >= ParamDsting.YMatchValue.SecondValue)
+			&& (TrackObject[i].iFindObjNumber >= ParamDsting.FindObjValue.SecondValue  && TrackObject[i].iFindObjNumber >= (int)(TrackObject[i].iTrackFrameNum * ParamDsting.fFindObjInverse.SecondValue ) )
+			&& (  (TrackObject[i].iRiseFrameNum[0] >=4 && TrackObject[i].iRiseFrameNum[1] >= 2)
+				||(TrackObject[i].iRiseFrameNum[0] >=2 && TrackObject[i].iRiseFrameNum[1] >= 4)
+				||(TrackObject[i].iRiseFrameNum[0] >=3 && TrackObject[i].iRiseFrameNum[1] >= 3) )
+			)
+		{
+			Temp_alarm = TRUE;
+		}
 	}
 
 	if ( TrackObject[i].bLineRangeFlag[0]
@@ -3769,52 +3931,107 @@ bool CParabolaOuterCurve::TrackAlarmObject(uint16_t i)
 	{
 		long v_line_y = (long)( m_fCurveLineLocation[0]*TrackObject[i].iTrackTopPoint[0] + m_fCurveLineLocation[1] );
 
-		if ( TrackObject[i].iFindObjNumber >= ParamDsting.FindObjValue.FouthValue  && TrackObject[i].iFindObjNumber <= 14 && TrackObject[i].iTrackFrameNum <= ParamDsting.TrackNumMax.FouthValue
-			&& TrackObject[i].iLittleRegionNum >= (TrackObject[i].iFindObjNumber-1) 
-			&& !TrackObject[i].bTrackAlarmFlag
-			&& TrackObject[i].iXContinueNum[1] <= 1
-			&& TrackObject[i].iLostFrameNum <= ParamDsting.LostNumVal.FouthValue 
-			&& ( TrackObject[i].iMatchNum[0] >= (int)(TrackObject[i].iFindObjNumber *  ParamDsting.fXMatchInverse.FouthValue  ) )
-			&& ( TrackObject[i].iMatchNum[1] >= (int)(TrackObject[i].iFindObjNumber *  ParamDsting.fXMatchInverse.FouthValue  ) )   
-			&& (TrackObject[i].iRiseFrameNum[0] >=ParamDsting.RiseNumVal.FouthValue || TrackObject[i].iRiseFrameNum[1] >=  ParamDsting.DownNumVal.FouthValue)
-			)
+		if (ParamSet.bSensitiveFlag == 1 || ParamSet.bSensitiveFlag == 0 )
 		{
-			if(ParamSet.iSceneDepth == 0)
+			if ( TrackObject[i].iFindObjNumber >= ParamDsting.FindObjValue.FouthValue  && TrackObject[i].iFindObjNumber <= 14 && TrackObject[i].iTrackFrameNum <= ParamDsting.TrackNumMax.FouthValue
+				&& TrackObject[i].iLittleRegionNum >= (TrackObject[i].iFindObjNumber-1) 
+				&& !TrackObject[i].bTrackAlarmFlag
+				&& TrackObject[i].iXContinueNum[1] <= 1
+				&& TrackObject[i].iLostFrameNum <= ParamDsting.LostNumVal.FouthValue 
+				&& ( TrackObject[i].iMatchNum[0] >= (int)(TrackObject[i].iFindObjNumber *  ParamDsting.fXMatchInverse.FouthValue  ) )
+				&& ( TrackObject[i].iMatchNum[1] >= (int)(TrackObject[i].iFindObjNumber *  ParamDsting.fXMatchInverse.FouthValue  ) )   
+				&& (TrackObject[i].iRiseFrameNum[0] >=ParamDsting.RiseNumVal.FouthValue || TrackObject[i].iRiseFrameNum[1] >=  ParamDsting.DownNumVal.FouthValue)
+				)
 			{
-				if ( TrackObject[i].iWhiteSpotNum <= ParamDsting.WhiteSpotVal.FirstValue  
-					&& TrackObject[i].iTrackBottomPoint[1] > v_line_y
-					&& TrackObject[i].iTrackTopPoint[1] < v_line_y
-					&& abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 10 
-					)
-
+				if(ParamSet.iSceneDepth == 0)
 				{
-					Temp_alarm = TRUE;
+					if ( TrackObject[i].iWhiteSpotNum <= ParamDsting.WhiteSpotVal.FirstValue  
+						&& TrackObject[i].iTrackBottomPoint[1] > v_line_y
+						&& TrackObject[i].iTrackTopPoint[1] < v_line_y
+						&& abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 10 
+						)
+
+					{
+						Temp_alarm = TRUE;
+					}
+				}
+
+				if(ParamSet.iSceneDepth == 1)
+				{
+					if ( TrackObject[i].iWhiteSpotNum > 30 
+						&& TrackObject[i].iWhiteSpotNum <= ParamDsting.WhiteSpotVal.SecondValue
+						&& TrackObject[i].iTrackBottomPoint[1] > v_line_y
+						&& TrackObject[i].iTrackTopPoint[1] < v_line_y
+						&& abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 15 
+						)
+					{
+						Temp_alarm = TRUE;
+					}
+				}
+
+				if(ParamSet.iSceneDepth == 2)
+				{
+					if ( TrackObject[i].iWhiteSpotNum > 50 
+						&& TrackObject[i].iWhiteSpotNum <= ParamDsting.WhiteSpotVal.ThirdValue
+						&& TrackObject[i].iTrackBottomPoint[1] > v_line_y
+						&& TrackObject[i].iTrackTopPoint[1] < v_line_y
+						&& abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 25 
+						)
+					{
+						Temp_alarm = TRUE;
+					}
 				}
 			}
-
-			if(ParamSet.iSceneDepth == 1)
+		}
+		else
+		{
+			if ( TrackObject[i].iFindObjNumber >= ParamDsting.FindObjValue.FouthValue+4  && TrackObject[i].iFindObjNumber <= 18 && TrackObject[i].iTrackFrameNum <= ParamDsting.TrackNumMax.FouthValue+2
+				&& TrackObject[i].iLittleRegionNum >= (TrackObject[i].iFindObjNumber-1) 
+				&& !TrackObject[i].bTrackAlarmFlag
+				&& TrackObject[i].iXContinueNum[1] <= 1
+				&& TrackObject[i].iLostFrameNum <= 0
+				&& ( TrackObject[i].iMatchNum[0] >= (int)(TrackObject[i].iFindObjNumber *  ParamDsting.fXMatchInverse.FouthValue  ) )
+				&& ( TrackObject[i].iMatchNum[1] >= (int)(TrackObject[i].iFindObjNumber *  ParamDsting.fXMatchInverse.FouthValue  ) )   
+				&& (TrackObject[i].iRiseFrameNum[0] >=ParamDsting.RiseNumVal.FouthValue && TrackObject[i].iRiseFrameNum[1] >=  ParamDsting.DownNumVal.FouthValue)
+				)
 			{
-				if ( TrackObject[i].iWhiteSpotNum > 30 
-					&& TrackObject[i].iWhiteSpotNum <= ParamDsting.WhiteSpotVal.SecondValue
-					&& TrackObject[i].iTrackBottomPoint[1] > v_line_y
-					&& TrackObject[i].iTrackTopPoint[1] < v_line_y
-					&& abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 15 
-					)
+				if(ParamSet.iSceneDepth == 0)
 				{
-					Temp_alarm = TRUE;
+					if ( TrackObject[i].iWhiteSpotNum <= ParamDsting.WhiteSpotVal.FirstValue  
+						&& TrackObject[i].iTrackBottomPoint[1] > v_line_y
+						&& TrackObject[i].iTrackTopPoint[1] < v_line_y
+						&& abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 10 
+						)
+
+					{
+						Temp_alarm = TRUE;
+					}
 				}
-			}
 
-			if(ParamSet.iSceneDepth == 2)
-			{
-				if ( TrackObject[i].iWhiteSpotNum > 50 
-					&& TrackObject[i].iWhiteSpotNum <= ParamDsting.WhiteSpotVal.ThirdValue
-					&& TrackObject[i].iTrackBottomPoint[1] > v_line_y
-					&& TrackObject[i].iTrackTopPoint[1] < v_line_y
-					&& abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 25 
-					)
+				if(ParamSet.iSceneDepth == 1)
 				{
-					Temp_alarm = TRUE;
+					if ( TrackObject[i].iWhiteSpotNum > 30 
+						&& TrackObject[i].iWhiteSpotNum <= ParamDsting.WhiteSpotVal.SecondValue
+						&& TrackObject[i].iTrackBottomPoint[1] > v_line_y
+						&& TrackObject[i].iTrackTopPoint[1] < v_line_y
+						&& abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 15 
+						)
+					{
+						Temp_alarm = TRUE;
+					}
+				}
+
+				if(ParamSet.iSceneDepth == 2)
+				{
+					if ( TrackObject[i].iWhiteSpotNum > 50 
+						&& TrackObject[i].iWhiteSpotNum <= ParamDsting.WhiteSpotVal.ThirdValue
+						&& TrackObject[i].iTrackBottomPoint[1] > v_line_y
+						&& TrackObject[i].iTrackTopPoint[1] < v_line_y
+						&& abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 25 
+						)
+					{
+						Temp_alarm = TRUE;
+					}
 				}
 			}
 		}
@@ -3859,22 +4076,23 @@ bool CParabolaOuterCurve::TrackAlarmObject(uint16_t i)
 		{
 			Temp_alarm = TRUE;
 		}
-	}
 
-	if ( TrackObject[i].bLineRangeFlag[0]
-	&& TrackObject[i].bLineRangeFlag[1]
-	&& !TrackObject[i].bTrackAlarmFlag
-		&& TrackObject[i].iLostFrameNum == ParamDsting.LostNumVal.SecondValue
-		&& ((TrackObject[i].iMigrationDiff[0] >= ParamDsting.MigrationDiff.SecondValue && abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) >= y_height_value ) || (abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) >=  y_height_value + 15))
-		&& (abs(TrackObject[i].iCurFrameCenter[0]-TrackObject[i].iOriginFrameCenter[0]) > ParamDsting.OriginCurrDis.SecondValue )
-		&& (TrackObject[i].iXContinueNum[0] >= (int)( TrackObject[i].iTrackFrameNum * ParamDsting.fXContInverse.SecondValue) || TrackObject[i].iXContinueNum[0] >= ParamDsting.XContValue.SecondValue )
-		&& (TrackObject[i].iMatchNum[0] >= (int)( TrackObject[i].iTrackFrameNum * ParamDsting.fXMatchInverse.SecondValue) && TrackObject[i].iMatchNum[0] >= ParamDsting.XMatchValue.SecondValue )
-		&& (TrackObject[i].iMatchNum[1] >= (int)( TrackObject[i].iTrackFrameNum * ParamDsting.fYMatchInverse.SecondValue) && TrackObject[i].iMatchNum[1] >= ParamDsting.YMatchValue.SecondValue)
-		&& (TrackObject[i].iFindObjNumber >= ParamDsting.FindObjValue.SecondValue  && TrackObject[i].iFindObjNumber >= (int)(TrackObject[i].iTrackFrameNum * ParamDsting.fFindObjInverse.SecondValue ) )
-		&& (TrackObject[i].iRiseFrameNum[0] >=ParamDsting.RiseNumVal.SecondValue || TrackObject[i].iRiseFrameNum[1] >= ParamDsting.DownNumVal.SecondValue ) 
-		)
-	{
-		Temp_alarm = TRUE;
+
+		if ( TrackObject[i].bLineRangeFlag[0]
+		&& TrackObject[i].bLineRangeFlag[1]
+		&& !TrackObject[i].bTrackAlarmFlag
+			&& TrackObject[i].iLostFrameNum == ParamDsting.LostNumVal.SecondValue
+			&& ((TrackObject[i].iMigrationDiff[0] >= ParamDsting.MigrationDiff.SecondValue && abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) >= y_height_value ) || (abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) >=  y_height_value + 15))
+			&& (abs(TrackObject[i].iCurFrameCenter[0]-TrackObject[i].iOriginFrameCenter[0]) > ParamDsting.OriginCurrDis.SecondValue )
+			&& (TrackObject[i].iXContinueNum[0] >= (int)( TrackObject[i].iTrackFrameNum * ParamDsting.fXContInverse.SecondValue) || TrackObject[i].iXContinueNum[0] >= ParamDsting.XContValue.SecondValue )
+			&& (TrackObject[i].iMatchNum[0] >= (int)( TrackObject[i].iTrackFrameNum * ParamDsting.fXMatchInverse.SecondValue) && TrackObject[i].iMatchNum[0] >= ParamDsting.XMatchValue.SecondValue )
+			&& (TrackObject[i].iMatchNum[1] >= (int)( TrackObject[i].iTrackFrameNum * ParamDsting.fYMatchInverse.SecondValue) && TrackObject[i].iMatchNum[1] >= ParamDsting.YMatchValue.SecondValue)
+			&& (TrackObject[i].iFindObjNumber >= ParamDsting.FindObjValue.SecondValue  && TrackObject[i].iFindObjNumber >= (int)(TrackObject[i].iTrackFrameNum * ParamDsting.fFindObjInverse.SecondValue ) )
+			&& (TrackObject[i].iRiseFrameNum[0] >=ParamDsting.RiseNumVal.SecondValue || TrackObject[i].iRiseFrameNum[1] >= ParamDsting.DownNumVal.SecondValue ) 
+			)
+		{
+			Temp_alarm = TRUE;
+		}
 	}
 
 	if ( TrackObject[i].bLineRangeFlag[0]
@@ -4011,52 +4229,107 @@ bool CParabolaLineTwoSide::TrackAlarmObject(uint16_t i)
 	{
 		long v_line_y = (long)( m_fCurveLineLocation[0]*TrackObject[i].iTrackTopPoint[0] + m_fCurveLineLocation[1] );
 
-		if ( TrackObject[i].iFindObjNumber >= ParamDsting.FindObjValue.FouthValue  && TrackObject[i].iFindObjNumber <= 14 && TrackObject[i].iTrackFrameNum <= ParamDsting.TrackNumMax.FouthValue
-			&& TrackObject[i].iLittleRegionNum >= (TrackObject[i].iFindObjNumber-1) 
-			&& !TrackObject[i].bTrackAlarmFlag
-			&& TrackObject[i].iXContinueNum[1] <= 1
-			&& TrackObject[i].iLostFrameNum <= ParamDsting.LostNumVal.FouthValue 
-			&& ( TrackObject[i].iMatchNum[0] >= (int)(TrackObject[i].iFindObjNumber *  ParamDsting.fXMatchInverse.FouthValue  ) )
-			&& ( TrackObject[i].iMatchNum[1] >= (int)(TrackObject[i].iFindObjNumber *  ParamDsting.fXMatchInverse.FouthValue  ) )   
-			&& (TrackObject[i].iRiseFrameNum[0] >=ParamDsting.RiseNumVal.FouthValue || TrackObject[i].iRiseFrameNum[1] >=  ParamDsting.DownNumVal.FouthValue)
-			)
+		if (ParamSet.bSensitiveFlag == 1 || ParamSet.bSensitiveFlag == 0 )
 		{
-			if(ParamSet.iSceneDepth == 0)
+			if ( TrackObject[i].iFindObjNumber >= ParamDsting.FindObjValue.FouthValue  && TrackObject[i].iFindObjNumber <= 14 && TrackObject[i].iTrackFrameNum <= ParamDsting.TrackNumMax.FouthValue
+				&& TrackObject[i].iLittleRegionNum >= (TrackObject[i].iFindObjNumber-1) 
+				&& !TrackObject[i].bTrackAlarmFlag
+				&& TrackObject[i].iXContinueNum[1] <= 1
+				&& TrackObject[i].iLostFrameNum <= ParamDsting.LostNumVal.FouthValue 
+				&& ( TrackObject[i].iMatchNum[0] >= (int)(TrackObject[i].iFindObjNumber *  ParamDsting.fXMatchInverse.FouthValue  ) )
+				&& ( TrackObject[i].iMatchNum[1] >= (int)(TrackObject[i].iFindObjNumber *  ParamDsting.fXMatchInverse.FouthValue  ) )   
+				&& (TrackObject[i].iRiseFrameNum[0] >=ParamDsting.RiseNumVal.FouthValue || TrackObject[i].iRiseFrameNum[1] >=  ParamDsting.DownNumVal.FouthValue)
+				)
 			{
-				if ( TrackObject[i].iWhiteSpotNum <= ParamDsting.WhiteSpotVal.FirstValue  
-					&& TrackObject[i].iTrackBottomPoint[1] > v_line_y
-					&& TrackObject[i].iTrackTopPoint[1] < v_line_y
-					&& abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 10 
-					)
-
+				if(ParamSet.iSceneDepth == 0)
 				{
-					Temp_alarm = TRUE;
+					if ( TrackObject[i].iWhiteSpotNum <= ParamDsting.WhiteSpotVal.FirstValue  
+						&& TrackObject[i].iTrackBottomPoint[1] > v_line_y
+						&& TrackObject[i].iTrackTopPoint[1] < v_line_y
+						&& abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 10 
+						)
+
+					{
+						Temp_alarm = TRUE;
+					}
+				}
+
+				if(ParamSet.iSceneDepth == 1)
+				{
+					if ( TrackObject[i].iWhiteSpotNum > 30 
+						&& TrackObject[i].iWhiteSpotNum <= ParamDsting.WhiteSpotVal.SecondValue
+						&& TrackObject[i].iTrackBottomPoint[1] > v_line_y
+						&& TrackObject[i].iTrackTopPoint[1] < v_line_y
+						&& abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 15 
+						)
+					{
+						Temp_alarm = TRUE;
+					}
+				}
+
+				if(ParamSet.iSceneDepth == 2)
+				{
+					if ( TrackObject[i].iWhiteSpotNum > 50 
+						&& TrackObject[i].iWhiteSpotNum <= ParamDsting.WhiteSpotVal.ThirdValue
+						&& TrackObject[i].iTrackBottomPoint[1] > v_line_y
+						&& TrackObject[i].iTrackTopPoint[1] < v_line_y
+						&& abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 25 
+						)
+					{
+						Temp_alarm = TRUE;
+					}
 				}
 			}
-
-			if(ParamSet.iSceneDepth == 1)
+		}
+		else
+		{
+			if ( TrackObject[i].iFindObjNumber >= ParamDsting.FindObjValue.FouthValue+4  && TrackObject[i].iFindObjNumber <= 18 && TrackObject[i].iTrackFrameNum <= ParamDsting.TrackNumMax.FouthValue+2
+				&& TrackObject[i].iLittleRegionNum >= (TrackObject[i].iFindObjNumber-1) 
+				&& !TrackObject[i].bTrackAlarmFlag
+				&& TrackObject[i].iXContinueNum[1] <= 1
+				&& TrackObject[i].iLostFrameNum <= 0
+				&& ( TrackObject[i].iMatchNum[0] >= (int)(TrackObject[i].iFindObjNumber *  ParamDsting.fXMatchInverse.FouthValue  ) )
+				&& ( TrackObject[i].iMatchNum[1] >= (int)(TrackObject[i].iFindObjNumber *  ParamDsting.fXMatchInverse.FouthValue  ) )   
+				&& (TrackObject[i].iRiseFrameNum[0] >=ParamDsting.RiseNumVal.FouthValue && TrackObject[i].iRiseFrameNum[1] >=  ParamDsting.DownNumVal.FouthValue)
+				)
 			{
-				if ( TrackObject[i].iWhiteSpotNum > 30 
-					&& TrackObject[i].iWhiteSpotNum <= ParamDsting.WhiteSpotVal.SecondValue
-					&& TrackObject[i].iTrackBottomPoint[1] > v_line_y
-					&& TrackObject[i].iTrackTopPoint[1] < v_line_y
-					&& abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 15 
-					)
+				if(ParamSet.iSceneDepth == 0)
 				{
-					Temp_alarm = TRUE;
+					if ( TrackObject[i].iWhiteSpotNum <= ParamDsting.WhiteSpotVal.FirstValue  
+						&& TrackObject[i].iTrackBottomPoint[1] > v_line_y
+						&& TrackObject[i].iTrackTopPoint[1] < v_line_y
+						&& abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 10 
+						)
+
+					{
+						Temp_alarm = TRUE;
+					}
 				}
-			}
 
-			if(ParamSet.iSceneDepth == 2)
-			{
-				if ( TrackObject[i].iWhiteSpotNum > 50 
-					&& TrackObject[i].iWhiteSpotNum <= ParamDsting.WhiteSpotVal.ThirdValue
-					&& TrackObject[i].iTrackBottomPoint[1] > v_line_y
-					&& TrackObject[i].iTrackTopPoint[1] < v_line_y
-					&& abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 25 
-					)
+				if(ParamSet.iSceneDepth == 1)
 				{
-					Temp_alarm = TRUE;
+					if ( TrackObject[i].iWhiteSpotNum > 30 
+						&& TrackObject[i].iWhiteSpotNum <= ParamDsting.WhiteSpotVal.SecondValue
+						&& TrackObject[i].iTrackBottomPoint[1] > v_line_y
+						&& TrackObject[i].iTrackTopPoint[1] < v_line_y
+						&& abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 15 
+						)
+					{
+						Temp_alarm = TRUE;
+					}
+				}
+
+				if(ParamSet.iSceneDepth == 2)
+				{
+					if ( TrackObject[i].iWhiteSpotNum > 50 
+						&& TrackObject[i].iWhiteSpotNum <= ParamDsting.WhiteSpotVal.ThirdValue
+						&& TrackObject[i].iTrackBottomPoint[1] > v_line_y
+						&& TrackObject[i].iTrackTopPoint[1] < v_line_y
+						&& abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 25 
+						)
+					{
+						Temp_alarm = TRUE;
+					}
 				}
 			}
 		}
@@ -4084,27 +4357,28 @@ bool CParabolaLineTwoSide::TrackAlarmObject(uint16_t i)
 		} 
 	}
 
-	if (TrackObject[i].iWhiteSpotNum <= 40  )
-	{
-		if ( TrackObject[i].bLineRangeFlag[0]
-		&& TrackObject[i].bLineRangeFlag[1]
-		&& !TrackObject[i].bTrackAlarmFlag
-			&& TrackObject[i].iLostFrameNum == ParamDsting.LostNumVal.FirstValue		
-			&& ((TrackObject[i].iMigrationDiff[0] >= ParamDsting.MigrationDiff.FirstValue && abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) >= y_height_value ) || (abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) >= y_height_value + 20 )  )
-			&& (abs(TrackObject[i].iCurFrameCenter[0]-TrackObject[i].iOriginFrameCenter[0]) > ParamDsting.OriginCurrDis.FirstValue )
-			&& (TrackObject[i].iXContinueNum[0] >= (int)( TrackObject[i].iTrackFrameNum * ParamDsting.fXContInverse.FirstValue )|| TrackObject[i].iXContinueNum[0] >= ParamDsting.XContValue.FirstValue )
-			&& (TrackObject[i].iMatchNum[0] >= (int)( TrackObject[i].iTrackFrameNum * ParamDsting.fXMatchInverse.FirstValue )&& TrackObject[i].iMatchNum[0] >= ParamDsting.XMatchValue.FirstValue )
-			&& (TrackObject[i].iMatchNum[1] >= (int)( TrackObject[i].iTrackFrameNum * ParamDsting.fYMatchInverse.FirstValue )&& TrackObject[i].iMatchNum[1] >= ParamDsting.YMatchValue.FirstValue )
-			&& (TrackObject[i].iFindObjNumber >= ParamDsting.FindObjValue.FirstValue  && TrackObject[i].iFindObjNumber >= (int)(TrackObject[i].iTrackFrameNum * ParamDsting.fFindObjInverse.FirstValue) )
-			&& (TrackObject[i].iRiseFrameNum[0] >=ParamDsting.RiseNumVal.FirstValue || TrackObject[i].iRiseFrameNum[1] >= ParamDsting.DownNumVal.FirstValue )
-			)
-		{
-			Temp_alarm = TRUE;
-		}
-	}
-
 	if (ParamSet.bSensitiveFlag == 1 || ParamSet.bSensitiveFlag == 0 )
 	{
+		if (TrackObject[i].iWhiteSpotNum <= 40  )
+		{
+			if ( TrackObject[i].bLineRangeFlag[0]
+			&& TrackObject[i].bLineRangeFlag[1]
+			&& !TrackObject[i].bTrackAlarmFlag
+				&& TrackObject[i].iLostFrameNum == ParamDsting.LostNumVal.FirstValue		
+				&& ((TrackObject[i].iMigrationDiff[0] >= ParamDsting.MigrationDiff.FirstValue && abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) >= y_height_value ) || (abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) >= y_height_value + 20 )  )
+				&& (abs(TrackObject[i].iCurFrameCenter[0]-TrackObject[i].iOriginFrameCenter[0]) > ParamDsting.OriginCurrDis.FirstValue )
+				&& (TrackObject[i].iXContinueNum[0] >= (int)( TrackObject[i].iTrackFrameNum * ParamDsting.fXContInverse.FirstValue )|| TrackObject[i].iXContinueNum[0] >= ParamDsting.XContValue.FirstValue )
+				&& (TrackObject[i].iMatchNum[0] >= (int)( TrackObject[i].iTrackFrameNum * ParamDsting.fXMatchInverse.FirstValue )&& TrackObject[i].iMatchNum[0] >= ParamDsting.XMatchValue.FirstValue )
+				&& (TrackObject[i].iMatchNum[1] >= (int)( TrackObject[i].iTrackFrameNum * ParamDsting.fYMatchInverse.FirstValue )&& TrackObject[i].iMatchNum[1] >= ParamDsting.YMatchValue.FirstValue )
+				&& (TrackObject[i].iFindObjNumber >= ParamDsting.FindObjValue.FirstValue  && TrackObject[i].iFindObjNumber >= (int)(TrackObject[i].iTrackFrameNum * ParamDsting.fFindObjInverse.FirstValue) )
+				&& (TrackObject[i].iRiseFrameNum[0] >=ParamDsting.RiseNumVal.FirstValue || TrackObject[i].iRiseFrameNum[1] >= ParamDsting.DownNumVal.FirstValue )
+				)
+			{
+				Temp_alarm = TRUE;
+			}
+		}
+
+	
 		if ( TrackObject[i].bLineRangeFlag[0] 
 			&& TrackObject[i].bLineRangeFlag[1] 
 			&& !TrackObject[i].bTrackAlarmFlag
@@ -4122,24 +4396,24 @@ bool CParabolaLineTwoSide::TrackAlarmObject(uint16_t i)
 		{
 			Temp_alarm = TRUE;
 		}
-	}
 
-	if ( TrackObject[i].bLineRangeFlag[0]
-		&& TrackObject[i].bLineRangeFlag[1]
-		&& !TrackObject[i].bTrackAlarmFlag
-		&& TrackObject[i].iLostFrameNum == ParamDsting.LostNumVal.SecondValue
-		&& ((TrackObject[i].iMigrationDiff[0] >= ParamDsting.MigrationDiff.SecondValue && abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) >= y_height_value ) || (abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) >=  y_height_value + 15))
-		&& (abs(TrackObject[i].iCurFrameCenter[0]-TrackObject[i].iOriginFrameCenter[0]) > ParamDsting.OriginCurrDis.SecondValue )
-		&& (TrackObject[i].iXContinueNum[0] >= (int)( TrackObject[i].iTrackFrameNum * ParamDsting.fXContInverse.SecondValue) || TrackObject[i].iXContinueNum[0] >= ParamDsting.XContValue.SecondValue )
-		&& (TrackObject[i].iMatchNum[0] >= (int)( TrackObject[i].iTrackFrameNum * ParamDsting.fXMatchInverse.SecondValue) && TrackObject[i].iMatchNum[0] >= ParamDsting.XMatchValue.SecondValue )
-		&& (TrackObject[i].iMatchNum[1] >= (int)( TrackObject[i].iTrackFrameNum * ParamDsting.fYMatchInverse.SecondValue) && TrackObject[i].iMatchNum[1] >= ParamDsting.YMatchValue.SecondValue)
-		&& (TrackObject[i].iFindObjNumber >= ParamDsting.FindObjValue.SecondValue  && TrackObject[i].iFindObjNumber >= (int)(TrackObject[i].iTrackFrameNum * ParamDsting.fFindObjInverse.SecondValue ) )
-		&& (  (TrackObject[i].iRiseFrameNum[0] >=4 && TrackObject[i].iRiseFrameNum[1] >= 2)
-		||(TrackObject[i].iRiseFrameNum[0] >=2 && TrackObject[i].iRiseFrameNum[1] >= 4)
-		||(TrackObject[i].iRiseFrameNum[0] >=3 && TrackObject[i].iRiseFrameNum[1] >= 3) )
-		)
-	{
-		Temp_alarm = TRUE;
+		if ( TrackObject[i].bLineRangeFlag[0]
+			&& TrackObject[i].bLineRangeFlag[1]
+			&& !TrackObject[i].bTrackAlarmFlag
+			&& TrackObject[i].iLostFrameNum == ParamDsting.LostNumVal.SecondValue
+			&& ((TrackObject[i].iMigrationDiff[0] >= ParamDsting.MigrationDiff.SecondValue && abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) >= y_height_value ) || (abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) >=  y_height_value + 15))
+			&& (abs(TrackObject[i].iCurFrameCenter[0]-TrackObject[i].iOriginFrameCenter[0]) > ParamDsting.OriginCurrDis.SecondValue )
+			&& (TrackObject[i].iXContinueNum[0] >= (int)( TrackObject[i].iTrackFrameNum * ParamDsting.fXContInverse.SecondValue) || TrackObject[i].iXContinueNum[0] >= ParamDsting.XContValue.SecondValue )
+			&& (TrackObject[i].iMatchNum[0] >= (int)( TrackObject[i].iTrackFrameNum * ParamDsting.fXMatchInverse.SecondValue) && TrackObject[i].iMatchNum[0] >= ParamDsting.XMatchValue.SecondValue )
+			&& (TrackObject[i].iMatchNum[1] >= (int)( TrackObject[i].iTrackFrameNum * ParamDsting.fYMatchInverse.SecondValue) && TrackObject[i].iMatchNum[1] >= ParamDsting.YMatchValue.SecondValue)
+			&& (TrackObject[i].iFindObjNumber >= ParamDsting.FindObjValue.SecondValue  && TrackObject[i].iFindObjNumber >= (int)(TrackObject[i].iTrackFrameNum * ParamDsting.fFindObjInverse.SecondValue ) )
+			&& (  (TrackObject[i].iRiseFrameNum[0] >=4 && TrackObject[i].iRiseFrameNum[1] >= 2)
+			||(TrackObject[i].iRiseFrameNum[0] >=2 && TrackObject[i].iRiseFrameNum[1] >= 4)
+			||(TrackObject[i].iRiseFrameNum[0] >=3 && TrackObject[i].iRiseFrameNum[1] >= 3) )
+			)
+		{
+			Temp_alarm = TRUE;
+		}
 	}
 
 	if ( TrackObject[i].bLineRangeFlag[0]
