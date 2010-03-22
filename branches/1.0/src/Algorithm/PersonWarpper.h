@@ -1,7 +1,9 @@
 #pragma once
 
-#include "CPersonDetect.h"
 #include "Analyzer.h"
+#include "Common/frames.h"
+
+class CPersonDetect;
 
 //抛物检测类的包装类，以屏蔽上层对其调用的差异性
 class CPersonWarpper: public CAnalyzer

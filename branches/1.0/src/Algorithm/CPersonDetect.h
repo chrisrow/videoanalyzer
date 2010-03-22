@@ -18,9 +18,7 @@
 
 #include "matlabFunc.h"
 
-#define SY 1
 
-#if (1 == SY)
 #include <math.h>
 // #include "..\\..\\..\\MultiThreadTestGUI\\src\\TonyJpegEncoder.h" 
 #include <Winsock2.h>
@@ -196,32 +194,32 @@ public:
   }; 
 
 public:/*处理主函数*/
-  /*室外场景，人形勾勒*/
-  ErrVal  PersenDetect_Process1(CFrameContainer* pFrame_matlabFunced,
-                                CFrameContainer* pRgbhumaninfo,
-                                CFrameContainer* Binremovebody ,
-                                const CFrameContainer*  const   pFrame_input)  ;
-  /*对D1图像，先隔行扫描找目标，再返回D1图像小阈值分析目标*/
-  ErrVal  PersenDetect_Process2(CFrameContainer* pFrame_matlabFunced,
-                                CFrameContainer* pRgbhumaninfo,
-                                CFrameContainer* Binremovebody,
-                                CFrameContainer* pFrame_curr_in, 
-                                const uint8_t* const pRGB_template ); 
-  /*大门口区分人与车*/
-  ErrVal  PersenDetect_Process3(CFrameContainer* pFrame_matlabFunced,
-                                CFrameContainer* pRgbhumaninfo,
-                                CFrameContainer* Binremovebody,
-                                CFrameContainer* pFrame_curr_in,
-                                const uint8_t* const pRGB_template ); 
-  /*新背景算法*/
-  ErrVal  PersenDetect_Process4(CFrameContainer* pFrame_matlabFunced,
-                                CFrameContainer* pRgbhumaninfo,
-                                CFrameContainer* Binremovebody,
-                                CFrameContainer* pFrame_curr_in, 
-                                const uint8_t* const pRGB_template ,
-                                const ALARMTYPE alarm_type,
-                                uint16_t demarcation_line,  //! 远近景的分界线
-                                const uint32_t framenum/* = 0*/); 
+//   /*室外场景，人形勾勒*/
+//   ErrVal  PersenDetect_Process1(CFrameContainer* pFrame_matlabFunced,
+//                                 CFrameContainer* pRgbhumaninfo,
+//                                 CFrameContainer* Binremovebody ,
+//                                 const CFrameContainer*  const   pFrame_input)  ;
+//   /*对D1图像，先隔行扫描找目标，再返回D1图像小阈值分析目标*/
+//   ErrVal  PersenDetect_Process2(CFrameContainer* pFrame_matlabFunced,
+//                                 CFrameContainer* pRgbhumaninfo,
+//                                 CFrameContainer* Binremovebody,
+//                                 CFrameContainer* pFrame_curr_in, 
+//                                 const uint8_t* const pRGB_template ); 
+//   /*大门口区分人与车*/
+//   ErrVal  PersenDetect_Process3(CFrameContainer* pFrame_matlabFunced,
+//                                 CFrameContainer* pRgbhumaninfo,
+//                                 CFrameContainer* Binremovebody,
+//                                 CFrameContainer* pFrame_curr_in,
+//                                 const uint8_t* const pRGB_template ); 
+//   /*新背景算法*/
+//   ErrVal  PersenDetect_Process4(CFrameContainer* pFrame_matlabFunced,
+//                                 CFrameContainer* pRgbhumaninfo,
+//                                 CFrameContainer* Binremovebody,
+//                                 CFrameContainer* pFrame_curr_in, 
+//                                 const uint8_t* const pRGB_template ,
+//                                 const ALARMTYPE alarm_type,
+//                                 uint16_t demarcation_line,  //! 远近景的分界线
+//                                 const uint32_t framenum/* = 0*/); 
 
   /*多线程处理，channel_1*/
   ErrVal  PersenDetect_Process_Channel_1(CFrameContainer* pFrame_matlabFunced,  
@@ -445,6 +443,5 @@ public:
                           float pitch1,float slope2,float pitch2);
 };
 
-#endif//#if (1 == SY)
 
 #endif
