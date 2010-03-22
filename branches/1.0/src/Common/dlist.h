@@ -440,7 +440,7 @@ CDList<T, CDNode>::DestroyAtPos( int const pos )
   //  return -1;
   ASSERT( 1 <= pos && pos <= m_nCount );
 
-  int i;
+//   int i;
   CDNode<T>* pTmpNode = NULL; //m_pNodeHead;
 
   // head node?

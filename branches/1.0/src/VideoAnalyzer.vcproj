@@ -257,6 +257,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Algorithm\CPersonDetect.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Algorithm\CPersonDetect.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Algorithm\Macro.cpp"
 				>
 			</File>
@@ -273,15 +281,19 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Algorithm\ParabolaStruct.h"
-				>
-			</File>
-			<File
 				RelativePath="Algorithm\ParabolaWarpper.cpp"
 				>
 			</File>
 			<File
 				RelativePath="Algorithm\ParabolaWarpper.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Algorithm\PersonWarpper.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Algorithm\PersonWarpper.h"
 				>
 			</File>
 		</Filter>
