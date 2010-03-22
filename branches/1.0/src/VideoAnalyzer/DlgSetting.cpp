@@ -3,7 +3,7 @@
 
 #include "stdafx.h"
 #include "VideoAnalyzer.h"
-#include "VideoAnalyzer\DlgSetting.h"
+#include "VideoAnalyzer/DlgSetting.h"
 #include "Algorithm/CParabolaDetect.h"
 
 extern struct ParamStruct ParamSet;

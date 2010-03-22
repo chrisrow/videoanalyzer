@@ -341,11 +341,27 @@
 				>
 			</File>
 			<File
+				RelativePath=".\VideoAnalyzer\Line.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\VideoAnalyzer\Line.h"
+				>
+			</File>
+			<File
 				RelativePath=".\VideoAnalyzer\Option.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\VideoAnalyzer\Option.h"
+				>
+			</File>
+			<File
+				RelativePath=".\VideoAnalyzer\PersonCfgDlg.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\VideoAnalyzer\PersonCfgDlg.h"
 				>
 			</File>
 			<File
