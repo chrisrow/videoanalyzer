@@ -14,8 +14,6 @@
 #include "PreviewStatic.h"
 #include "Algorithm/Analyzer.h"
 #include "afxcmn.h"
-#include "DlgSetting.h"
-
 
 enum SOURCETYPE
 {

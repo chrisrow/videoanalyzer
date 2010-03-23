@@ -6,44 +6,44 @@
 #include "Common/frames.h"
 
 
-// CSettingDlg dialog
+// CDlgPersonCfg dialog
 
-IMPLEMENT_DYNAMIC(CSettingDlg, CDialog)
+IMPLEMENT_DYNAMIC(CDlgPersonCfg, CDialog)
 
-CSettingDlg::CSettingDlg(CWnd* pParent /*=NULL*/)
-	: CDialog(CSettingDlg::IDD, pParent)
+CDlgPersonCfg::CDlgPersonCfg(CWnd* pParent /*=NULL*/)
+	: CDialog(CDlgPersonCfg::IDD, pParent)
 {
 
 }
 
-CSettingDlg::~CSettingDlg()
+CDlgPersonCfg::~CDlgPersonCfg()
 {
   desrory( );
 }
 
-void CSettingDlg::DoDataExchange(CDataExchange* pDX)
+void CDlgPersonCfg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 }
 
 
-BEGIN_MESSAGE_MAP(CSettingDlg, CDialog)
-  ON_BN_CLICKED(IDC_BTN_REFRESH, &CSettingDlg::OnBnClickedBtnRefresh)
+BEGIN_MESSAGE_MAP(CDlgPersonCfg, CDialog)
+  ON_BN_CLICKED(IDC_BTN_REFRESH, &CDlgPersonCfg::OnBnClickedBtnRefresh)
   ON_WM_LBUTTONDOWN()
   ON_WM_RBUTTONDOWN()
-  ON_BN_CLICKED(IDC_BTN_FILL, &CSettingDlg::OnBnClickedBtnFill)
-  ON_BN_CLICKED(IDC_BTN_CAR, &CSettingDlg::OnBnClickedBtnCar)
-  ON_BN_CLICKED(IDC_BTN_UNDO, &CSettingDlg::OnBnClickedBtnUndo)
-  ON_BN_CLICKED(IDC_BTN_OUTPUT, &CSettingDlg::OnBnClickedBtnOutput)
-  ON_BN_CLICKED(IDC_BTN_SAVE, &CSettingDlg::OnBnClickedBtnSave)
+  ON_BN_CLICKED(IDC_BTN_FILL, &CDlgPersonCfg::OnBnClickedBtnFill)
+  ON_BN_CLICKED(IDC_BTN_CAR, &CDlgPersonCfg::OnBnClickedBtnCar)
+  ON_BN_CLICKED(IDC_BTN_UNDO, &CDlgPersonCfg::OnBnClickedBtnUndo)
+  ON_BN_CLICKED(IDC_BTN_OUTPUT, &CDlgPersonCfg::OnBnClickedBtnOutput)
+  ON_BN_CLICKED(IDC_BTN_SAVE, &CDlgPersonCfg::OnBnClickedBtnSave)
   ON_WM_PAINT()
-  ON_BN_CLICKED(IDC_BTN_INVERSE, &CSettingDlg::OnBnClickedBtnInverse)
+  ON_BN_CLICKED(IDC_BTN_INVERSE, &CDlgPersonCfg::OnBnClickedBtnInverse)
 END_MESSAGE_MAP()
 
 
-// CSettingDlg message handlers
+// CDlgPersonCfg message handlers
 
-BOOL CSettingDlg::OnInitDialog()
+BOOL CDlgPersonCfg::OnInitDialog()
 {
   CDialog::OnInitDialog();
 
@@ -59,7 +59,7 @@ BOOL CSettingDlg::OnInitDialog()
   // EXCEPTION: OCX Property Pages should return FALSE
 }
 
-void CSettingDlg::OnPaint()
+void CDlgPersonCfg::OnPaint()
 {
   CPaintDC dc(this); // device context for painting
   // TODO: Add your message handler code here
@@ -71,10 +71,9 @@ void CSettingDlg::OnPaint()
   {
     line_TestGUI->Draw(DC);
   }
-
 }
 
-void CSettingDlg::OnLButtonDown(UINT nFlags, CPoint point)
+void CDlgPersonCfg::OnLButtonDown(UINT nFlags, CPoint point)
 {
   if ( line_TestGUI->flag4 )
   {
@@ -94,10 +93,9 @@ void CSettingDlg::OnLButtonDown(UINT nFlags, CPoint point)
 
   CDialog::OnLButtonDown(nFlags, point);
   OnPaint();
-
 }
 
-void CSettingDlg::OnRButtonDown(UINT nFlags, CPoint point)
+void CDlgPersonCfg::OnRButtonDown(UINT nFlags, CPoint point)
 {
   if(point.x>line_TestGUI->pos_pic.x+line_TestGUI->Pic_sizex
       ||point.y>line_TestGUI->pos_pic.y+line_TestGUI->Pic_sizey
@@ -110,9 +108,9 @@ void CSettingDlg::OnRButtonDown(UINT nFlags, CPoint point)
 
   CDialog::OnRButtonDown(nFlags, point);
   OnPaint();
-
 }
-void CSettingDlg::OnBnClickedBtnRefresh()
+
+void CDlgPersonCfg::OnBnClickedBtnRefresh()
 {
   line_TestGUI->init_line(line_TestGUI->Pic_sizex,line_TestGUI->Pic_sizey);
   line_TestGUI->flag4 = true;
@@ -120,7 +118,7 @@ void CSettingDlg::OnBnClickedBtnRefresh()
   Invalidate();
 }
 
-void CSettingDlg::OnBnClickedBtnFill()
+void CDlgPersonCfg::OnBnClickedBtnFill()
 {
   CClientDC dc(this); 
   line_TestGUI->flag2=true;
@@ -128,7 +126,7 @@ void CSettingDlg::OnBnClickedBtnFill()
   line_TestGUI->OutPut(dc);
 }
 
-void CSettingDlg::OnBnClickedBtnCar()
+void CDlgPersonCfg::OnBnClickedBtnCar()
 {
   if(0 == line_TestGUI->index)
   {
@@ -138,24 +136,24 @@ void CSettingDlg::OnBnClickedBtnCar()
   line_TestGUI->GetCutIndex();
 }
 
-void CSettingDlg::OnBnClickedBtnUndo()
+void CDlgPersonCfg::OnBnClickedBtnUndo()
 {
   line_TestGUI->undo();
   OnPaint();
 }
 
-void CSettingDlg::OnBnClickedBtnOutput()
+void CDlgPersonCfg::OnBnClickedBtnOutput()
 {
   CClientDC dc(this);
   line_TestGUI->ShowReginInfo(dc,360,0);
 }
 
-void CSettingDlg::OnBnClickedBtnInverse()
+void CDlgPersonCfg::OnBnClickedBtnInverse()
 {
   line_TestGUI->binverse = !line_TestGUI->binverse;
 }
 
-void CSettingDlg::OnBnClickedBtnSave()
+void CDlgPersonCfg::OnBnClickedBtnSave()
 {
   CString m_FilePath = line_TestGUI->GetFilePath();
   CString FileName = _T("\\set_TestGUIDLG.set");
@@ -165,7 +163,7 @@ void CSettingDlg::OnBnClickedBtnSave()
   line_TestGUI->SaveParameterToFile(m_FilePath);
 }
 
-void CSettingDlg::desrory( )//==
+void CDlgPersonCfg::desrory( )//==
 {
   if (datafromline)
   {
@@ -174,7 +172,7 @@ void CSettingDlg::desrory( )//==
   }
 }
 
-void CSettingDlg::reinit(int imWidthin, int imHeightin )
+void CDlgPersonCfg::reinit(int imWidthin, int imHeightin )
 {
   line_TestGUI = new Line(imWidthin,imHeightin);
   datafromline = new unsigned char[imWidthin*imHeightin*3];
