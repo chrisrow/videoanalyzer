@@ -10,6 +10,9 @@
 #include "Algorithm/Macro.h"
 #include "Option.h"
 
+#include "DlgSetting.h"
+#include "DlgPersonCfg.h"
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -967,21 +970,23 @@ void CVideoAnalyzerDlg::OnMenuClear()
 
 void CVideoAnalyzerDlg::OnBnClickedButtonSetup()
 {
-    CDlgSetting dlgSetting;
-    if ( !this->loadConfig() )
-    {
-        AfxMessageBox("ÔØÈëÅäÖÃÊý¾ÝÊ§°Ü");
-    }
-//CDlgSetting m_dlgSetting;
-	dlgSetting.setImage(m_ctlVideo.getImage());
-
-    if (dlgSetting.DoModal() != IDOK)
-    {
-		
-        return;
-    }
-
-    this->saveConfig();
+//     CDlgSetting dlgSetting;
+//     if ( !this->loadConfig() )
+//     {
+//         AfxMessageBox("ÔØÈëÅäÖÃÊý¾ÝÊ§°Ü");
+//     }
+// 
+//     dlgSetting.setImage(m_ctlVideo.getImage());
+//     if (dlgSetting.DoModal() != IDOK)
+//     {
+// 		
+//         return;
+//     }
+// 
+//     this->saveConfig();
+    CDlgPersonCfg dlg;
+    dlg.reinit(m_iWidth, m_iHeight);
+    dlg.DoModal();
 }
 
 bool CVideoAnalyzerDlg::loadConfig()
