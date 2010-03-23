@@ -313,6 +313,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\VideoAnalyzer\DlgPersonCfg.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\VideoAnalyzer\DlgPersonCfg.h"
+				>
+			</File>
+			<File
 				RelativePath=".\VideoAnalyzer\DlgSetting.cpp"
 				>
 			</File>
@@ -354,14 +362,6 @@
 			</File>
 			<File
 				RelativePath=".\VideoAnalyzer\Option.h"
-				>
-			</File>
-			<File
-				RelativePath=".\VideoAnalyzer\PersonCfgDlg.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\VideoAnalyzer\PersonCfgDlg.h"
 				>
 			</File>
 			<File
