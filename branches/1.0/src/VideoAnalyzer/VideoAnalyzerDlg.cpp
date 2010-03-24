@@ -7,6 +7,7 @@
 
 #include "UDPAlerter.h"
 #include "Algorithm/ParabolaWarpper.h"
+#include "Algorithm/PersonWarpper.h"
 #include "Algorithm/Macro.h"
 #include "Option.h"
 
@@ -656,7 +657,6 @@ bool CVideoAnalyzerDlg::openSource(TVideoSource& tSource)
     m_txtAlert.SetWindowText("0");
 
     //ÉèÖÃÊÓÆµ·ÖÎöÆ÷
-    OnCbnSelchangeComboAyalyzer();
     if(m_pAnalyzer)
     {
         m_pVideoGraber->addListener(m_pAnalyzer);
@@ -916,7 +916,8 @@ void CVideoAnalyzerDlg::OnCbnSelchangeComboAyalyzer()
 {
     delete m_pAnalyzer;
     m_pAnalyzer = NULL;
-    m_pAnalyzer = new CParabolaWarpper;
+//     m_pAnalyzer = new CParabolaWarpper;
+    m_pAnalyzer = new CPersonWarpper;
     m_pAnalyzer->addListener(this);
 }
 

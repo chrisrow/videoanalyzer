@@ -14,6 +14,9 @@
 #include "stdafx.h"
 
 #include "CPersonDetect.h"
+#include "Macro.h"
+
+extern int g_debug;
 
 
 CPersonDetect::CPersonDetect(uint16_t const  nYWidth_in, uint16_t const  nYHeight_in, YUVTYPE const  YuvType_in,const uint8_t nChannel)
@@ -1532,6 +1535,9 @@ CPersonDetect::PersenDetect_Process_Channel_3(CFrameContainer* pFrame_matlabFunc
 #endif
     Shadow_Mask(pFrame_curr_in,pRGB_template);
     EXM_NOK( averagesmoothRgb( pFrame_RgbSmoothed,pFrame_curr_in/*, SMOOTHSTARTLINE */), "smoothRgb fail!" );
+
+    SHOW_IMAGE("smooth", pFrame_RgbSmoothed->getImage());
+
     CFrameContainer*   pFrame_RgbSmoothed_low   = new CFrameContainer(pFrame_curr_in->getWidth()/2,pFrame_curr_in->getHeight()/2,pFrame_curr_in->getYuvType());
     CFrameContainer*   pFrame_bkgndDetected_low = new CFrameContainer(pFrame_curr_in->getWidth()/2,pFrame_curr_in->getHeight()/2,pFrame_curr_in->getYuvType());
     CFrameContainer*   pFrame_matlabFunced_low  = new CFrameContainer(pFrame_curr_in->getWidth()/2,pFrame_curr_in->getHeight()/2,pFrame_curr_in->getYuvType());

@@ -20,6 +20,7 @@ public:
     virtual void updateFrame(const IplImage *pFrame) ;
 
 private:
+    unsigned char* m_RGB_template;
     CFrameContainer *m_pFrameContainer, *m_pOutFrameContainer, *m_pFrame_matlabFunced;
     CPersonDetect* m_pDetector;
 };
