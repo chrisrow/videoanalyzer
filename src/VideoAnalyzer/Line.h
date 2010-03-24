@@ -22,7 +22,7 @@
                          
 #if !defined  (_LINE_H__21487776_F28C_45b5_9E53_33FC9F1F2F08)
 #define _LINE_H__21487776_F28C_45b5_9E53_33FC9F1F2F08
-#undef DEBUG_NEW
+// #undef DEBUG_NEW
 
 class Line
 {
