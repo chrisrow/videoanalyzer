@@ -329,6 +329,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\VideoAnalyzer\HeartBeat.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\VideoAnalyzer\HeartBeat.h"
+				>
+			</File>
+			<File
 				RelativePath=".\VideoAnalyzer\Option.cpp"
 				>
 			</File>
@@ -342,6 +350,10 @@
 			</File>
 			<File
 				RelativePath=".\VideoAnalyzer\PreviewStatic.h"
+				>
+			</File>
+			<File
+				RelativePath=".\VideoAnalyzer\Protocol.h"
 				>
 			</File>
 			<File

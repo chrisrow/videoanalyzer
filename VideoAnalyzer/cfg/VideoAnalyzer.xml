@@ -3,6 +3,7 @@
     <golbal>
         <LocalAddr>0.0.0.0</LocalAddr>
         <UDPServer>10.2.1.13:10116</UDPServer>
+        <HeartBeat>180</HeartBeat>    <!-- 发送心跳消息的间隔时间(秒) -->
     </golbal>
     <camera channel="0">
         <ParamStruct>
