@@ -12,6 +12,7 @@ CUDPAlerter::CUDPAlerter()
 
 CUDPAlerter::~CUDPAlerter()
 {
+    this->destroy();
 }
 
 void CUDPAlerter::alert(const IplImage *pFrame)
@@ -23,8 +24,6 @@ void CUDPAlerter::alert(const IplImage *pFrame)
 void CUDPAlerter::doRun()
 {
     IplImage* pImage = cvCloneImage(m_pIplImage);
-//     const unsigned short REMOTE_PORT = 10116;
-
     SOCKET sockClient=socket(AF_INET,SOCK_DGRAM,0);
     SOCKADDR_IN addrClient;
 
@@ -90,3 +89,4 @@ bool CUDPAlerter::destroy()
     WSACleanup( );
     return true;
 }
+
