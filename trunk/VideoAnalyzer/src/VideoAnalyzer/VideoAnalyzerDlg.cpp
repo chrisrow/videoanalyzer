@@ -711,6 +711,11 @@ void CVideoAnalyzerDlg::closeSource()
     {
         m_pVideoGraber->close();
     }
+
+    if (m_pVideoRecoder)
+    {
+        m_pVideoRecoder->stop();
+    }
 }
 
 void CVideoAnalyzerDlg::setVideoControl(VIDEO_CONTROL c)
@@ -862,6 +867,9 @@ void CVideoAnalyzerDlg::OnClose()
 
         delete m_pAnalyzer;
         m_pAnalyzer = NULL;
+
+        delete m_pVideoRecoder;
+        m_pVideoRecoder = NULL;
 
         __super::OnClose();
     }
@@ -1116,12 +1124,6 @@ bool CVideoAnalyzerDlg::startRecord(const char* szFileName)
         delete m_pVideoRecoder;
     }
 
-    CString strWidth, strHeight;
-    m_edtWidth.GetWindowText(strWidth);
-    m_edtHeight.GetWindowText(strHeight);
-    m_iWidth = atoi((LPCTSTR)strWidth);
-    m_iHeight = atoi((LPCTSTR)strHeight);
-
     bool bResult = false;
     m_pVideoRecoder = new CVideoRecorder;
     m_pVideoRecoder->setResolution(m_iWidth, m_iHeight);
@@ -1141,17 +1143,8 @@ bool CVideoAnalyzerDlg::startRecord(const char* szFileName)
 
 void CVideoAnalyzerDlg::stopRecord()
 {
-    if (m_pVideoRecoder && m_pVideoGraber)
+    if (m_pVideoGraber)
     {
-        //很挫的用法
-        m_pVideoGraber->pause();
-        Sleep(500);
-
         m_pVideoGraber->removeListener(m_pVideoRecoder);
-        m_pVideoRecoder->stop();
-        delete m_pVideoRecoder;
-        m_pVideoRecoder = NULL;
-
-        m_pVideoGraber->resume();
     }
 }
