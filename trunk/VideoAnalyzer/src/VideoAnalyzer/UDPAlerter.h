@@ -20,11 +20,8 @@ protected:
     virtual void doRun();
 
 private:
-    int m_iAlarmType;
-    int m_iChannel;
-    unsigned char m_ucLocalIP[4];
-    unsigned char m_ucRemoteIP[4];
-    int m_iPort;
-    const IplImage* m_pIplImage;
+    SOCKET m_sockClient;
+    unsigned char m_szBuf[1024];
+    SOCKADDR_IN m_addrClient;
 };
 
