@@ -170,9 +170,9 @@ BOOL CVideoAnalyzerDlg::OnInitDialog()
     m_menu.LoadMenu(IDR_MENU_LIST);
 
     //选项
+    g_debug = 1;
+    m_chkDebug.SetCheck(g_debug);//改动
     m_chkPreview.SetCheck(1);
-    m_chkDebug.SetCheck(0);//改动
-    g_debug = 0;
     
     //选择视频属性
     CString strWidth, strHeight, strFR;
@@ -657,6 +657,7 @@ bool CVideoAnalyzerDlg::openSource(TVideoSource& tSource)
     m_txtAlert.SetWindowText("0");
 
     //设置视频分析器
+    this->OnCbnSelchangeComboAyalyzer(); //临时
     if(m_pAnalyzer)
     {
         m_pVideoGraber->addListener(m_pAnalyzer);
@@ -985,9 +986,27 @@ void CVideoAnalyzerDlg::OnBnClickedButtonSetup()
 //     }
 // 
 //     this->saveConfig();
+
+    IplImage* pImage = NULL;
+    if (m_ctlVideo.getImage())
+    {
+        pImage = cvCloneImage(m_ctlVideo.getImage());
+    }
+    else
+    {
+        pImage = cvCreateImage(cvSize(352, 288), 8, 3);
+        cvZero(pImage);
+    }
+
     CDlgPersonCfg dlg;
     dlg.reinit(m_iWidth, m_iHeight);
+    memcpy(dlg.datafromline, pImage->imageData, pImage->imageSize);
     dlg.DoModal();
+
+    if (pImage)
+    {
+        cvReleaseImage(&pImage);
+    }
 }
 
 bool CVideoAnalyzerDlg::loadConfig()
