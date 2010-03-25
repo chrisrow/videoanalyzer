@@ -1536,7 +1536,6 @@ CPersonDetect::PersenDetect_Process_Channel_3(CFrameContainer* pFrame_matlabFunc
     Shadow_Mask(pFrame_curr_in,pRGB_template);
     EXM_NOK( averagesmoothRgb( pFrame_RgbSmoothed,pFrame_curr_in/*, SMOOTHSTARTLINE */), "smoothRgb fail!" );
 
-    SHOW_IMAGE("smooth", pFrame_RgbSmoothed->getImage());
 
     CFrameContainer*   pFrame_RgbSmoothed_low   = new CFrameContainer(pFrame_curr_in->getWidth()/2,pFrame_curr_in->getHeight()/2,pFrame_curr_in->getYuvType());
     CFrameContainer*   pFrame_bkgndDetected_low = new CFrameContainer(pFrame_curr_in->getWidth()/2,pFrame_curr_in->getHeight()/2,pFrame_curr_in->getYuvType());
@@ -1553,12 +1552,17 @@ CPersonDetect::PersenDetect_Process_Channel_3(CFrameContainer* pFrame_matlabFunc
     deletminobj(ObjectLabeledDList, demarcation_line);
     ForecastObjectDetect(ObjectLabeledDList, pFrame_curr_in/*pRgbhumaninfo*/, pFrame_matlabFunced,&Warning_Line[2],&Alarm_Line[2] , alarm_type);
     ObjectLabeledDList->DestroyAll();
+
+    Draw_Warning_Line(&Warning_Line[2],pFrame_RgbSmoothed/*pRgbhumaninfo*/);    
+    ImgMoveObjectDetect(pFrame_RgbSmoothed/*pRgbhumaninfo*/);
+    SHOW_IMAGE("smooth", pFrame_RgbSmoothed->getImage());
+
 #if (1 == SY_DEBUG)
     Draw_Warning_Line(&Warning_Line[2],pFrame_curr_in/*pRgbhumaninfo*/);    
     ImgMoveObjectDetect(pFrame_curr_in/*pRgbhumaninfo*/);
     if (b_First_Alarm /*|| b_Second_Alarm*/)
     {
-      SaveJpeg_File_color(pFrame_curr_in/*pRgbhumaninfo*/,3);
+//       SaveJpeg_File_color(pFrame_curr_in/*pRgbhumaninfo*/,3);
     }
 #endif
     SAFEDELETE( pFrame_RgbSmoothed_low);
