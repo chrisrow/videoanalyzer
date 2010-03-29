@@ -73,6 +73,7 @@ CVideoAnalyzerDlg::CVideoAnalyzerDlg(CWnd* pParent /*=NULL*/)
     m_uAlert = 0;
     m_bRecord = false;
     m_pVideoRecoder = NULL;
+    m_pHeartBeat = NULL;
     m_iWidth = 352;
     m_iHeight = 288;
 }
@@ -663,44 +664,71 @@ bool CVideoAnalyzerDlg::openSource(TVideoSource& tSource)
         m_pVideoGraber->addListener(m_pAnalyzer);
     }
 
+    //获取远程、本地IP地址和端口
+    unsigned char local[4] = {0, 0, 0, 0};
+    unsigned char remote[4] = {127, 0, 0, 1}; // {192, 168, 1, 74}
+    int port = 0;
+
+    int tmp[4] = {0};
+    const char* ip = NULL;
+    if ( NULL == (ip = m_cfgParse.GetGolbalParam("UDPServer")) )
+    {
+        this->AddRunStatus("获取UDPServer的IP地址失败，使用默认地址'192.168.1.74'");
+        ip = "192.168.1.74";
+    }
+    m_cfgParse.GetGolbalParam("UDPServer");
+    sscanf(ip, "%d.%d.%d.%d:%d", &tmp[0], &tmp[1], &tmp[2], &tmp[3], &port);
+    remote[0] = (unsigned char)tmp[0];
+    remote[1] = (unsigned char)tmp[1];
+    remote[2] = (unsigned char)tmp[2];
+    remote[3] = (unsigned char)tmp[3];    
+    
+    //通道号
+    int iChannel = 0;
+    if (TYPE_CAMERA == m_tSource.eType)
+    {
+        iChannel = m_cbCamera.GetCurSel();
+    }
+    else
+    {
+        iChannel = m_cbChannel.GetCurSel();
+    }
+
+    //心跳
+    if (NULL == m_pHeartBeat)
+    {
+        m_pHeartBeat = new CHeartBeat;
+    }
+    int iInterval = 0;
+    const char* pInterval = NULL;
+    if ( NULL == (pInterval = m_cfgParse.GetGolbalParam("HeartBeat")) )
+    {
+        this->AddRunStatus("获取发送心跳消息间隔时间失败，使用默认时间：180秒");
+        iInterval = 180;
+    }
+    iInterval = atoi(pInterval);
+    if (!m_pHeartBeat->init(iChannel, local, remote, port, iInterval))
+    {
+        this->AddRunStatus("初始化心跳消息失败");
+        return false;
+    }
+    m_pHeartBeat->run();
+
     //设置报警器
     if (m_pAnalyzer && NULL == m_pUDPAlerter)
     {
         CUDPAlerter* pUDPAlerter = new CUDPAlerter ;
-        unsigned char local[4] = {0, 0, 0, 0};
-        unsigned char remote[4] = {127, 0, 0, 1}; // {192, 168, 1, 74}
-        int port = 0;
-
-        int tmp[4] = {0};
-        const char* ip = NULL;
-        if ( NULL == (ip = m_cfgParse.GetGolbalParam("UDPServer")) )
-        {
-            this->AddRunStatus("获取UDPServer的IP地址失败，使用默认地址'192.168.1.74'");
-            ip = "192.168.1.74";
-        }
-        m_cfgParse.GetGolbalParam("UDPServer");
-        sscanf(ip, "%d.%d.%d.%d:%d", &tmp[0], &tmp[1], &tmp[2], &tmp[3], &port);
-        remote[0] = (unsigned char)tmp[0];
-        remote[1] = (unsigned char)tmp[1];
-        remote[2] = (unsigned char)tmp[2];
-        remote[3] = (unsigned char)tmp[3];
 
         int iAlarmType = 1;
-        int iChannel = 0;
-        if (TYPE_CAMERA == m_tSource.eType)
-        {
-            iChannel = m_cbCamera.GetCurSel();
-        }
-        else
-        {
-            iChannel = m_cbChannel.GetCurSel();
-        }
         this->AddRunStatus("报警中心：%d.%d.%d.%d:%d", 
             remote[0], remote[1], remote[2], remote[3], port);
         (void)pUDPAlerter->init(iAlarmType, iChannel, local, remote, port);
         m_pUDPAlerter = pUDPAlerter;
     }
-    m_pAnalyzer->addListener(m_pUDPAlerter);
+    if (m_pAnalyzer)
+    {
+        m_pAnalyzer->addListener(m_pUDPAlerter);
+    }
 
     INIT_IMAGE();
     this->AddRunStatus("正在播放");
@@ -714,6 +742,16 @@ void CVideoAnalyzerDlg::closeSource()
     if (m_pVideoGraber)
     {
         m_pVideoGraber->close();
+    }
+
+    if (m_pVideoRecoder)
+    {
+        m_pVideoRecoder->stop();
+    }
+
+    if (m_pHeartBeat)
+    {
+        m_pHeartBeat->destroy();
     }
 }
 
@@ -866,6 +904,12 @@ void CVideoAnalyzerDlg::OnClose()
 
         delete m_pAnalyzer;
         m_pAnalyzer = NULL;
+
+        delete m_pVideoRecoder;
+        m_pVideoRecoder = NULL;
+
+        delete m_pHeartBeat;
+        m_pHeartBeat = NULL;
 
         __super::OnClose();
     }
@@ -1141,12 +1185,6 @@ bool CVideoAnalyzerDlg::startRecord(const char* szFileName)
         delete m_pVideoRecoder;
     }
 
-    CString strWidth, strHeight;
-    m_edtWidth.GetWindowText(strWidth);
-    m_edtHeight.GetWindowText(strHeight);
-    m_iWidth = atoi((LPCTSTR)strWidth);
-    m_iHeight = atoi((LPCTSTR)strHeight);
-
     bool bResult = false;
     m_pVideoRecoder = new CVideoRecorder;
     m_pVideoRecoder->setResolution(m_iWidth, m_iHeight);
@@ -1166,17 +1204,8 @@ bool CVideoAnalyzerDlg::startRecord(const char* szFileName)
 
 void CVideoAnalyzerDlg::stopRecord()
 {
-    if (m_pVideoRecoder && m_pVideoGraber)
+    if (m_pVideoGraber)
     {
-        //很挫的用法
-        m_pVideoGraber->pause();
-        Sleep(500);
-
         m_pVideoGraber->removeListener(m_pVideoRecoder);
-        m_pVideoRecoder->stop();
-        delete m_pVideoRecoder;
-        m_pVideoRecoder = NULL;
-
-        m_pVideoGraber->resume();
     }
 }
