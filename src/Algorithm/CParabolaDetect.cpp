@@ -644,7 +644,7 @@ CParabolaDetect::DetectedTrackedObject(const CFrameContainer* const pFrame_in, C
 					vi_temp_hight = 3*pTrackObjInfo->iMigrationDiff[1] ;
 				}
 
-				if( ( abs(curr_x_coordinate - curr_track_x) >= ParamSet.iXTrackOffsetValue ) 
+				if( ( curr_x_coordinate - curr_track_x >= ParamSet.iXTrackOffsetValue ) 
 					&& (abs(curr_y_coordinate - forecast_cent_y) <= vi_temp_hight )
 					&& ( ( abs(curr_x_coordinate - forecast_cent_x) <= detect_x &&  abs(curr_y_coordinate - forecast_cent_y) <= detect_y  && abs((int16_t)(fore_white_spot_num - curr_white_num)) < temp_white_spot )
 					||(abs(curr_x_coordinate - forecast_cent_x) <= 3 &&  abs(curr_y_coordinate - forecast_cent_y) <= 4  && abs((int16_t)(fore_white_spot_num - curr_white_num)) < round_white_spot )
@@ -706,7 +706,7 @@ CParabolaDetect::DetectedTrackedObject(const CFrameContainer* const pFrame_in, C
 					vi_temp_hight = 3*pTrackObjInfo->iMigrationDiff[1] ;
 				}
 
-				if( ( abs(curr_track_x -curr_x_coordinate) >= ParamSet.iXTrackOffsetValue ) 
+				if( ( curr_track_x -curr_x_coordinate >= ParamSet.iXTrackOffsetValue ) 
 					&& (abs(curr_y_coordinate - forecast_cent_y) <= vi_temp_hight )
 					&& (  ( abs(curr_x_coordinate - forecast_cent_x) <= detect_x &&  abs(curr_y_coordinate - forecast_cent_y) <= detect_y  && abs((int16_t)(fore_white_spot_num - curr_white_num)) < temp_white_spot )
 					||(abs(curr_x_coordinate - forecast_cent_x) <= 3 &&  abs(curr_y_coordinate - forecast_cent_y) <= 4  && abs((int16_t)(fore_white_spot_num - curr_white_num)) < round_white_spot )
@@ -3387,7 +3387,7 @@ bool CParabolaLineOneSide::TrackAlarmObject(uint16_t i)
 					if ( TrackObject[i].iWhiteSpotNum <= ParamDsting.WhiteSpotVal.FirstValue  
 						&& TrackObject[i].iTrackBottomPoint[1] > v_line_y
 						&& TrackObject[i].iTrackTopPoint[1] < v_line_y
-						&& abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 10 
+						&& abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 20 
 						)
 
 					{
@@ -3401,7 +3401,7 @@ bool CParabolaLineOneSide::TrackAlarmObject(uint16_t i)
 						&& TrackObject[i].iWhiteSpotNum <= ParamDsting.WhiteSpotVal.SecondValue
 						&& TrackObject[i].iTrackBottomPoint[1] > v_line_y
 						&& TrackObject[i].iTrackTopPoint[1] < v_line_y
-						&& abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 15 
+						&& abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 30 
 						)
 					{
 						Temp_alarm = TRUE;
@@ -3414,7 +3414,7 @@ bool CParabolaLineOneSide::TrackAlarmObject(uint16_t i)
 						&& TrackObject[i].iWhiteSpotNum <= ParamDsting.WhiteSpotVal.ThirdValue
 						&& TrackObject[i].iTrackBottomPoint[1] > v_line_y
 						&& TrackObject[i].iTrackTopPoint[1] < v_line_y
-						&& abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 25 
+						&& abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 40 
 						)
 					{
 						Temp_alarm = TRUE;
@@ -3451,6 +3451,7 @@ bool CParabolaLineOneSide::TrackAlarmObject(uint16_t i)
 		if ( TrackObject[i].bLineRangeFlag[0]
 		    && TrackObject[i].bLineRangeFlag[1]
 			&& !TrackObject[i].bTrackAlarmFlag
+			&& TrackObject[i].iXContinueNum[1] <= 1
 			&& TrackObject[i].iLostFrameNum == ParamDsting.LostNumVal.FirstValue		
 			&& ((TrackObject[i].iMigrationDiff[0] >= ParamDsting.MigrationDiff.FirstValue && abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) >= y_height_value ) || (abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) >= y_height_value + 20 )  )
 			&& (abs(TrackObject[i].iCurFrameCenter[0]-TrackObject[i].iOriginFrameCenter[0]) > ParamDsting.OriginCurrDis.FirstValue )
@@ -3468,6 +3469,7 @@ bool CParabolaLineOneSide::TrackAlarmObject(uint16_t i)
 		if ( TrackObject[i].bLineRangeFlag[0]
 			&& TrackObject[i].bLineRangeFlag[1]
 			&& !TrackObject[i].bTrackAlarmFlag
+			&& TrackObject[i].iXContinueNum[1] <= 1
 			&& TrackObject[i].iLostFrameNum == ParamDsting.LostNumVal.SecondValue
 			&& ((TrackObject[i].iMigrationDiff[0] >= ParamDsting.MigrationDiff.SecondValue && abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) >= y_height_value ) || (abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) >=  y_height_value + 15))
 			&& (abs(TrackObject[i].iCurFrameCenter[0]-TrackObject[i].iOriginFrameCenter[0]) > ParamDsting.OriginCurrDis.SecondValue )
@@ -3485,6 +3487,8 @@ bool CParabolaLineOneSide::TrackAlarmObject(uint16_t i)
 	if ( TrackObject[i].bLineRangeFlag[0]
 		&& TrackObject[i].bLineRangeFlag[1]
 		&& !TrackObject[i].bTrackAlarmFlag
+			&& TrackObject[i].iXContinueNum[1] <= 1
+			&& TrackObject[i].iLostFrameNum == ParamDsting.LostNumVal.ThirdValue
 		&& ((TrackObject[i].iMigrationDiff[0] >= ParamDsting.MigrationDiff.ThirdValue && abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) >= y_height_value ) || (abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) >=  y_height_value + 15))
 		&& (abs(TrackObject[i].iCurFrameCenter[0]-TrackObject[i].iOriginFrameCenter[0]) > ParamDsting.OriginCurrDis.ThirdValue )
 		&& (TrackObject[i].iXContinueNum[0] >= (int)( TrackObject[i].iFindObjNumber * ParamDsting.fXContInverse.ThirdValue) || TrackObject[i].iXContinueNum[0] >= ParamDsting.XContValue.ThirdValue )
@@ -3685,7 +3689,7 @@ bool CParabolaInnerCurve::TrackAlarmObject(uint16_t i)
 					if ( TrackObject[i].iWhiteSpotNum <= ParamDsting.WhiteSpotVal.FirstValue  
 						&& TrackObject[i].iTrackBottomPoint[1] > v_line_y
 						&& TrackObject[i].iTrackTopPoint[1] < v_line_y
-						&& abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 10 
+						&& abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 20 
 						)
 
 					{
@@ -3699,7 +3703,7 @@ bool CParabolaInnerCurve::TrackAlarmObject(uint16_t i)
 						&& TrackObject[i].iWhiteSpotNum <= ParamDsting.WhiteSpotVal.SecondValue
 						&& TrackObject[i].iTrackBottomPoint[1] > v_line_y
 						&& TrackObject[i].iTrackTopPoint[1] < v_line_y
-						&& abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 15 
+						&& abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 30 
 						)
 					{
 						Temp_alarm = TRUE;
@@ -3712,7 +3716,7 @@ bool CParabolaInnerCurve::TrackAlarmObject(uint16_t i)
 						&& TrackObject[i].iWhiteSpotNum <= ParamDsting.WhiteSpotVal.ThirdValue
 						&& TrackObject[i].iTrackBottomPoint[1] > v_line_y
 						&& TrackObject[i].iTrackTopPoint[1] < v_line_y
-						&& abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 25 
+						&& abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 40 
 						)
 					{
 						Temp_alarm = TRUE;
@@ -3768,6 +3772,7 @@ bool CParabolaInnerCurve::TrackAlarmObject(uint16_t i)
 		if ( TrackObject[i].bLineRangeFlag[0]
 		&& TrackObject[i].bLineRangeFlag[1]
 		&& !TrackObject[i].bTrackAlarmFlag
+			&& TrackObject[i].iXContinueNum[1] <= 1
 			&& TrackObject[i].iLostFrameNum == ParamDsting.LostNumVal.FirstValue		
 			&& ((TrackObject[i].iMigrationDiff[0] >= ParamDsting.MigrationDiff.FirstValue && abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) >= y_height_value ) || (abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) >= y_height_value + 20 )  )
 			&& (abs(TrackObject[i].iCurFrameCenter[0]-TrackObject[i].iOriginFrameCenter[0]) > ParamDsting.OriginCurrDis.FirstValue )
@@ -3787,6 +3792,7 @@ bool CParabolaInnerCurve::TrackAlarmObject(uint16_t i)
 		if ( TrackObject[i].bLineRangeFlag[0]
 		&& TrackObject[i].bLineRangeFlag[1]
 		&& !TrackObject[i].bTrackAlarmFlag
+			&& TrackObject[i].iXContinueNum[1] <= 1
 			&& TrackObject[i].iLostFrameNum == ParamDsting.LostNumVal.SecondValue
 			&& ((TrackObject[i].iMigrationDiff[0] >= ParamDsting.MigrationDiff.SecondValue && abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) >= y_height_value ) || (abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) >=  y_height_value + 15))
 			&& (abs(TrackObject[i].iCurFrameCenter[0]-TrackObject[i].iOriginFrameCenter[0]) > ParamDsting.OriginCurrDis.SecondValue )
@@ -3806,6 +3812,8 @@ bool CParabolaInnerCurve::TrackAlarmObject(uint16_t i)
 	if ( TrackObject[i].bLineRangeFlag[0]
 	&& TrackObject[i].bLineRangeFlag[1]
 	&& !TrackObject[i].bTrackAlarmFlag
+		&& TrackObject[i].iXContinueNum[1] <= 1
+		&& TrackObject[i].iLostFrameNum == ParamDsting.LostNumVal.ThirdValue
 		&& ((TrackObject[i].iMigrationDiff[0] >= ParamDsting.MigrationDiff.ThirdValue && abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) >= y_height_value ) || (abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) >=  y_height_value + 15))
 		&& (abs(TrackObject[i].iCurFrameCenter[0]-TrackObject[i].iOriginFrameCenter[0]) > ParamDsting.OriginCurrDis.ThirdValue )
 		&& (TrackObject[i].iXContinueNum[0] >= (int)( TrackObject[i].iFindObjNumber * ParamDsting.fXContInverse.ThirdValue) || TrackObject[i].iXContinueNum[0] >= ParamDsting.XContValue.ThirdValue )
@@ -4000,7 +4008,7 @@ bool CParabolaOuterCurve::TrackAlarmObject(uint16_t i)
 					if ( TrackObject[i].iWhiteSpotNum <= ParamDsting.WhiteSpotVal.FirstValue  
 						&& TrackObject[i].iTrackBottomPoint[1] > v_line_y
 						&& TrackObject[i].iTrackTopPoint[1] < v_line_y
-						&& abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 10 
+						&& abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 20 
 						)
 
 					{
@@ -4014,7 +4022,7 @@ bool CParabolaOuterCurve::TrackAlarmObject(uint16_t i)
 						&& TrackObject[i].iWhiteSpotNum <= ParamDsting.WhiteSpotVal.SecondValue
 						&& TrackObject[i].iTrackBottomPoint[1] > v_line_y
 						&& TrackObject[i].iTrackTopPoint[1] < v_line_y
-						&& abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 15 
+						&& abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 30 
 						)
 					{
 						Temp_alarm = TRUE;
@@ -4027,7 +4035,7 @@ bool CParabolaOuterCurve::TrackAlarmObject(uint16_t i)
 						&& TrackObject[i].iWhiteSpotNum <= ParamDsting.WhiteSpotVal.ThirdValue
 						&& TrackObject[i].iTrackBottomPoint[1] > v_line_y
 						&& TrackObject[i].iTrackTopPoint[1] < v_line_y
-						&& abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 25 
+						&& abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 40 
 						)
 					{
 						Temp_alarm = TRUE;
@@ -4064,6 +4072,7 @@ bool CParabolaOuterCurve::TrackAlarmObject(uint16_t i)
 		if ( TrackObject[i].bLineRangeFlag[0]
 		&& TrackObject[i].bLineRangeFlag[1]
 		&& !TrackObject[i].bTrackAlarmFlag
+			&& TrackObject[i].iXContinueNum[1] <= 1
 			&& TrackObject[i].iLostFrameNum == ParamDsting.LostNumVal.FirstValue		
 			&& ((TrackObject[i].iMigrationDiff[0] >= ParamDsting.MigrationDiff.FirstValue && abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) >= y_height_value ) || (abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) >= y_height_value + 20 )  )
 			&& (abs(TrackObject[i].iCurFrameCenter[0]-TrackObject[i].iOriginFrameCenter[0]) > ParamDsting.OriginCurrDis.FirstValue )
@@ -4081,6 +4090,7 @@ bool CParabolaOuterCurve::TrackAlarmObject(uint16_t i)
 		if ( TrackObject[i].bLineRangeFlag[0]
 		&& TrackObject[i].bLineRangeFlag[1]
 		&& !TrackObject[i].bTrackAlarmFlag
+			&& TrackObject[i].iXContinueNum[1] <= 1
 			&& TrackObject[i].iLostFrameNum == ParamDsting.LostNumVal.SecondValue
 			&& ((TrackObject[i].iMigrationDiff[0] >= ParamDsting.MigrationDiff.SecondValue && abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) >= y_height_value ) || (abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) >=  y_height_value + 15))
 			&& (abs(TrackObject[i].iCurFrameCenter[0]-TrackObject[i].iOriginFrameCenter[0]) > ParamDsting.OriginCurrDis.SecondValue )
@@ -4098,6 +4108,8 @@ bool CParabolaOuterCurve::TrackAlarmObject(uint16_t i)
 	if ( TrackObject[i].bLineRangeFlag[0]
 	&& TrackObject[i].bLineRangeFlag[1]
 	&& !TrackObject[i].bTrackAlarmFlag
+		&& TrackObject[i].iXContinueNum[1] <= 1
+		&& TrackObject[i].iLostFrameNum == ParamDsting.LostNumVal.ThirdValue
 		&& ((TrackObject[i].iMigrationDiff[0] >= ParamDsting.MigrationDiff.ThirdValue && abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) >= y_height_value ) || (abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) >=  y_height_value + 15))
 		&& (abs(TrackObject[i].iCurFrameCenter[0]-TrackObject[i].iOriginFrameCenter[0]) > ParamDsting.OriginCurrDis.ThirdValue )
 		&& (TrackObject[i].iXContinueNum[0] >= (int)( TrackObject[i].iFindObjNumber * ParamDsting.fXContInverse.ThirdValue) || TrackObject[i].iXContinueNum[0] >= ParamDsting.XContValue.ThirdValue )
@@ -4298,7 +4310,7 @@ bool CParabolaLineTwoSide::TrackAlarmObject(uint16_t i)
 					if ( TrackObject[i].iWhiteSpotNum <= ParamDsting.WhiteSpotVal.FirstValue  
 						&& TrackObject[i].iTrackBottomPoint[1] > v_line_y
 						&& TrackObject[i].iTrackTopPoint[1] < v_line_y
-						&& abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 10 
+						&& abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 20 
 						)
 
 					{
@@ -4312,7 +4324,7 @@ bool CParabolaLineTwoSide::TrackAlarmObject(uint16_t i)
 						&& TrackObject[i].iWhiteSpotNum <= ParamDsting.WhiteSpotVal.SecondValue
 						&& TrackObject[i].iTrackBottomPoint[1] > v_line_y
 						&& TrackObject[i].iTrackTopPoint[1] < v_line_y
-						&& abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 15 
+						&& abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 30 
 						)
 					{
 						Temp_alarm = TRUE;
@@ -4325,7 +4337,7 @@ bool CParabolaLineTwoSide::TrackAlarmObject(uint16_t i)
 						&& TrackObject[i].iWhiteSpotNum <= ParamDsting.WhiteSpotVal.ThirdValue
 						&& TrackObject[i].iTrackBottomPoint[1] > v_line_y
 						&& TrackObject[i].iTrackTopPoint[1] < v_line_y
-						&& abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 25 
+						&& abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) > 40 
 						)
 					{
 						Temp_alarm = TRUE;
@@ -4364,6 +4376,7 @@ bool CParabolaLineTwoSide::TrackAlarmObject(uint16_t i)
 			if ( TrackObject[i].bLineRangeFlag[0]
 			&& TrackObject[i].bLineRangeFlag[1]
 			&& !TrackObject[i].bTrackAlarmFlag
+				&& TrackObject[i].iXContinueNum[1] <= 1
 				&& TrackObject[i].iLostFrameNum == ParamDsting.LostNumVal.FirstValue		
 				&& ((TrackObject[i].iMigrationDiff[0] >= ParamDsting.MigrationDiff.FirstValue && abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) >= y_height_value ) || (abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) >= y_height_value + 20 )  )
 				&& (abs(TrackObject[i].iCurFrameCenter[0]-TrackObject[i].iOriginFrameCenter[0]) > ParamDsting.OriginCurrDis.FirstValue )
@@ -4382,6 +4395,7 @@ bool CParabolaLineTwoSide::TrackAlarmObject(uint16_t i)
 		if ( TrackObject[i].bLineRangeFlag[0] 
 			&& TrackObject[i].bLineRangeFlag[1] 
 			&& !TrackObject[i].bTrackAlarmFlag
+			&& TrackObject[i].iXContinueNum[1] <= 1
 			&& TrackObject[i].iLostFrameNum == ParamDsting.LostNumVal.FirstValue		
 			&& ((TrackObject[i].iMigrationDiff[0] >= ParamDsting.MigrationDiff.FirstValue && abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) >= y_height_value ) || (abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) >= y_height_value + 20 )  )
 			&& (abs(TrackObject[i].iCurFrameCenter[0]-TrackObject[i].iOriginFrameCenter[0]) > ParamDsting.OriginCurrDis.FirstValue )
@@ -4400,6 +4414,7 @@ bool CParabolaLineTwoSide::TrackAlarmObject(uint16_t i)
 		if ( TrackObject[i].bLineRangeFlag[0]
 			&& TrackObject[i].bLineRangeFlag[1]
 			&& !TrackObject[i].bTrackAlarmFlag
+			&& TrackObject[i].iXContinueNum[1] <= 1
 			&& TrackObject[i].iLostFrameNum == ParamDsting.LostNumVal.SecondValue
 			&& ((TrackObject[i].iMigrationDiff[0] >= ParamDsting.MigrationDiff.SecondValue && abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) >= y_height_value ) || (abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) >=  y_height_value + 15))
 			&& (abs(TrackObject[i].iCurFrameCenter[0]-TrackObject[i].iOriginFrameCenter[0]) > ParamDsting.OriginCurrDis.SecondValue )
@@ -4419,6 +4434,8 @@ bool CParabolaLineTwoSide::TrackAlarmObject(uint16_t i)
 	if ( TrackObject[i].bLineRangeFlag[0]
 		&& TrackObject[i].bLineRangeFlag[1]
 		&& !TrackObject[i].bTrackAlarmFlag
+		&& TrackObject[i].iXContinueNum[1] <= 1
+		&& TrackObject[i].iLostFrameNum == ParamDsting.LostNumVal.ThirdValue
 		&& ((TrackObject[i].iMigrationDiff[0] >= ParamDsting.MigrationDiff.ThirdValue && abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) >= y_height_value ) || (abs(TrackObject[i].iTrackBottomPoint[1] - TrackObject[i].iTrackTopPoint[1]) >=  y_height_value + 15))
 		&& (abs(TrackObject[i].iCurFrameCenter[0]-TrackObject[i].iOriginFrameCenter[0]) > ParamDsting.OriginCurrDis.ThirdValue )
 		&& (TrackObject[i].iXContinueNum[0] >= (int)( TrackObject[i].iFindObjNumber * ParamDsting.fXContInverse.ThirdValue) || TrackObject[i].iXContinueNum[0] >= ParamDsting.XContValue.ThirdValue )

@@ -14,6 +14,7 @@
 #include "PreviewStatic.h"
 #include "Algorithm/Analyzer.h"
 #include "afxcmn.h"
+#include "HeartBeat.h"
 
 enum SOURCETYPE
 {
@@ -82,6 +83,7 @@ protected:
     CAnalyzer* m_pAnalyzer;
     IAlerter* m_pUDPAlerter;
     CVideoRecorder* m_pVideoRecoder;
+    CHeartBeat* m_pHeartBeat;
 
     CString m_strAppPath;
     VIDEO_CONTROL m_eVideoCtrl;

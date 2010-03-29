@@ -1,32 +1,39 @@
 #include "StdAfx.h"
-#include "UDPAlerter.h"
+#include "HeartBeat.h"
 
-CUDPAlerter::CUDPAlerter()
+CHeartBeat::CHeartBeat()
+: m_iInterval(180)
+, m_evtStop(false, true)
 {
+    memset(m_szBuf, 0, 1024);
 }
 
-CUDPAlerter::~CUDPAlerter()
+CHeartBeat::~CHeartBeat()
 {
     this->destroy();
 }
 
-void CUDPAlerter::alert(const IplImage *pFrame)
+void CHeartBeat::doRun()
 {
-    CTaskBase::run();
+    m_evtStop.ResetEvent();
+    while (1)
+    {
+        sendto(m_sockClient, (const char*)m_szBuf, sizeof(TVIAlarmHead), 0, (SOCKADDR*)&m_addrClient, sizeof(SOCKADDR) );
+
+        if (WAIT_OBJECT_0 == WaitForSingleObject(m_evtStop, m_iInterval * 1000))
+        {
+            break;
+        } 
+    }
 }
 
-void CUDPAlerter::doRun()
+bool CHeartBeat::init(int iChannel, 
+                      unsigned char ucLocalIP[4], 
+                      unsigned char ucRemoteIP[4], 
+                      int iPort,
+                      int iInterval)
 {
-    sendto( m_sockClient, (const char*)m_szBuf, sizeof(TVIAlarmHead), 0, 
-        (SOCKADDR*)&m_addrClient, sizeof(SOCKADDR) );
-}
-
-bool CUDPAlerter::init(int iAlarmType, 
-                       int iChannel, 
-                       unsigned char ucLocalIP[4], 
-                       unsigned char ucRemoteIP[4], 
-                       int iPort)
-{
+    m_iInterval = iInterval;
     WORD wVersionRequested;
     WSADATA wsaData;
 
@@ -49,7 +56,7 @@ bool CUDPAlerter::init(int iAlarmType,
 
     pHead->ucVIConst = VI_CONST;
     pHead->ucChannelID = iChannel;
-    pHead->ucAlarmType = iAlarmType;
+    pHead->ucAlarmType = ALARM_HEARTBEAT;
 
     pHead->ucIPAddr[0] = ucLocalIP[3]; //真恶心，还要反过来
     pHead->ucIPAddr[1] = ucLocalIP[2];
@@ -65,10 +72,12 @@ bool CUDPAlerter::init(int iAlarmType,
     return true;
 }
 
-bool CUDPAlerter::destroy()
+bool CHeartBeat::destroy()
 {
+    m_evtStop.SetEvent();
+
     closesocket(m_sockClient);
-    WSACleanup( );
+    WSACleanup();
     return true;
 }
 
