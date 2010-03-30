@@ -1,18 +1,18 @@
 #pragma once
 
 
-// CDlgPersonCfg dialog
+// CDlgPerson dialog
 
 #include "Line.h"
 #include "resource.h"
 
-class CDlgPersonCfg : public CDialog
+class CDlgPerson : public CDialog
 {
-	DECLARE_DYNAMIC(CDlgPersonCfg)
+	DECLARE_DYNAMIC(CDlgPerson)
 
 public:
-	CDlgPersonCfg(CWnd* pParent = NULL);   // standard constructor
-	virtual ~CDlgPersonCfg();
+	CDlgPerson(CWnd* pParent = NULL);   // standard constructor
+	virtual ~CDlgPerson();
 
 // Dialog Data
 	enum { IDD = IDD_SETDLG };
