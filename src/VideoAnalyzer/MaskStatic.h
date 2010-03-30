@@ -17,20 +17,20 @@ const COLORREF COLOR_LINE = RGB(255, 0, 0); //红色：预警线
 const COLORREF COLOR_POLY = RGB(0, 0, 255); //蓝色：遮罩区域
 
 typedef std::vector<CPoint> PolyLine; //折线
-typedef std::vector<CPoint> Line;     //直线
+typedef PolyLine Line;     //直线
 
 typedef std::vector<PolyLine> PolyLineArray;
+typedef PolyLineArray LineArray;
+
 typedef std::vector<CRect> RectArray;
 
 class CMaskStatic : public CStatic
 {
 protected:
-    IplImage *m_image, *m_imageDraft, *m_imageOrg;
+    IplImage *m_pImageOrg;
+    IplImage *m_pImage;
+    IplImage *m_pImageDraft;
 
-
-    IplImage *m_pLayer, *m_pLayerDraft; //用于显示线条矩形的图像层
-    IplImage *m_pImageOrg;  //原始的视频截图
-    IplImage *m_pImage;     //最终显示在界面上的
 
     bool m_bStart;
     CPoint m_ptPre, m_ptCur;
@@ -45,7 +45,7 @@ protected:
 
     //直线
     Line m_tmpLine;
-    Line* m_pLine;
+    LineArray* m_pLineArray;
     CvScalar m_lineColor;
 
     CRect m_tmpRect;
@@ -72,7 +72,7 @@ public:
     inline void clearPolyLineArray();
 
     //直线
-    inline void setLine(Line& line);
+    inline void setLine(LineArray& line);
     inline void clearLine();
 
     //设置、清空矩形数组
@@ -83,9 +83,11 @@ protected:
     bool DramImage(IplImage *img);
     void Reset();
 
-    void DrawPolyline(IplImage* img, PolyLineArray* array, CvScalar* color);
+    void DrawPolylineArray(IplImage* img, PolyLineArray* array, CvScalar* color);
+    void DrawPolyline(IplImage* img, PolyLine* line, CvScalar* color);
     void DrawLine(IplImage* img, Line* line, CvScalar* color);
     void DrawRect(IplImage* img, RectArray* array, CvScalar* color);
+    inline CvScalar& getColor();
 
     DECLARE_MESSAGE_MAP()
 
@@ -128,16 +130,16 @@ void CMaskStatic::clearPolyLineArray()
 	}
 }
 
-void CMaskStatic::setLine(Line& line)
+void CMaskStatic::setLine(LineArray& line)
 { 
-    m_pLine = &line; 
+    m_pLineArray = &line; 
 }
 
 void CMaskStatic::clearLine() 
 { 
-    if (m_pLine)
+    if (m_pLineArray)
     {
-        m_pLine->clear(); 
+        m_pLineArray->clear(); 
     }
 }
 
@@ -152,4 +154,17 @@ void CMaskStatic::clearRectArray()
 	{
 		m_pRectArray->clear(); 
 	}
+}
+
+CvScalar& CMaskStatic::getColor()
+{
+    static CvScalar black = cvScalar(0, 0, 0, 0);
+    switch (m_grapType)
+    {
+    case GT2_Line :      return m_lineColor;
+    case GT2_Polyline :  return m_polyLineColor;
+    case GT2_Rectangle : return m_rectColor;
+    default: 
+        return black;
+    }
 }

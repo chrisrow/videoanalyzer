@@ -52,9 +52,11 @@ BOOL CDlgPersonCfg::OnInitDialog()
 
     m_ctrlImage.setPolyLineArray(m_mask);
     m_ctrlImage.setLine(m_warningLine);
+    m_ctrlImage.setRectArray(m_rect);
 
-//     m_ctrlImage.SetGraphicsType(GT2_Polyline, RGB(0, 0, 255));
-    m_ctrlImage.SetGraphicsType(GT2_Line, RGB(0, 0, 255));
+    m_ctrlImage.SetGraphicsType(GT2_Polyline, RGB(0, 0, 255));
+//     m_ctrlImage.SetGraphicsType(GT2_Line, RGB(255, 0, 0));
+//     m_ctrlImage.SetGraphicsType(GT2_Rectangle, RGB(255, 0, 255));
 
 
     return TRUE;  // return TRUE unless you set the focus to a control
