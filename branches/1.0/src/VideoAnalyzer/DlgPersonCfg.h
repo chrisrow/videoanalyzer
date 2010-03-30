@@ -27,7 +27,8 @@ private:
     CMaskStatic m_ctrlImage;
 
     PolyLineArray m_mask; //遮罩
-    Line m_warningLine;   //预警线
+    LineArray m_warningLine;   //预警线
+    RectArray m_rect;
 
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 支持

@@ -706,7 +706,10 @@ bool CVideoAnalyzerDlg::openSource(TVideoSource& tSource)
         this->AddRunStatus("获取发送心跳消息间隔时间失败，使用默认时间：180秒");
         iInterval = 180;
     }
-    iInterval = atoi(pInterval);
+    else
+    {
+        iInterval = atoi(pInterval);
+    }
     if (!m_pHeartBeat->init(iChannel, local, remote, port, iInterval))
     {
         this->AddRunStatus("初始化心跳消息失败");

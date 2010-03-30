@@ -4,23 +4,24 @@
 const int LINE_WIDTH = 2;
 
 CMaskStatic::CMaskStatic(void)
-    : m_image(NULL)
-    , m_imageDraft(NULL)
-    , m_imageOrg(NULL)
-    , m_pLayer(NULL)
-    , m_pLayerDraft(NULL)
-    , m_pImage(NULL)
+    : m_pImage(NULL)
     , m_pImageOrg(NULL)
+    , m_pImageDraft(NULL)
     , m_bStart(false)
     , m_grapType(GT2_Polyline)
     , m_pPolyLineArray(NULL)
+    , m_pLineArray(NULL)
     , m_pRectArray(NULL)
 {
-  m_OrgPoint.x = 0 ;
-  m_OrgPoint.y = 0 ;
+    m_OrgPoint.x = 0 ;
+    m_OrgPoint.y = 0 ;
 
-  m_EndPoint.x = 0 ;
-  m_EndPoint.y = 0 ;
+    m_EndPoint.x = 0 ;
+    m_EndPoint.y = 0 ;
+
+    m_polyLineColor = cvScalar(0, 0, 255, 0);
+    m_lineColor = cvScalar(255, 0, 0, 0);
+    m_rectColor = cvScalar(255, 255, 0, 0);
 }
 
 CMaskStatic::~CMaskStatic(void)
@@ -79,11 +80,30 @@ bool CMaskStatic::ShowImage(const IplImage* pFrame)
         m_pImageOrg = cvCloneImage(m_pImage);
     }
 
-    DrawPolyline(m_pLayer, m_pPolyLineArray, &m_polyLineColor);
-    DrawLine(m_pLayer, m_pLine, &m_lineColor);
-    DrawRect(m_pLayer, m_pRectArray, &m_rectColor);
+    if (m_pPolyLineArray)
+    {
+        DrawPolylineArray(m_pImage, m_pPolyLineArray, &m_polyLineColor);
+    }
+    if (m_pLineArray)
+    {
+        DrawPolylineArray(m_pImage, m_pPolyLineArray, &m_polyLineColor);
+    }
+    if (m_pRectArray)
+    {
+        DrawRect(m_pImage, m_pRectArray, &m_rectColor);
+    }
 
-    SetWindowPos(NULL, -1, -1, m_image->width, m_image->height, SWP_NOMOVE);
+    //创建或者复制视频图像
+    if (m_pImageDraft)
+    {
+        cvCopy(m_pImage, m_pImageDraft);
+    }
+    else
+    {
+        m_pImageDraft = cvCloneImage(m_pImage);
+    }
+
+    SetWindowPos(NULL, -1, -1, m_pImage->width, m_pImage->height, SWP_NOMOVE);
 	this->DrawItem(NULL);
 
     return true;
@@ -98,23 +118,29 @@ void CMaskStatic::DrawLine(IplImage* img, Line* line, CvScalar* color)
     }
 }
 
-void CMaskStatic::DrawPolyline(IplImage* img, PolyLineArray* array, CvScalar* color)
+void CMaskStatic::DrawPolyline(IplImage* img, PolyLine* line, CvScalar* color)
+{
+    if (line->size() < 2)
+    {
+        return;
+    }
+
+    for (unsigned j = 0; j < line->size() - 1; j++)
+    {
+        cvLine(img, cvPoint((*line)[j].x, (*line)[j].y), cvPoint((*line)[j+1].x, (*line)[j+1].y), 
+            *color, LINE_WIDTH, CV_AA, 0 );
+    }
+}
+
+void CMaskStatic::DrawPolylineArray(IplImage* img, PolyLineArray* array, CvScalar* color)
 {
     if (array)
     {
         for (unsigned i = 0; i < array->size(); i++)
         {
             PolyLine& line = (*array)[i];
-            if (line.size() < 2)
-            {
-                continue;
-            }
 
-            for (unsigned j = 0; j < line.size() - 1; j++)
-            {
-                cvLine(img, cvPoint(line[j].x, line[j].y), cvPoint(line[j+1].x, line[j+1].y), 
-                    *color, LINE_WIDTH, CV_AA, 0 );
-            }
+            DrawPolyline(img, &line, color);
         }
     }
 }
@@ -132,61 +158,37 @@ void CMaskStatic::DrawRect(IplImage* img, RectArray* array, CvScalar* color)
     }
 }
 
-
-// TODO: //////////////////////////////////////////////////////////////////
-// TODO: //////////////////////////////////////////////////////////////////
-// TODO: //////////////////////////////////////////////////////////////////
-// TODO: //////////////////////////////////////////////////////////////////
-// TODO: //////////////////////////////////////////////////////////////////
-
 bool CMaskStatic::Refresh()
 {
-//     m_pPolyLineArray = NULL;
-//     m_pRectArray = NULL;
+    cvCopy(m_pImageOrg, m_pImage);
+    cvCopy(m_pImageOrg, m_pImageDraft);
 
-    cvCopy(m_imageOrg, m_imageDraft, NULL);
-    cvCopy(m_imageOrg, m_image, NULL);
-
-    DramImage(m_imageOrg);
+    DramImage(m_pImageOrg);
 
     return true;
 }
 
 void CMaskStatic::Reset()
 {
-    if (m_image != NULL)
-    {
-        cvReleaseImage(&m_image);
-        m_image = NULL;
-    }
+#define RELEASE_IMAGE(a) \
+    do \
+    {\
+        if (a != NULL)\
+        {\
+            cvReleaseImage(&a);\
+            a = NULL;\
+        }\
+    } while (0)
 
-    if (m_imageDraft != NULL)
-    {
-        cvReleaseImage(&m_imageDraft);
-        m_imageDraft = NULL;
-    }
-
-    if (m_imageOrg != NULL)
-    {
-        cvReleaseImage(&m_imageOrg);
-        m_imageOrg = NULL;
-    }
-
-    if (m_pLayer != NULL)
-    {
-        cvReleaseImage(&m_imageOrg);
-        m_pLayer = NULL;
-    }
-
-    if (m_pLayerDraft != NULL)
-    {
-        cvReleaseImage(&m_imageOrg);
-        m_pLayerDraft = NULL;
-    }
+    RELEASE_IMAGE(m_pImageDraft);
+    RELEASE_IMAGE(m_pImageOrg);
+    RELEASE_IMAGE(m_pImage);
 
     m_bStart = false;
     m_grapType = GT2_Polyline;
+
     m_pPolyLineArray = NULL;
+    m_pLineArray = NULL;
     m_pRectArray = NULL;
 }
 
@@ -207,14 +209,16 @@ bool CMaskStatic::DramImage(IplImage *img)
 
 void CMaskStatic::DrawItem(LPDRAWITEMSTRUCT /*lpDrawItemStruct*/)
 {
-    if (m_imageDraft != NULL)
+    if(m_pImageDraft)
     {
-        DramImage(m_imageDraft);
+        DramImage(m_pImageDraft);
     }
 }
 
 void CMaskStatic::OnLButtonDown(UINT nFlags, CPoint point)
 {
+    cvCopy(m_pImageOrg, m_pImage);
+
     // 第一次画点
 	if (GT2_Polyline == m_grapType || GT2_Line == m_grapType)
 	{
@@ -227,19 +231,25 @@ void CMaskStatic::OnLButtonDown(UINT nFlags, CPoint point)
 	   }
 	   else
 	   {
-		   cvLine(m_image, cvPoint(m_ptPre.x, m_ptPre.y), cvPoint(point.x, point.y), 
-			   m_polyLineColor, LINE_WIDTH, CV_AA, 0 );
 		   m_ptPre = point;
 		   m_tmpPolyLine.push_back(point);
-// 		   cvCopy(m_image, m_imageDraft, NULL);
-           cvAddWeighted(m_image, 0.5, m_imageDraft, 0.5, 0, m_imageDraft);
 
            if (GT2_Line == m_grapType)
            {
-		       m_pPolyLineArray->push_back(m_tmpPolyLine);
+		       m_pLineArray->push_back(m_tmpPolyLine);
 		       m_bStart = false;
            } 
 	   }
+
+       if (GT2_Line == m_grapType)
+       {
+           DrawPolylineArray(m_pImage, m_pLineArray, &getColor());
+       } 
+       else
+       {
+           DrawPolylineArray(m_pImage, m_pPolyLineArray, &getColor());
+       }
+       DrawPolyline(m_pImage, &m_tmpPolyLine, &getColor());
 	} 
 	else //矩形
 	{
@@ -252,24 +262,18 @@ void CMaskStatic::OnLButtonDown(UINT nFlags, CPoint point)
 	   }
 	   else
 	   {
-		   cvRectangle(m_image, cvPoint(m_ptPre.x, m_ptPre.y), cvPoint(point.x, point.y), 
-			   m_rectColor, LINE_WIDTH, CV_AA, 0 );
-// 		   m_ptPre = point;
 		   if (m_pRectArray)
 		   {
 			   m_pRectArray->push_back(CRect(m_ptPre.x, m_ptPre.y, point.x, point.y));
 		   }
-// 		   cvCopy(m_image, m_imageDraft, NULL);
-           cvAddWeighted(m_image, 0.5, m_imageDraft, 0.5, 0, m_imageDraft);
-		   m_bStart = false;
+           m_bStart = false;
 	   }
+       DrawRect(m_pImage, m_pRectArray, &getColor());
 	}
 
     m_OrgPoint = point;
-//     m_bStart = true;
-    DramImage(m_imageDraft);
-
-    //CStatic::OnLButtonDown(nFlags, point);
+    cvCopy(m_pImage, m_pImageDraft);
+    DramImage(m_pImage);
 }
 
 void CMaskStatic::OnMouseMove(UINT nFlags, CPoint point)
@@ -278,60 +282,54 @@ void CMaskStatic::OnMouseMove(UINT nFlags, CPoint point)
     {
         if (m_bStart)
         {
-            cvLine(m_imageDraft, cvPoint(m_OrgPoint.x, m_OrgPoint.y), cvPoint(point.x, point.y), 
-                m_polyLineColor, LINE_WIDTH, CV_AA, 0 );
+            cvLine(m_pImageDraft, cvPoint(m_OrgPoint.x, m_OrgPoint.y), cvPoint(point.x, point.y), 
+                getColor(), LINE_WIDTH, CV_AA, 0 );
         }
     } 
     else //矩形
     {
         if (m_bStart)
         {
-            cvRectangle(m_imageDraft, cvPoint(m_OrgPoint.x, m_OrgPoint.y), cvPoint(point.x, point.y), 
+            cvRectangle(m_pImageDraft, cvPoint(m_OrgPoint.x, m_OrgPoint.y), cvPoint(point.x, point.y), 
                 m_rectColor, LINE_WIDTH, CV_AA, 0 );
        }
     }
 
-    DramImage(m_imageDraft);
-
-    //CStatic::OnMouseMove(nFlags, point);
     if (m_bStart)
     {
-//       cvCopy(m_image, m_imageDraft, NULL);
-      cvAddWeighted(m_image, 0.5, m_imageDraft, 0.5, 0, m_imageDraft);
+        DramImage(m_pImageDraft);
+        cvCopy(m_pImage, m_pImageDraft, NULL);
     }
-    
 }
 
 //取消一个点
 void CMaskStatic::OnRButtonDown(UINT nFlags, CPoint point)
 {
-    if (GT2_Polyline == m_grapType || GT2_Line == m_grapType)
+    //完成折线的绘画
+    if (m_bStart && GT2_Polyline == m_grapType)
     {
-      if (m_bStart)
-      {
-          if (m_tmpPolyLine.size() > 1 && m_pPolyLineArray)
-          {
-              m_pPolyLineArray->push_back(m_tmpPolyLine);
-          }
-//           cvCopy(m_image, m_imageDraft, NULL);
-          cvAddWeighted(m_image, 0.5, m_imageDraft, 0.5, 0, m_imageDraft);
-
-          m_bStart = false;
-      }
-    }
-    else //矩形
-    {
-      if (m_bStart)
-      {
-//           cvCopy(m_image, m_imageDraft, NULL);
-          cvAddWeighted(m_image, 0.5, m_imageDraft, 0.5, 0, m_imageDraft);
-
-          m_bStart = false;
-      }
+        if (m_tmpPolyLine.size() > 1 && m_pPolyLineArray)
+        {
+            m_pPolyLineArray->push_back(m_tmpPolyLine);
+        }
     }
 
-    DramImage(m_imageDraft);
+    //回退
+    if (!m_bStart)
+    {
+        if (GT2_Polyline == m_grapType)
+        {
+        } 
+        else if (GT2_Line == m_grapType)
+        {
+        }
+        else if(GT2_Rectangle == m_grapType)
+        {
+        }
+    }
 
-    //CStatic::OnRButtonDown(nFlags, point);
+    m_bStart = false;
+
+    DrawItem(NULL);
 }
 
