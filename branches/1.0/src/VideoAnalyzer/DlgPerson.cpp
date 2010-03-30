@@ -2,48 +2,48 @@
 //
 
 #include "stdafx.h"
-#include "DlgPersonCfg.h"
+#include "DlgPerson.h"
 #include "Common/frames.h"
 
 
-// CDlgPersonCfg dialog
+// CDlgPerson dialog
 
-IMPLEMENT_DYNAMIC(CDlgPersonCfg, CDialog)
+IMPLEMENT_DYNAMIC(CDlgPerson, CDialog)
 
-CDlgPersonCfg::CDlgPersonCfg(CWnd* pParent /*=NULL*/)
-	: CDialog(CDlgPersonCfg::IDD, pParent)
+CDlgPerson::CDlgPerson(CWnd* pParent /*=NULL*/)
+	: CDialog(CDlgPerson::IDD, pParent)
 {
 
 }
 
-CDlgPersonCfg::~CDlgPersonCfg()
+CDlgPerson::~CDlgPerson()
 {
   desrory( );
 }
 
-void CDlgPersonCfg::DoDataExchange(CDataExchange* pDX)
+void CDlgPerson::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 }
 
 
-BEGIN_MESSAGE_MAP(CDlgPersonCfg, CDialog)
-  ON_BN_CLICKED(IDC_BTN_REFRESH, &CDlgPersonCfg::OnBnClickedBtnRefresh)
+BEGIN_MESSAGE_MAP(CDlgPerson, CDialog)
+  ON_BN_CLICKED(IDC_BTN_REFRESH, &CDlgPerson::OnBnClickedBtnRefresh)
   ON_WM_LBUTTONDOWN()
   ON_WM_RBUTTONDOWN()
-  ON_BN_CLICKED(IDC_BTN_FILL, &CDlgPersonCfg::OnBnClickedBtnFill)
-  ON_BN_CLICKED(IDC_BTN_CAR, &CDlgPersonCfg::OnBnClickedBtnCar)
-  ON_BN_CLICKED(IDC_BTN_UNDO, &CDlgPersonCfg::OnBnClickedBtnUndo)
-  ON_BN_CLICKED(IDC_BTN_OUTPUT, &CDlgPersonCfg::OnBnClickedBtnOutput)
-  ON_BN_CLICKED(IDC_BTN_SAVE, &CDlgPersonCfg::OnBnClickedBtnSave)
+  ON_BN_CLICKED(IDC_BTN_FILL, &CDlgPerson::OnBnClickedBtnFill)
+  ON_BN_CLICKED(IDC_BTN_CAR, &CDlgPerson::OnBnClickedBtnCar)
+  ON_BN_CLICKED(IDC_BTN_UNDO, &CDlgPerson::OnBnClickedBtnUndo)
+  ON_BN_CLICKED(IDC_BTN_OUTPUT, &CDlgPerson::OnBnClickedBtnOutput)
+  ON_BN_CLICKED(IDC_BTN_SAVE, &CDlgPerson::OnBnClickedBtnSave)
   ON_WM_PAINT()
-  ON_BN_CLICKED(IDC_BTN_INVERSE, &CDlgPersonCfg::OnBnClickedBtnInverse)
+  ON_BN_CLICKED(IDC_BTN_INVERSE, &CDlgPerson::OnBnClickedBtnInverse)
 END_MESSAGE_MAP()
 
 
-// CDlgPersonCfg message handlers
+// CDlgPerson message handlers
 
-BOOL CDlgPersonCfg::OnInitDialog()
+BOOL CDlgPerson::OnInitDialog()
 {
   CDialog::OnInitDialog();
 
@@ -59,7 +59,7 @@ BOOL CDlgPersonCfg::OnInitDialog()
   // EXCEPTION: OCX Property Pages should return FALSE
 }
 
-void CDlgPersonCfg::OnPaint()
+void CDlgPerson::OnPaint()
 {
   CPaintDC dc(this); // device context for painting
   // TODO: Add your message handler code here
@@ -73,7 +73,7 @@ void CDlgPersonCfg::OnPaint()
   }
 }
 
-void CDlgPersonCfg::OnLButtonDown(UINT nFlags, CPoint point)
+void CDlgPerson::OnLButtonDown(UINT nFlags, CPoint point)
 {
   if ( line_TestGUI->flag4 )
   {
@@ -95,7 +95,7 @@ void CDlgPersonCfg::OnLButtonDown(UINT nFlags, CPoint point)
   OnPaint();
 }
 
-void CDlgPersonCfg::OnRButtonDown(UINT nFlags, CPoint point)
+void CDlgPerson::OnRButtonDown(UINT nFlags, CPoint point)
 {
   if(point.x>line_TestGUI->pos_pic.x+line_TestGUI->Pic_sizex
       ||point.y>line_TestGUI->pos_pic.y+line_TestGUI->Pic_sizey
@@ -110,7 +110,7 @@ void CDlgPersonCfg::OnRButtonDown(UINT nFlags, CPoint point)
   OnPaint();
 }
 
-void CDlgPersonCfg::OnBnClickedBtnRefresh()
+void CDlgPerson::OnBnClickedBtnRefresh()
 {
   line_TestGUI->init_line(line_TestGUI->Pic_sizex,line_TestGUI->Pic_sizey);
   line_TestGUI->flag4 = true;
@@ -118,7 +118,7 @@ void CDlgPersonCfg::OnBnClickedBtnRefresh()
   Invalidate();
 }
 
-void CDlgPersonCfg::OnBnClickedBtnFill()
+void CDlgPerson::OnBnClickedBtnFill()
 {
   CClientDC dc(this); 
   line_TestGUI->flag2=true;
@@ -126,7 +126,7 @@ void CDlgPersonCfg::OnBnClickedBtnFill()
   line_TestGUI->OutPut(dc);
 }
 
-void CDlgPersonCfg::OnBnClickedBtnCar()
+void CDlgPerson::OnBnClickedBtnCar()
 {
   if(0 == line_TestGUI->index)
   {
@@ -136,24 +136,24 @@ void CDlgPersonCfg::OnBnClickedBtnCar()
   line_TestGUI->GetCutIndex();
 }
 
-void CDlgPersonCfg::OnBnClickedBtnUndo()
+void CDlgPerson::OnBnClickedBtnUndo()
 {
   line_TestGUI->undo();
   OnPaint();
 }
 
-void CDlgPersonCfg::OnBnClickedBtnOutput()
+void CDlgPerson::OnBnClickedBtnOutput()
 {
   CClientDC dc(this);
   line_TestGUI->ShowReginInfo(dc,360,0);
 }
 
-void CDlgPersonCfg::OnBnClickedBtnInverse()
+void CDlgPerson::OnBnClickedBtnInverse()
 {
   line_TestGUI->binverse = !line_TestGUI->binverse;
 }
 
-void CDlgPersonCfg::OnBnClickedBtnSave()
+void CDlgPerson::OnBnClickedBtnSave()
 {
   CString m_FilePath = line_TestGUI->GetFilePath();
   CString FileName = _T("\\set_TestGUIDLG.set");
@@ -163,7 +163,7 @@ void CDlgPersonCfg::OnBnClickedBtnSave()
   line_TestGUI->SaveParameterToFile(m_FilePath);
 }
 
-void CDlgPersonCfg::desrory( )//==
+void CDlgPerson::desrory( )//==
 {
   if (datafromline)
   {
@@ -172,7 +172,7 @@ void CDlgPersonCfg::desrory( )//==
   }
 }
 
-void CDlgPersonCfg::reinit(int imWidthin, int imHeightin )
+void CDlgPerson::reinit(int imWidthin, int imHeightin )
 {
   line_TestGUI = new Line(imWidthin,imHeightin);
   datafromline = new unsigned char[imWidthin*imHeightin*3];

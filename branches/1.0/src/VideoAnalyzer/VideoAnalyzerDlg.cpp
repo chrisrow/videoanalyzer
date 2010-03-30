@@ -12,7 +12,7 @@
 #include "Option.h"
 
 #include "DlgSetting.h"
-#include "DlgPersonCfg.h"
+#include "DlgPerson.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -1042,7 +1042,7 @@ void CVideoAnalyzerDlg::OnBnClickedButtonSetup()
         cvZero(pImage);
     }
 
-    CDlgPersonCfg dlg;
+    CDlgPerson dlg;
     dlg.reinit(m_iWidth, m_iHeight);
     memcpy(dlg.datafromline, pImage->imageData, pImage->imageSize);
     dlg.DoModal();
