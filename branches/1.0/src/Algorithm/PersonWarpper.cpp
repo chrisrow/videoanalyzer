@@ -66,11 +66,6 @@ const IplImage* CPersonWarpper::analysis(const IplImage *pFrame)
     m_pDetector->PersenDetect_Process_Channel_3(m_pFrame_matlabFunced, m_pOutFrameContainer,
         m_pFrameContainer, m_RGB_template, m_pDetector->LEFTTORIGNT, 60/*m_nInputFrameNum*/); 
 
-    SHOW_BIN_IMAGE("m_pFrame_matlabFunced", 
-        m_pFrame_matlabFunced->getWidth(), 
-        m_pFrame_matlabFunced->getHeight(), 
-        (char*)m_pFrame_matlabFunced->m_YuvPlane[0]);
-
 	return m_pOutFrameContainer->getImage();
 }
 
