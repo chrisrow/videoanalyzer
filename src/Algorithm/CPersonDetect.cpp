@@ -358,6 +358,7 @@ ErrVal CPersonDetect::binarizeY_fromRgbBkgnd( CFrameContainer* pFrame_RgbtoYBina
   uint8_t* pY_RgbtoYBinarized = pFrame_RgbtoYBinarized_inout->m_YuvPlane[0];
   int16_t Temp_R, Temp_G, Temp_B, Temp_BGR_Sum;
 
+  //二值
   for (uint32_t j = 0 ; j < imHeight ; ++j)
   {
     for (uint32_t i = 0 ; i < imWidth ; ++i)
@@ -375,10 +376,14 @@ ErrVal CPersonDetect::binarizeY_fromRgbBkgnd( CFrameContainer* pFrame_RgbtoYBina
   uint16_t nTopRemoveLine     = 5;     
   uint16_t nBottomRemoveLine  = 5;     
 
+  //上5行
   memset(pY_RgbtoYBinarized, 0, nTopRemoveLine*imWidth*sizeof(uint8_t)); 
+  //下5行
   memset(pY_RgbtoYBinarized + (imHeight - nBottomRemoveLine)*imWidth, 0, nBottomRemoveLine*imWidth*sizeof(uint8_t));
+
   for (uint16_t i = 1; i < imHeight; i++)
   {
+    //左右各5列
     memset( pY_RgbtoYBinarized+imWidth*i + imWidth-nRightRemoveColumn, 0, nLeftRemoveColumn+nRightRemoveColumn );
   }
 
@@ -1540,14 +1545,30 @@ CPersonDetect::PersenDetect_Process_Channel_3(CFrameContainer* pFrame_matlabFunc
     CFrameContainer*   pFrame_RgbSmoothed_low   = new CFrameContainer(pFrame_curr_in->getWidth()/2,pFrame_curr_in->getHeight()/2,pFrame_curr_in->getYuvType());
     CFrameContainer*   pFrame_bkgndDetected_low = new CFrameContainer(pFrame_curr_in->getWidth()/2,pFrame_curr_in->getHeight()/2,pFrame_curr_in->getYuvType());
     CFrameContainer*   pFrame_matlabFunced_low  = new CFrameContainer(pFrame_curr_in->getWidth()/2,pFrame_curr_in->getHeight()/2,pFrame_curr_in->getYuvType());
+
+    //隔行采样
     Interlaced_Scanning(pFrame_RgbSmoothed_low,pFrame_RgbSmoothed);
     Interlaced_Scanning(pFrame_bkgndDetected_low,pFrame_bkgndDetected);
+
+    //二值
     EXM_NOK( binarizeY_fromRgbBkgnd(pFrame_matlabFunced_low ,pFrame_RgbSmoothed_low,pFrame_bkgndDetected_low ,MAXTHRESHOLD), "pMatlabFunc fail!" );//pFramesBuffer->getFrame(1)
+
+    //标定，顺便得到他们的RGB信息（暂时没用）
     EXM_NOK( pMatlabFunc->labelObj( ObjectLabeledDList, pFrame_matlabFunced_low, pFrame_RgbSmoothed_low), "labelObject fail!" );
+
+    //根据标定信息对原图进行二值
+    memset(pFrame_matlabFunced->m_YuvPlane[0], 0, pFrame_matlabFunced->getWidth()*pFrame_matlabFunced->getHeight());
     binRgbtoY_LowtoHigh( pFrame_matlabFunced, pFrame_RgbSmoothed,pFrame_bkgndDetected, ObjectLabeledDList, 70,45,demarcation_line);//pFramesBuffer->getFrame(1)
+
+    SHOW_BIN_IMAGE("pFrame_matlabFunced", 
+        pFrame_matlabFunced->getWidth(), 
+        pFrame_matlabFunced->getHeight(), 
+        (char*)pFrame_matlabFunced->m_YuvPlane[0]);
+
     ObjectLabeledDList->DestroyAll();
-    erodeY( pFrame_matlabFunced, 3,3,5,1);
-    dilateY( pFrame_matlabFunced, 1 );
+    erodeY( pFrame_matlabFunced, 3,3,5,1);  //腐蚀
+    dilateY( pFrame_matlabFunced, 1 );      //膨胀
+
     EXM_NOK( pMatlabFunc->labelObj( ObjectLabeledDList, pFrame_matlabFunced ,pFrame_RgbSmoothed), "labelObject fail!" );
     deletminobj(ObjectLabeledDList, demarcation_line);
     ForecastObjectDetect(ObjectLabeledDList, pFrame_curr_in/*pRgbhumaninfo*/, pFrame_matlabFunced,&Warning_Line[2],&Alarm_Line[2] , alarm_type);
@@ -1556,6 +1577,7 @@ CPersonDetect::PersenDetect_Process_Channel_3(CFrameContainer* pFrame_matlabFunc
     Draw_Warning_Line(&Warning_Line[2],pFrame_RgbSmoothed/*pRgbhumaninfo*/);    
     ImgMoveObjectDetect(pFrame_RgbSmoothed/*pRgbhumaninfo*/);
     SHOW_IMAGE("smooth", pFrame_RgbSmoothed->getImage());
+
 
 #if (1 == SY_DEBUG)
     Draw_Warning_Line(&Warning_Line[2],pFrame_curr_in/*pRgbhumaninfo*/);    
@@ -2507,14 +2529,15 @@ CPersonDetect::Interlaced_Scanning (CFrameContainer* pFrame_low,const CFrameCont
 
   const uint16_t width = pFrame_high->getWidth();
   const uint16_t height = pFrame_high->getHeight();
+  int s = SampleIntervallines;
 
   for (int j = 0 ; j < height; j += SampleIntervallines)
   {
     for (int i = 0 ; i < width; i += SampleIntervallines)
     {
-      pFrame_low->m_BmpBuffer[3*j/2*width/2 + 3*i/2 + 0] = pFrame_high->m_BmpBuffer[3*j*width+ 3*i + 0];
-      pFrame_low->m_BmpBuffer[3*j/2*width/2 + 3*i/2 + 1] = pFrame_high->m_BmpBuffer[3*j*width+ 3*i + 1];
-      pFrame_low->m_BmpBuffer[3*j/2*width/2 + 3*i/2 + 2] = pFrame_high->m_BmpBuffer[3*j*width+ 3*i + 2];
+      pFrame_low->m_BmpBuffer[3* (j/s) * (width/s) + 3*(i/s) + 0] = pFrame_high->m_BmpBuffer[3*j*width+ 3*i + 0];
+      pFrame_low->m_BmpBuffer[3* (j/s) * (width/s) + 3*(i/s) + 1] = pFrame_high->m_BmpBuffer[3*j*width+ 3*i + 1];
+      pFrame_low->m_BmpBuffer[3* (j/s) * (width/s) + 3*(i/s) + 2] = pFrame_high->m_BmpBuffer[3*j*width+ 3*i + 2];
     }
   }
   ROK();
