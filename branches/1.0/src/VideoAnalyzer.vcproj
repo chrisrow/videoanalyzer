@@ -72,7 +72,7 @@
 				Name="VCLinkerTool"
 				AdditionalOptions="/NODEFAULTLIB:&quot;atlthunk&quot;&#x0D;&#x0A;"
 				LinkIncremental="2"
-				IgnoreDefaultLibraryNames="libcmt.lib"
+				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
@@ -160,7 +160,7 @@
 				AdditionalOptions="/NODEFAULTLIB:&quot;atlthunk&quot;"
 				AdditionalDependencies="$(NOINHERIT)"
 				LinkIncremental="1"
-				IgnoreDefaultLibraryNames="libcmt.lib"
+				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="false"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -320,6 +320,14 @@
 			</File>
 			<File
 				RelativePath=".\VideoAnalyzer\DlgPerson.h"
+				>
+			</File>
+			<File
+				RelativePath=".\VideoAnalyzer\DlgPersonCfg.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\VideoAnalyzer\DlgPersonCfg.h"
 				>
 			</File>
 			<File

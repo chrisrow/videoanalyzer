@@ -6,6 +6,25 @@
         <HeartBeat>180</HeartBeat>    <!-- 发送心跳消息的间隔时间(秒) -->
     </golbal>
     <camera channel="0">
+        
+        <PersonDetect>  <!-- 人员检测 -->
+            <WarningLine x1 = "1" y1 = "1" x2 = "100" y2 = "100" />   <!-- 预警线 -->
+            <Mask>  <!-- 遮罩 -->
+                <Inverse value = "0" />   <!-- 遮罩区域是否反转  0:否  1:是 -->
+                <Poly>  <!-- 遮罩多边形 -->
+                    <Point x = "10" y = "5" />
+                    <Point x = "10" y = "15" />
+                    <Point x = "60" y = "15" />
+                </Poly>
+                <Poly>
+                    <Point x = "15" y = "5" />
+                    <Point x = "10" y = "15" />
+                    <Point x = "60" y = "15" />
+                    <Point x = "100" y = "200" />
+                </Poly>
+            </Mask>
+        </PersonDetect>
+        
         <ParamStruct>
             <iStyleChange value="1" />
             <!-- 0_natural 1_tree 2_curver 3_-->
