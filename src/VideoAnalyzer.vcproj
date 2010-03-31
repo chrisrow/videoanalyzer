@@ -73,7 +73,7 @@
 				Name="VCLinkerTool"
 				AdditionalOptions="/NODEFAULTLIB:&quot;atlthunk&quot;&#x0D;&#x0A;"
 				LinkIncremental="2"
-				IgnoreDefaultLibraryNames=""
+				IgnoreDefaultLibraryNames="libcmt.lib"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
@@ -99,7 +99,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="rem copy $(SolutionDir)\cfg\$(ProjectName).xml $(SolutionDir)$(ConfigurationName)\$(ProjectName).xml"
+				CommandLine=""
 			/>
 		</Configuration>
 		<Configuration
@@ -189,7 +189,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="rem copy $(SolutionDir)\src\Config\$(ProjectName).xml $(SolutionDir)$(ConfigurationName)\$(ProjectName).xml"
+				CommandLine=""
 			/>
 		</Configuration>
 	</Configurations>
