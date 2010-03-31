@@ -50,20 +50,20 @@ const IplImage* CPersonWarpper::analysis(const IplImage *pFrame)
 		m_pOutFrameContainer = new CFrameContainer(pFrame->width, pFrame->height);
 		m_pFrame_matlabFunced = new CFrameContainer(pFrame->width, pFrame->height);
 
-        m_RGB_template = new unsigned char[pFrame->width * pFrame->height];
-        Line* getTemplate = new Line(pFrame->width, pFrame->height);
-        bool b_get_template_is_OK = getTemplate->GetTemplateParameter(m_RGB_template,
-            _T("\\set_TestGUIDLG.set"), pFrame->width, pFrame->height);
-        if(!b_get_template_is_OK)
-        {
-            MessageBoxA( NULL, "模板参数读取失败!", "Line", MB_OK );
-        }
-        delete getTemplate;
+//         m_RGB_template = new unsigned char[pFrame->width * pFrame->height];
+//         Line* getTemplate = new Line(pFrame->width, pFrame->height);
+//         bool b_get_template_is_OK = getTemplate->GetTemplateParameter(m_RGB_template,
+//             _T("\\set_TestGUIDLG.set"), pFrame->width, pFrame->height);
+//         if(!b_get_template_is_OK)
+//         {
+//             MessageBoxA( NULL, "模板参数读取失败!", "Line", MB_OK );
+//         }
+//         delete getTemplate;
     }
 
 	memcpy(m_pFrameContainer->m_BmpBuffer, pFrame->imageData, pFrame->imageSize);
 
-    m_pDetector->PersenDetect_Process_Channel_3(m_pFrame_matlabFunced, m_pOutFrameContainer,
+    m_pDetector->PersenDetect_Process(m_pFrame_matlabFunced, m_pOutFrameContainer,
         m_pFrameContainer, m_RGB_template, m_pDetector->LEFTTORIGNT, 60/*m_nInputFrameNum*/); 
 
 	return m_pOutFrameContainer->getImage();
