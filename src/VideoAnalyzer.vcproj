@@ -292,6 +292,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Algorithm\PersonStruct.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Algorithm\PersonWarpper.cpp"
 				>
 			</File>

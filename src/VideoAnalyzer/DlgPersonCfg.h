@@ -22,6 +22,7 @@ public:
 public:
     virtual BOOL OnInitDialog();
     void setImage(const IplImage *pImage);
+    void makeMask();
 
 private:
     IplImage *m_pImage;
@@ -46,4 +47,5 @@ public:
     afx_msg void OnBnClickedButtonClearPoly();
     afx_msg void OnBnClickedButtonFill();
     afx_msg void OnBnClickedButtonClearall();
+    afx_msg void OnBnClickedOk();
 };

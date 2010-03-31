@@ -24,6 +24,9 @@
 #include <Winsock2.h>
 // #pragma comment(lib,Ws2_32.lib)
 
+#include "PersonStruct.h"
+
+
 class CPersonDetect
 {
 #define  SAMPLING_INTERVAL    5             //  采样间隔（每两帧处理一帧）
@@ -221,52 +224,60 @@ public:/*处理主函数*/
 //                                 uint16_t demarcation_line,  //! 远近景的分界线
 //                                 const uint32_t framenum/* = 0*/); 
 
-  /*多线程处理，channel_1*/
-  ErrVal  PersenDetect_Process_Channel_1(CFrameContainer* pFrame_matlabFunced,  
-                                         CFrameContainer* pRgbhumaninfo,
-                                         CFrameContainer*    pFrame_input,  
-                                         const uint8_t* const pRGB_template,  
-                                         const ALARMTYPE alarm_type,
-                                         uint16_t demarcation_line,
-                                         const uint32_t framenum = 0); 
-  /*多线程处理，channel_2*/
-  ErrVal  PersenDetect_Process_Channel_2(CFrameContainer* pFrame_matlabFunced,  
-                                          CFrameContainer* pRgbhumaninfo,
-                                          CFrameContainer*    pFrame_input,  
-                                          const uint8_t* const pRGB_template,
-                                          const ALARMTYPE alarm_type,
-                                          uint16_t demarcation_line,
-                                         const uint32_t framenum = 0); 
-  /*多线程处理，channel_3*/
-  ErrVal  PersenDetect_Process_Channel_3(CFrameContainer* pFrame_matlabFunced,  
-                                         CFrameContainer* pRgbhumaninfo,
-                                         CFrameContainer*    pFrame_input,  
-                                         const uint8_t* const pRGB_template,  
-                                         const ALARMTYPE alarm_type,
-                                         uint16_t demarcation_line,
-                                       const uint32_t framenum = 0); 
-  /*多线程处理，channel_4*/
-  ErrVal  PersenDetect_Process_Channel_4(CFrameContainer* pFrame_matlabFunced,  
-                                        CFrameContainer* pRgbhumaninfo,  
-                                        CFrameContainer*    pFrame_input,  
-                                        const uint8_t* const pRGB_template,  
-                                        const ALARMTYPE alarm_type,
-                                        uint16_t demarcation_line,
-                                        const uint32_t framenum = 0); 
-  /*多路处理主函数*/
-  ErrVal  PersenDetect_Process_Main     (CFrameContainer* pFrame_matlabFunced,  
-                                         CFrameContainer* pRgbhumaninfo,  
-                                         CFrameContainer*    pFrame_input,  
-                                         const uint8_t* const pRGB_template,  
-                                         const ALARMTYPE alarm_type_channle_1,
-                                         const ALARMTYPE alarm_type_channle_2,
-                                         const ALARMTYPE alarm_type_channle_3,
-                                         const ALARMTYPE alarm_type_channle_4,
-                                         uint16_t demarcation_line_channel_1,
-                                         uint16_t demarcation_line_channel_2,
-                                         uint16_t demarcation_line_channel_3,
-                                         uint16_t demarcation_line_channel_4,
-                                        const uint32_t framenum = 0); 
+    ErrVal  PersenDetect_Process(CFrameContainer* pFrame_matlabFunced,  
+                                 CFrameContainer* pRgbhumaninfo,
+                                 CFrameContainer*    pFrame_input,  
+                                 const uint8_t* const pRGB_template,  
+                                 const ALARMTYPE alarm_type,
+                                 uint16_t demarcation_line,
+                                 const uint32_t framenum = 0); 
+
+//   /*多线程处理，channel_1*/
+//   ErrVal  PersenDetect_Process_Channel_1(CFrameContainer* pFrame_matlabFunced,  
+//                                          CFrameContainer* pRgbhumaninfo,
+//                                          CFrameContainer*    pFrame_input,  
+//                                          const uint8_t* const pRGB_template,  
+//                                          const ALARMTYPE alarm_type,
+//                                          uint16_t demarcation_line,
+//                                          const uint32_t framenum = 0); 
+//   /*多线程处理，channel_2*/
+//   ErrVal  PersenDetect_Process_Channel_2(CFrameContainer* pFrame_matlabFunced,  
+//                                           CFrameContainer* pRgbhumaninfo,
+//                                           CFrameContainer*    pFrame_input,  
+//                                           const uint8_t* const pRGB_template,
+//                                           const ALARMTYPE alarm_type,
+//                                           uint16_t demarcation_line,
+//                                          const uint32_t framenum = 0); 
+//   /*多线程处理，channel_3*/
+//   ErrVal  PersenDetect_Process_Channel_3(CFrameContainer* pFrame_matlabFunced,  
+//                                          CFrameContainer* pRgbhumaninfo,
+//                                          CFrameContainer*    pFrame_input,  
+//                                          const uint8_t* const pRGB_template,  
+//                                          const ALARMTYPE alarm_type,
+//                                          uint16_t demarcation_line,
+//                                        const uint32_t framenum = 0); 
+//   /*多线程处理，channel_4*/
+//   ErrVal  PersenDetect_Process_Channel_4(CFrameContainer* pFrame_matlabFunced,  
+//                                         CFrameContainer* pRgbhumaninfo,  
+//                                         CFrameContainer*    pFrame_input,  
+//                                         const uint8_t* const pRGB_template,  
+//                                         const ALARMTYPE alarm_type,
+//                                         uint16_t demarcation_line,
+//                                         const uint32_t framenum = 0); 
+//   /*多路处理主函数*/
+//   ErrVal  PersenDetect_Process_Main     (CFrameContainer* pFrame_matlabFunced,  
+//                                          CFrameContainer* pRgbhumaninfo,  
+//                                          CFrameContainer*    pFrame_input,  
+//                                          const uint8_t* const pRGB_template,  
+//                                          const ALARMTYPE alarm_type_channle_1,
+//                                          const ALARMTYPE alarm_type_channle_2,
+//                                          const ALARMTYPE alarm_type_channle_3,
+//                                          const ALARMTYPE alarm_type_channle_4,
+//                                          uint16_t demarcation_line_channel_1,
+//                                          uint16_t demarcation_line_channel_2,
+//                                          uint16_t demarcation_line_channel_3,
+//                                          uint16_t demarcation_line_channel_4,
+//                                         const uint32_t framenum = 0); 
 
 
   /*************************************
