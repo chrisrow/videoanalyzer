@@ -34,6 +34,7 @@ protected:
 
     bool m_bStart;
     CPoint m_ptPre, m_ptCur;
+    bool m_bFill;
 
     //图像类型与颜色
     GraphicsType_2 m_grapType;
@@ -79,6 +80,8 @@ public:
     inline void setRectArray(RectArray& array);
     inline void clearRectArray();
 
+    inline void setFill(bool bFill = true);
+
 protected:
     bool DramImage(IplImage *img);
     void Reset();
@@ -87,7 +90,7 @@ protected:
     void DrawPolyline(IplImage* img, PolyLine* line, CvScalar* color);
     void DrawLine(IplImage* img, Line* line, CvScalar* color);
     void DrawRect(IplImage* img, RectArray* array, CvScalar* color);
-    inline CvScalar& getColor();
+    inline CvScalar& getColor(GraphicsType_2 type);
 
     DECLARE_MESSAGE_MAP()
 
@@ -156,10 +159,10 @@ void CMaskStatic::clearRectArray()
 	}
 }
 
-CvScalar& CMaskStatic::getColor()
+CvScalar& CMaskStatic::getColor(GraphicsType_2 type)
 {
     static CvScalar black = cvScalar(0, 0, 0, 0);
-    switch (m_grapType)
+    switch (type)
     {
     case GT2_Line :      return m_lineColor;
     case GT2_Polyline :  return m_polyLineColor;
@@ -168,3 +171,9 @@ CvScalar& CMaskStatic::getColor()
         return black;
     }
 }
+
+void CMaskStatic::setFill(bool bFill)
+{
+    m_bFill = bFill;
+}
+

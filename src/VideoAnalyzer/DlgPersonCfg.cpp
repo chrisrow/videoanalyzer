@@ -22,12 +22,21 @@ CDlgPersonCfg::~CDlgPersonCfg()
 
 void CDlgPersonCfg::DoDataExchange(CDataExchange* pDX)
 {
-	CDialog::DoDataExchange(pDX);
+    CDialog::DoDataExchange(pDX);
     DDX_Control(pDX, IDC_IMAGE, m_ctrlImage);
+    DDX_Control(pDX, IDC_BUTTON_WARNING_LINE, m_btnWarnLine);
+    DDX_Control(pDX, IDC_BUTTON_POLY, m_btnMask);
+    DDX_Control(pDX, IDC_BUTTON_FILL, m_btnFill);
 }
 
 
 BEGIN_MESSAGE_MAP(CDlgPersonCfg, CDialog)
+    ON_BN_CLICKED(IDC_BUTTON_WARNING_LINE, &CDlgPersonCfg::OnBnClickedButtonWarningLine)
+    ON_BN_CLICKED(IDC_BUTTON_CLEAR_WARNING_LINE, &CDlgPersonCfg::OnBnClickedButtonClearWarningLine)
+    ON_BN_CLICKED(IDC_BUTTON_POLY, &CDlgPersonCfg::OnBnClickedButtonPoly)
+    ON_BN_CLICKED(IDC_BUTTON_CLEAR_POLY, &CDlgPersonCfg::OnBnClickedButtonClearPoly)
+    ON_BN_CLICKED(IDC_BUTTON_FILL, &CDlgPersonCfg::OnBnClickedButtonFill)
+    ON_BN_CLICKED(IDC_BUTTON_CLEARALL, &CDlgPersonCfg::OnBnClickedButtonClearall)
 END_MESSAGE_MAP()
 
 void CDlgPersonCfg::setImage(const IplImage *pImage)
@@ -50,15 +59,75 @@ BOOL CDlgPersonCfg::OnInitDialog()
 
     m_ctrlImage.ShowImage(m_pImage);
 
-    m_ctrlImage.setPolyLineArray(m_mask);
-    m_ctrlImage.setLine(m_warningLine);
-    m_ctrlImage.setRectArray(m_rect);
-
-    m_ctrlImage.SetGraphicsType(GT2_Polyline, RGB(0, 0, 255));
-//     m_ctrlImage.SetGraphicsType(GT2_Line, RGB(255, 0, 0));
-//     m_ctrlImage.SetGraphicsType(GT2_Rectangle, RGB(255, 0, 255));
-
+    OnBnClickedButtonWarningLine();
 
     return TRUE;  // return TRUE unless you set the focus to a control
     // 异常: OCX 属性页应返回 FALSE
+}
+
+void CDlgPersonCfg::OnBnClickedButtonWarningLine()
+{
+    m_ctrlImage.setLine(m_warningLine);
+    m_ctrlImage.SetGraphicsType(GT2_Line, RGB(255, 0, 0));
+
+    m_btnWarnLine.SetState(TRUE);
+    m_btnMask.SetState(FALSE);
+}
+
+void CDlgPersonCfg::OnBnClickedButtonClearWarningLine()
+{
+    if (m_warningLine.size() > 0)
+    {
+        m_warningLine.pop_back();
+        m_ctrlImage.ShowImage(m_pImage);
+    }
+    m_btnWarnLine.SetState(TRUE);
+    m_btnMask.SetState(FALSE);
+}
+
+void CDlgPersonCfg::OnBnClickedButtonPoly()
+{
+    m_ctrlImage.setPolyLineArray(m_mask);
+    m_ctrlImage.SetGraphicsType(GT2_Polyline, RGB(0, 0, 255));
+
+    m_btnWarnLine.SetState(FALSE);
+    m_btnMask.SetState(TRUE);
+}
+
+void CDlgPersonCfg::OnBnClickedButtonClearPoly()
+{
+    if (m_mask.size() > 0)
+    {
+        m_mask.pop_back();
+        m_ctrlImage.ShowImage(m_pImage);
+    }
+    m_btnWarnLine.SetState(FALSE);
+    m_btnMask.SetState(TRUE);
+}
+
+void CDlgPersonCfg::OnBnClickedButtonFill()
+{
+    static bool flag = false;
+    if (!flag)
+    {
+        m_ctrlImage.setFill(true);
+        m_btnFill.SetState(TRUE);
+    }
+    else
+    {
+        m_ctrlImage.setFill(false);
+        m_btnFill.SetState(FALSE);
+    }
+    m_ctrlImage.ShowImage(m_pImage);
+    flag = !flag;
+}
+
+void CDlgPersonCfg::OnBnClickedButtonClearall()
+{
+    m_warningLine.clear();
+    m_mask.clear();
+    m_ctrlImage.ShowImage(m_pImage);
+
+    m_btnWarnLine.SetState(FALSE);
+    m_btnMask.SetState(FALSE);
 }

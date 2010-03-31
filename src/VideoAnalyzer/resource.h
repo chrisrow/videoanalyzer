@@ -20,7 +20,6 @@
 #define IDD_DLGSETTING                  130
 #define IDD_SETTING                     130
 #define IDD_SETDLG                      131
-#define IDD_DIALOG2                     132
 #define IDD_PERSON_CFG                  132
 #define IDC_BUTTON_OPEN_FILE            1002
 #define IDC_COMBO_CAMERA                1003
@@ -48,7 +47,9 @@
 #define IDC_BUTTON1                     1023
 #define IDC_BUTTON_APPLY_FR             1023
 #define IDC_BUTTON_CLEAR                1023
+#define IDC_BUTTON_CLEAR_POLY           1023
 #define IDC_BUTTON_APPLY_RES            1024
+#define IDC_BUTTON_CLEAR_WARNING_LINE   1024
 #define IDC_STATIC_CURRENT_FRAME3       1025
 #define IDC_STATIC_CURRENT_ALERT        1025
 #define IDC_LIST_STATUS                 1026
@@ -60,6 +61,7 @@
 #define IDC_BUTTON_SAVE                 1031
 #define IDC_BUTTON_NEXT                 1031
 #define IDC_BUTTON_REC_START            1031
+#define IDC_BUTTON_CLEARALL             1031
 #define IDC_COMBO_CONTROL               1032
 #define IDC_EDIT_TWO_VALUE              1033
 #define IDC_EDIT_FILTER_VALUE           1034
@@ -89,8 +91,12 @@
 #define IDC_CHECK_NIGHT                 1056
 #define IDC_BUTTON4                     1057
 #define IDC_BUTTON_REC_OPEN             1057
+#define IDC_BUTTON_POLY                 1057
 #define IDC_EDIT1                       1060
 #define IDC_EDIT_REC_PATH               1060
+#define IDC_BUTTON_WARNING_LINE         1063
+#define IDC_BUTTON_FILL_MASK            1064
+#define IDC_BUTTON_FILL                 1064
 #define ID_32771                        32771
 #define ID_MENU_CLEAR                   32772
 
@@ -100,7 +106,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        133
 #define _APS_NEXT_COMMAND_VALUE         32773
-#define _APS_NEXT_CONTROL_VALUE         1061
+#define _APS_NEXT_CONTROL_VALUE         1065
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
