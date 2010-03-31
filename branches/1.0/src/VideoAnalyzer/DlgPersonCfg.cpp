@@ -62,7 +62,26 @@ BOOL CDlgPersonCfg::OnInitDialog()
 
     m_ctrlImage.ShowImage(m_pImage);
 
-    OnBnClickedButtonWarningLine();
+
+    m_ctrlImage.SetGraphicsType(GT2_Polyline, RGB(0, 0, 255));
+    m_ctrlImage.setPolyLineArray(m_mask);
+    m_btnMask.SetState(FALSE);
+
+    m_ctrlImage.SetGraphicsType(GT2_Line, RGB(255, 0, 0));
+    m_ctrlImage.setLine(m_warningLine);
+    m_btnWarnLine.SetState(TRUE);
+
+    m_warningLine.clear();
+    if (g_personParam.warnLine.size() > 0)
+    {
+        m_warningLine.push_back(g_personParam.warnLine);
+    }
+
+    m_mask.clear();
+    m_mask = g_personParam.maskLine;
+
+
+    m_ctrlImage.ShowImage(m_pImage);
 
     return TRUE;  // return TRUE unless you set the focus to a control
     // 异常: OCX 属性页应返回 FALSE
@@ -143,9 +162,11 @@ void CDlgPersonCfg::OnBnClickedOk()
         return;
     }
 
+    g_personParam.reset();
+
     //预警线
-    g_personParam.warnLing.push_back(CPoint(m_warningLine[0][0].x, m_warningLine[0][0].y));
-    g_personParam.warnLing.push_back(CPoint(m_warningLine[0][1].x, m_warningLine[0][1].y));
+    g_personParam.warnLine.push_back(CPoint(m_warningLine[0][0].x, m_warningLine[0][0].y));
+    g_personParam.warnLine.push_back(CPoint(m_warningLine[0][1].x, m_warningLine[0][1].y));
 
     //由折线生成遮罩图像
     makeMask();

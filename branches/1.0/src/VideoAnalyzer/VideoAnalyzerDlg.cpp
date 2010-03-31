@@ -1021,12 +1021,12 @@ void CVideoAnalyzerDlg::OnMenuClear()
 
 void CVideoAnalyzerDlg::OnBnClickedButtonSetup()
 {
+    if ( !this->loadConfig() )
+    {
+        AfxMessageBox("ÔØÈëÅäÖÃÊý¾ÝÊ§°Ü");
+    }
+
 //     CDlgSetting dlgSetting;
-//     if ( !this->loadConfig() )
-//     {
-//         AfxMessageBox("ÔØÈëÅäÖÃÊý¾ÝÊ§°Ü");
-//     }
-// 
 //     dlgSetting.setImage(m_ctlVideo.getImage());
 //     if (dlgSetting.DoModal() != IDOK)
 //     {
@@ -1034,7 +1034,6 @@ void CVideoAnalyzerDlg::OnBnClickedButtonSetup()
 //         return;
 //     }
 // 
-//     this->saveConfig();
 
     CDlgPersonCfg dlg;
     dlg.setImage(m_ctlVideo.getImage());
@@ -1042,6 +1041,8 @@ void CVideoAnalyzerDlg::OnBnClickedButtonSetup()
     {
         return;
     }
+
+    this->saveConfig();
 }
 
 bool CVideoAnalyzerDlg::loadConfig()

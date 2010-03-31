@@ -892,7 +892,7 @@ int CCfgParse::LoadChannel(int iCh, TPersonDetect& pd)
         return 0;
     }
 
-    GET_VALUE(xPSElement, "WarningLine", pd.warnLing);
+    GET_VALUE(xPSElement, "WarningLine", pd.warnLine);
     GET_VALUE(xPSElement, "Mask", pd.maskLine);
 
     return 1;
@@ -922,7 +922,7 @@ int CCfgParse::SaveChannel(int iCh, TPersonDetect& pd)
         return 0;
     }
 
-    SET_VALUE(xPSElement, "WarningLine", pd.warnLing);
+    SET_VALUE(xPSElement, "WarningLine", pd.warnLine);
     SET_VALUE(xPSElement, "Mask", pd.maskLine);
 
     return 1;
@@ -930,11 +930,9 @@ int CCfgParse::SaveChannel(int iCh, TPersonDetect& pd)
 
 int CCfgParse::GetElemValue(TiXmlElement* xParentElement, const char* szName, PolyLine *pValue)
 {
-    const char* NODE_LINE = "Line";
-    const char* ATTR_BX = "x1";
-    const char* ATTR_BY = "y1";
-    const char* ATTR_EX = "x2";
-    const char* ATTR_EY = "y2";
+    const char* NODE_POINT = "Point";
+    const char* ATTR_X = "x";
+    const char* ATTR_Y = "y";
 
     TiXmlElement* xElem = SearchElement(xParentElement, szName);
     if(NULL == xElem)
@@ -943,57 +941,133 @@ int CCfgParse::GetElemValue(TiXmlElement* xParentElement, const char* szName, Po
         return NULL;
     }
 
-    //获取单个Line
-    int x1, x2, y1, y2;
-    if (xElem->Attribute(ATTR_BX, &x1) 
-        && xElem->Attribute(ATTR_BY, &y1) 
-        && xElem->Attribute(ATTR_EX, &x2) 
-        && xElem->Attribute(ATTR_EY, &y2)   )
-    {
-        pValue->push_back(CPoint(x1, y1));
-        pValue->push_back(CPoint(x2, y2));
-        return 1;
-    }
-
     //获取Line数组
-    TiXmlElement *xValueElem = this->SearchElement(xElem, NODE_LINE);
+    TiXmlElement *xValueElem = this->SearchElement(xElem, NODE_POINT);
     if (!xValueElem)
     {
-        LOG_DEBUG(DEBUG_ERR, "No '%s' in '%s'", NODE_LINE, szName);
+        LOG_DEBUG(DEBUG_ERR, "No '%s' in '%s'", NODE_POINT, szName);
         return 0;
     }
 
-    xValueElem->Attribute(ATTR_BX, &x1) ;
-    xValueElem->Attribute(ATTR_BY, &y1) ;
-    xValueElem->Attribute(ATTR_EX, &x2) ;
-    xValueElem->Attribute(ATTR_EY, &y2) ;
-    pValue->push_back(CPoint(x1, y1));
-    pValue->push_back(CPoint(x2, y2));
+    pValue->clear();
 
-    xValueElem = xValueElem->NextSiblingElement(NODE_LINE);
+    int x = 0, y = 0;
+    if (xValueElem->Attribute(ATTR_X, &x) 
+        && xValueElem->Attribute(ATTR_Y, &y))
+    {
+        pValue->push_back(CPoint(x, y));
+    }
+
+    xValueElem = xValueElem->NextSiblingElement(NODE_POINT);
 
     while(xValueElem)
     {
-        xValueElem->Attribute(ATTR_BX, &x1) ;
-        xValueElem->Attribute(ATTR_BY, &y1) ;
-        xValueElem->Attribute(ATTR_EX, &x2) ;
-        xValueElem->Attribute(ATTR_EY, &y2) ;
-        pValue->push_back(CPoint(x1, y1));
-        pValue->push_back(CPoint(x2, y2));
+        if (xValueElem->Attribute(ATTR_X, &x) 
+            && xValueElem->Attribute(ATTR_Y, &y))
+        {
+            pValue->push_back(CPoint(x, y));
+        }
 
-        xValueElem = xValueElem->NextSiblingElement(NODE_LINE);
+        xValueElem = xValueElem->NextSiblingElement(NODE_POINT);
     }
 
-    return 1;
-}
-
-int CCfgParse::GetElemValue(TiXmlElement* xParentElement, const char* szName, PolyLineArray *pValue)
-{
     return 1;
 }
 
 int CCfgParse::SetElemValue(TiXmlElement* xParentElement, const char* szName, PolyLine *pValue)
 {
+    if (pValue->size() < 2)
+    {
+        LOG_DEBUG(DEBUG_ERR, "Number of points is %d", pValue->size());
+        return 0;
+    }
+
+    const char* NODE_POINT = "Point";
+    const char* ATTR_X = "x";
+    const char* ATTR_Y = "y";
+
+    TiXmlElement* xElem = SearchElement(xParentElement, szName);
+    if(NULL == xElem)
+    {
+        LOG_DEBUG(DEBUG_ERR, "No '%s' info", szName);
+        return NULL;
+    }
+
+    xElem->Clear();
+
+    for (unsigned i = 0; i < pValue->size(); i++)
+    {
+        TiXmlElement* ptElement = new TiXmlElement(NODE_POINT); // 退出时未清理内存
+        char num[20] = {0};
+        xElem->LinkEndChild(ptElement);
+        sprintf(num, "%d", (*pValue)[i].x);
+        ptElement->SetAttribute(ATTR_X, num);
+        sprintf(num, "%d", (*pValue)[i].y);
+        ptElement->SetAttribute(ATTR_Y, num);
+    }
+
+    return 1;
+}
+
+//获取折线数组
+int CCfgParse::GetElemValue(TiXmlElement* xParentElement, const char* szName, PolyLineArray *pValue)
+{
+    const char* NODE_POLY = "Poly";
+    const char* NODE_POINT = "Point";
+    const char* ATTR_X = "x";
+    const char* ATTR_Y = "y";
+
+    TiXmlElement* xElem = SearchElement(xParentElement, szName);
+    if(NULL == xElem)
+    {
+        LOG_DEBUG(DEBUG_ERR, "No '%s' info", szName);
+        return NULL;
+    }
+
+    TiXmlElement *xValueElem = this->SearchElement(xElem, NODE_POLY);
+    if (!xValueElem)
+    {
+        LOG_DEBUG(DEBUG_ERR, "No '%s' in '%s'", NODE_POLY, szName);
+        return 0;
+    }
+
+    pValue->clear();
+
+    while (xValueElem)
+    {
+        PolyLine line;
+        TiXmlElement *xPtElem = this->SearchElement(xValueElem, NODE_POINT);
+        if (!xValueElem)
+        {
+            LOG_DEBUG(DEBUG_ERR, "No '%s' in '%s'", NODE_POINT, szName);
+            return 0;
+        }
+
+        int x = 0, y = 0;
+        if (xPtElem->Attribute(ATTR_X, &x) 
+            && xPtElem->Attribute(ATTR_Y, &y))
+        {
+            line.push_back(CPoint(x, y));
+        }
+
+        xPtElem = xPtElem->NextSiblingElement(NODE_POINT);
+
+        while(xPtElem)
+        {
+            if (xPtElem->Attribute(ATTR_X, &x) 
+                && xPtElem->Attribute(ATTR_Y, &y))
+            {
+                line.push_back(CPoint(x, y));
+            }
+
+            xPtElem = xPtElem->NextSiblingElement(NODE_POINT);
+        }
+
+        pValue->push_back(line);
+        xValueElem = xValueElem->NextSiblingElement(NODE_POLY);
+
+    }
+
     return 1;
 }
 
