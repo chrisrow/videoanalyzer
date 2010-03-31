@@ -1,15 +1,19 @@
 #pragma once
 
 #include "cv.h"
+#include <vector>
+
+typedef std::vector<CPoint> PolyLine; //折线
+typedef PolyLine Line;     //直线
+
+typedef std::vector<PolyLine> PolyLineArray;
 
 //人员检测相关参数
 struct TPersonDetect
 {
-    int warn_pt1_x;
-    int warn_pt1_y;
-    int warn_pt2_x;
-    int warn_pt2_y;
+    Line warnLing;
+    PolyLineArray maskLine;
     IplImage* mask;
 
-    TPersonDetect(): warn_pt1_x(0), warn_pt1_y(0), warn_pt2_x(0), warn_pt2_y(0), mask(NULL) {}
+    TPersonDetect(): mask(NULL) {}
 };

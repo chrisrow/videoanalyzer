@@ -144,10 +144,8 @@ void CDlgPersonCfg::OnBnClickedOk()
     }
 
     //预警线
-    g_personParam.warn_pt1_x = m_warningLine[0][0].x;
-    g_personParam.warn_pt1_y = m_warningLine[0][0].y;
-    g_personParam.warn_pt2_x = m_warningLine[0][1].x;
-    g_personParam.warn_pt2_y = m_warningLine[0][1].y;
+    g_personParam.warnLing.push_back(CPoint(m_warningLine[0][0].x, m_warningLine[0][0].y));
+    g_personParam.warnLing.push_back(CPoint(m_warningLine[0][1].x, m_warningLine[0][1].y));
 
     //由折线生成遮罩图像
     makeMask();

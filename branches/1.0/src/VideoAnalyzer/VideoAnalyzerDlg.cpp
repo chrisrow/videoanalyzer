@@ -23,6 +23,8 @@ extern int g_debug;
 extern struct ParamStruct ParamSet;
 extern struct ParamDistinguish ParamDsting;
 
+extern struct TPersonDetect g_personParam;
+
 
 // 用于应用程序“关于”菜单项的 CAboutDlg 对话框
 
@@ -1058,7 +1060,15 @@ bool CVideoAnalyzerDlg::loadConfig()
         return false;
     }
 
-    if (!m_cfgParse.LoadChannel(iChannel, ParamSet, ParamDsting))
+//     //抛物
+//     if (!m_cfgParse.LoadChannel(iChannel, ParamSet, ParamDsting))
+//     {
+//         this->AddRunStatus("载入通道%d的数据失败", iChannel);
+//         return false;
+//     }
+
+    //人员检测
+    if (!m_cfgParse.LoadChannel(iChannel, g_personParam))
     {
         this->AddRunStatus("载入通道%d的数据失败", iChannel);
         return false;
@@ -1078,7 +1088,15 @@ bool CVideoAnalyzerDlg::saveConfig()
     strConfigFile = m_strAppPath + "\\" + strConfigFile;
     iChannel = atoi((LPCTSTR)strChannel);
 
-    if (!m_cfgParse.SaveChannel(iChannel, ParamSet, ParamDsting))
+//     //抛物
+//     if (!m_cfgParse.SaveChannel(iChannel, ParamSet, ParamDsting))
+//     {
+//         this->AddRunStatus("保存通道%d的数据失败", iChannel);
+//         return false;
+//     }
+
+    //人员检测
+    if (!m_cfgParse.SaveChannel(iChannel, g_personParam))
     {
         this->AddRunStatus("保存通道%d的数据失败", iChannel);
         return false;

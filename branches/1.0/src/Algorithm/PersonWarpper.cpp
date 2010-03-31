@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "PersonWarpper.h"
 #include "CPersonDetect.h"
-#include "VideoAnalyzer/Line.h"
 #include "Macro.h"
 
 extern int g_debug;
