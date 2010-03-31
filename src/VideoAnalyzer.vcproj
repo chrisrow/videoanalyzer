@@ -320,14 +320,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\VideoAnalyzer\DlgPerson.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\VideoAnalyzer\DlgPerson.h"
-				>
-			</File>
-			<File
 				RelativePath=".\VideoAnalyzer\DlgPersonCfg.cpp"
 				>
 			</File>
@@ -369,14 +361,6 @@
 			</File>
 			<File
 				RelativePath=".\VideoAnalyzer\HeartBeat.h"
-				>
-			</File>
-			<File
-				RelativePath=".\VideoAnalyzer\Line.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\VideoAnalyzer\Line.h"
 				>
 			</File>
 			<File

@@ -251,15 +251,15 @@ CPersonDetect::init_pudong (uint16_t const  nYWidth_in, uint16_t const  nYHeight
 //   Alarm_Line[2].m_distancetotop       = ReadIni("C://Intelligent_video.ini","AlarmLine2","alarm_distancetotop");
 //   Alarm_Line[2].m_distancetobottom    = ReadIni("C://Intelligent_video.ini","AlarmLine2","alarm_distancetobottom");
 
-  warning_pt1_x = g_personParam.warn_pt1_x;
-  warning_pt1_y = g_personParam.warn_pt1_y;
-  warning_pt2_x = g_personParam.warn_pt2_x;
-  warning_pt2_y = g_personParam.warn_pt2_y;
+  warning_pt1_x = (int16_t)g_personParam.warnLing[0].x;
+  warning_pt1_y = (int16_t)g_personParam.warnLing[0].y;
+  warning_pt2_x = (int16_t)g_personParam.warnLing[1].x;
+  warning_pt2_y = (int16_t)g_personParam.warnLing[2].y;
 
-  alarm_pt1_x = g_personParam.warn_pt1_x;
-  alarm_pt1_y = g_personParam.warn_pt1_y;
-  alarm_pt2_x = g_personParam.warn_pt2_x;
-  alarm_pt2_y = g_personParam.warn_pt2_y;
+  alarm_pt1_x = (int16_t)g_personParam.warnLing[0].x;
+  alarm_pt1_y = (int16_t)g_personParam.warnLing[0].y;
+  alarm_pt2_x = (int16_t)g_personParam.warnLing[1].x;
+  alarm_pt2_y = (int16_t)g_personParam.warnLing[2].y;
 
   Warning_Line[2].m_distancetotop     = 0;
   Warning_Line[2].m_distancetobottom  = nYHeight_in;
@@ -1455,23 +1455,18 @@ CPersonDetect::PersenDetect_Process(CFrameContainer* pFrame_matlabFunced,
         ForecastObjectDetect(ObjectLabeledDList, pFrame_curr_in/*pRgbhumaninfo*/, pFrame_matlabFunced,&Warning_Line[2],&Alarm_Line[2] , alarm_type);
         ObjectLabeledDList->DestroyAll();
 
-        Draw_Warning_Line(&Warning_Line[2],pFrame_RgbSmoothed/*pRgbhumaninfo*/);    
-        ImgMoveObjectDetect(pFrame_RgbSmoothed/*pRgbhumaninfo*/);
-        cvLine(const_cast<IplImage*>(pFrame_RgbSmoothed->getImage()), 
-            cvPoint(g_personParam.warn_pt1_x,  g_personParam.warn_pt1_y), 
-            cvPoint(g_personParam.warn_pt2_x,  g_personParam.warn_pt2_y), 
-            cvScalar(0, 0, 255, 0), 2, CV_AA, 0 );
-        SHOW_IMAGE("smooth", pFrame_RgbSmoothed->getImage());
-
-
-#if (1 == SY_DEBUG)
-        Draw_Warning_Line(&Warning_Line[2],pFrame_curr_in/*pRgbhumaninfo*/);    
-        ImgMoveObjectDetect(pFrame_curr_in/*pRgbhumaninfo*/);
-        if (b_First_Alarm /*|| b_Second_Alarm*/)
+        //
+        if (g_debug)
         {
-            //       SaveJpeg_File_color(pFrame_curr_in/*pRgbhumaninfo*/,3);
+            Draw_Warning_Line(&Warning_Line[2],pFrame_RgbSmoothed/*pRgbhumaninfo*/);    
+            ImgMoveObjectDetect(pFrame_RgbSmoothed/*pRgbhumaninfo*/);
+            cvLine(const_cast<IplImage*>(pFrame_RgbSmoothed->getImage()), 
+                cvPoint(g_personParam.warnLing[0].x,  g_personParam.warnLing[0].y), 
+                cvPoint(g_personParam.warnLing[1].x,  g_personParam.warnLing[0].y), 
+                cvScalar(0, 0, 255, 0), 2, CV_AA, 0 );
+            SHOW_IMAGE("smooth", pFrame_RgbSmoothed->getImage());
         }
-#endif
+
         SAFEDELETE( pFrame_RgbSmoothed_low);
         SAFEDELETE( pFrame_bkgndDetected_low);
         SAFEDELETE( pFrame_matlabFunced_low);

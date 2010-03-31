@@ -868,3 +868,136 @@ const char* CCfgParse::GetGolbalParam(const char* szName)
 }
 
 
+int CCfgParse::LoadChannel(int iCh, TPersonDetect& pd)
+{
+    if (iCh < 0)
+    {
+        LOG_DEBUG(DEBUG_ERR, "Error channel:  %d", iCh);
+        return 0;
+    }
+
+    //找到对应的视频通道
+    TiXmlElement *xChannelElement = this->SearchChannel(iCh);
+    if(NULL == xChannelElement)
+    {
+        LOG_DEBUG(DEBUG_ERR, "No channel info:  %d", iCh);
+        return 0;
+    }
+
+    const char* NODE_PARAMSTRUCT = "PersonDetect";
+    TiXmlElement *xPSElement = this->SearchElement(xChannelElement, NODE_PARAMSTRUCT);
+    if(NULL == xPSElement)
+    {
+        LOG_DEBUG(DEBUG_ERR, "No '%s' info in channel %d", NODE_PARAMSTRUCT, iCh);
+        return 0;
+    }
+
+    GET_VALUE(xPSElement, "WarningLine", pd.warnLing);
+    GET_VALUE(xPSElement, "Mask", pd.maskLine);
+
+    return 1;
+}
+
+int CCfgParse::SaveChannel(int iCh, TPersonDetect& pd)
+{
+    if (iCh < 0)
+    {
+        LOG_DEBUG(DEBUG_ERR, "Error channel:  %d", iCh);
+        return 0;
+    }
+
+    //找到对应的视频通道
+    TiXmlElement *xChannelElement = this->SearchChannel(iCh);
+    if(NULL == xChannelElement)
+    {
+        LOG_DEBUG(DEBUG_ERR, "No channel info:  %d", iCh);
+        return 0;
+    }
+
+    const char* NODE_PARAMSTRUCT = "PersonDetect";
+    TiXmlElement *xPSElement = this->SearchElement(xChannelElement, NODE_PARAMSTRUCT);
+    if(NULL == xPSElement)
+    {
+        LOG_DEBUG(DEBUG_ERR, "No '%s' info in channel %d", NODE_PARAMSTRUCT, iCh);
+        return 0;
+    }
+
+    SET_VALUE(xPSElement, "WarningLine", pd.warnLing);
+    SET_VALUE(xPSElement, "Mask", pd.maskLine);
+
+    return 1;
+}
+
+int CCfgParse::GetElemValue(TiXmlElement* xParentElement, const char* szName, PolyLine *pValue)
+{
+    const char* NODE_LINE = "Line";
+    const char* ATTR_BX = "x1";
+    const char* ATTR_BY = "y1";
+    const char* ATTR_EX = "x2";
+    const char* ATTR_EY = "y2";
+
+    TiXmlElement* xElem = SearchElement(xParentElement, szName);
+    if(NULL == xElem)
+    {
+        LOG_DEBUG(DEBUG_ERR, "No '%s' info", szName);
+        return NULL;
+    }
+
+    //获取单个Line
+    int x1, x2, y1, y2;
+    if (xElem->Attribute(ATTR_BX, &x1) 
+        && xElem->Attribute(ATTR_BY, &y1) 
+        && xElem->Attribute(ATTR_EX, &x2) 
+        && xElem->Attribute(ATTR_EY, &y2)   )
+    {
+        pValue->push_back(CPoint(x1, y1));
+        pValue->push_back(CPoint(x2, y2));
+        return 1;
+    }
+
+    //获取Line数组
+    TiXmlElement *xValueElem = this->SearchElement(xElem, NODE_LINE);
+    if (!xValueElem)
+    {
+        LOG_DEBUG(DEBUG_ERR, "No '%s' in '%s'", NODE_LINE, szName);
+        return 0;
+    }
+
+    xValueElem->Attribute(ATTR_BX, &x1) ;
+    xValueElem->Attribute(ATTR_BY, &y1) ;
+    xValueElem->Attribute(ATTR_EX, &x2) ;
+    xValueElem->Attribute(ATTR_EY, &y2) ;
+    pValue->push_back(CPoint(x1, y1));
+    pValue->push_back(CPoint(x2, y2));
+
+    xValueElem = xValueElem->NextSiblingElement(NODE_LINE);
+
+    while(xValueElem)
+    {
+        xValueElem->Attribute(ATTR_BX, &x1) ;
+        xValueElem->Attribute(ATTR_BY, &y1) ;
+        xValueElem->Attribute(ATTR_EX, &x2) ;
+        xValueElem->Attribute(ATTR_EY, &y2) ;
+        pValue->push_back(CPoint(x1, y1));
+        pValue->push_back(CPoint(x2, y2));
+
+        xValueElem = xValueElem->NextSiblingElement(NODE_LINE);
+    }
+
+    return 1;
+}
+
+int CCfgParse::GetElemValue(TiXmlElement* xParentElement, const char* szName, PolyLineArray *pValue)
+{
+    return 1;
+}
+
+int CCfgParse::SetElemValue(TiXmlElement* xParentElement, const char* szName, PolyLine *pValue)
+{
+    return 1;
+}
+
+int CCfgParse::SetElemValue(TiXmlElement* xParentElement, const char* szName, PolyLineArray *pValue)
+{
+    return 1;
+}
