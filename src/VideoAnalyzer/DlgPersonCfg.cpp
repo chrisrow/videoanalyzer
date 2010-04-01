@@ -158,7 +158,7 @@ void CDlgPersonCfg::OnBnClickedOk()
     g_personParam.reset();
 
     //Ô¤¾¯Ïß
-    if (m_warningLine.size() == 2)
+    if (m_warningLine.size() > 0 && m_warningLine[0].size() > 1)
     {
         g_personParam.warnLine.push_back(CPoint(m_warningLine[0][0].x, m_warningLine[0][0].y));
         g_personParam.warnLine.push_back(CPoint(m_warningLine[0][1].x, m_warningLine[0][1].y));
