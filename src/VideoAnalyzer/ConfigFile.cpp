@@ -1073,5 +1073,40 @@ int CCfgParse::GetElemValue(TiXmlElement* xParentElement, const char* szName, Po
 
 int CCfgParse::SetElemValue(TiXmlElement* xParentElement, const char* szName, PolyLineArray *pValue)
 {
+    const char* NODE_POLY = "Poly";
+    const char* NODE_POINT = "Point";
+    const char* ATTR_X = "x";
+    const char* ATTR_Y = "y";
+
+    TiXmlElement* xElem = SearchElement(xParentElement, szName);
+    if(NULL == xElem)
+    {
+        LOG_DEBUG(DEBUG_ERR, "No '%s' info", szName);
+        return NULL;
+    }
+    xElem->Clear();
+
+    for (unsigned i = 0; i < pValue->size(); i++)
+    {
+        PolyLine& polyline = (*pValue)[i];
+
+        //添加Poly节点
+        TiXmlElement *PolyElement = new TiXmlElement(NODE_POLY);
+        xElem->LinkEndChild(PolyElement);
+
+        //在Poly下添加点
+        for (unsigned j = 0; j < polyline.size(); j++)
+        {
+            TiXmlElement* ptElement = new TiXmlElement(NODE_POINT); // 退出时未清理内存
+            char num[20] = {0};
+
+            PolyElement->LinkEndChild(ptElement);
+            sprintf(num, "%d", polyline[j].x);
+            ptElement->SetAttribute(ATTR_X, num);
+            sprintf(num, "%d", polyline[j].y);
+            ptElement->SetAttribute(ATTR_Y, num);
+        }
+    }
+
     return 1;
 }
