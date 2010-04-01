@@ -1476,17 +1476,6 @@ CPersonDetect::PersenDetect_Process(CFrameContainer* pFrame_matlabFunced,
         {
             Draw_Warning_Line(&Warning_Line[2],pFrame_RgbSmoothed/*pRgbhumaninfo*/);    
             ImgMoveObjectDetect(pFrame_RgbSmoothed/*pRgbhumaninfo*/);
-
-
-//             warning_pt1_x = (int16_t)g_personParam.warnLine[0].x;
-//             warning_pt1_y = (int16_t)g_personParam.warnLine[0].y;
-//             warning_pt2_x = (int16_t)g_personParam.warnLine[1].x;
-//             warning_pt2_y = (int16_t)g_personParam.warnLine[1].y;
-// 
-//             cvLine(const_cast<IplImage*>(pFrame_RgbSmoothed->getImage()), 
-//                 cvPoint(g_personParam.warnLine[0].x,  g_personParam.warnLine[0].y), 
-//                 cvPoint(g_personParam.warnLine[1].x,  g_personParam.warnLine[1].y), 
-//                 cvScalar(0, 0, 255, 0), 2, CV_AA, 0 );
             SHOW_IMAGE("smooth", pFrame_RgbSmoothed->getImage());
         }
 
