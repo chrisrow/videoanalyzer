@@ -154,17 +154,15 @@ void CDlgPersonCfg::OnBnClickedButtonClearall()
 
 void CDlgPersonCfg::OnBnClickedOk()
 {
-    if (m_warningLine.size() != 1)
-    {
-        AfxMessageBox("预警线必须且只能有一条");
-        return;
-    }
 
     g_personParam.reset();
 
     //预警线
-    g_personParam.warnLine.push_back(CPoint(m_warningLine[0][0].x, m_warningLine[0][0].y));
-    g_personParam.warnLine.push_back(CPoint(m_warningLine[0][1].x, m_warningLine[0][1].y));
+    if (m_warningLine.size() == 2)
+    {
+        g_personParam.warnLine.push_back(CPoint(m_warningLine[0][0].x, m_warningLine[0][0].y));
+        g_personParam.warnLine.push_back(CPoint(m_warningLine[0][1].x, m_warningLine[0][1].y));
+    }
 
     //由折线生成遮罩图像
     if (m_mask.size() > 0)

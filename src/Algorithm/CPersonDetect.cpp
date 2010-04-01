@@ -263,6 +263,18 @@ CPersonDetect::init_pudong (uint16_t const  nYWidth_in, uint16_t const  nYHeight
       alarm_pt2_x = (int16_t)g_personParam.warnLine[1].x;
       alarm_pt2_y = (int16_t)g_personParam.warnLine[1].y;
   }
+  else
+  {
+      warning_pt1_x = 0;
+      warning_pt1_y = 0;
+      warning_pt2_x = 0;
+      warning_pt2_y = 0;
+
+      alarm_pt1_x = 0;
+      alarm_pt1_y = 0;
+      alarm_pt2_x = 0;
+      alarm_pt2_y = 0;
+  }
 
   Warning_Line[2].m_distancetotop     = 0;
   Warning_Line[2].m_distancetobottom  = nYHeight_in;
