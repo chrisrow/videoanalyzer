@@ -251,15 +251,18 @@ CPersonDetect::init_pudong (uint16_t const  nYWidth_in, uint16_t const  nYHeight
 //   Alarm_Line[2].m_distancetotop       = ReadIni("C://Intelligent_video.ini","AlarmLine2","alarm_distancetotop");
 //   Alarm_Line[2].m_distancetobottom    = ReadIni("C://Intelligent_video.ini","AlarmLine2","alarm_distancetobottom");
 
-  warning_pt1_x = (int16_t)g_personParam.warnLine[0].x;
-  warning_pt1_y = (int16_t)g_personParam.warnLine[0].y;
-  warning_pt2_x = (int16_t)g_personParam.warnLine[1].x;
-  warning_pt2_y = (int16_t)g_personParam.warnLine[1].y;
+  if (g_personParam.warnLine.size() == 2)
+  {
+      warning_pt1_x = (int16_t)g_personParam.warnLine[0].x;
+      warning_pt1_y = (int16_t)g_personParam.warnLine[0].y;
+      warning_pt2_x = (int16_t)g_personParam.warnLine[1].x;
+      warning_pt2_y = (int16_t)g_personParam.warnLine[1].y;
 
-  alarm_pt1_x = (int16_t)g_personParam.warnLine[0].x;
-  alarm_pt1_y = (int16_t)g_personParam.warnLine[0].y;
-  alarm_pt2_x = (int16_t)g_personParam.warnLine[1].x;
-  alarm_pt2_y = (int16_t)g_personParam.warnLine[1].y;
+      alarm_pt1_x = (int16_t)g_personParam.warnLine[0].x;
+      alarm_pt1_y = (int16_t)g_personParam.warnLine[0].y;
+      alarm_pt2_x = (int16_t)g_personParam.warnLine[1].x;
+      alarm_pt2_y = (int16_t)g_personParam.warnLine[1].y;
+  }
 
   Warning_Line[2].m_distancetotop     = 0;
   Warning_Line[2].m_distancetobottom  = nYHeight_in;
@@ -268,6 +271,19 @@ CPersonDetect::init_pudong (uint16_t const  nYWidth_in, uint16_t const  nYHeight
 
   Calculate_Line_Parameter(Warning_Line[2].m_slope,Warning_Line[2].m_pitch,warning_pt1_x,warning_pt1_y,warning_pt2_x,warning_pt2_y);//扩展到4路
   Calculate_Line_Parameter(Alarm_Line[2].m_slope,Alarm_Line[2].m_pitch,alarm_pt1_x,alarm_pt1_y,alarm_pt2_x,alarm_pt2_y);
+
+  //生成遮罩图像
+  if (g_personParam.mask)
+  {
+      cvReleaseImage(&g_personParam.mask);
+      g_personParam.mask = NULL;
+  }
+  if (g_personParam.maskLine.size() > 0)
+  {
+      g_personParam.mask = cvCreateImage(cvSize(nYWidth_in, nYHeight_in), 8, 3);
+      ::makeMask(g_personParam.maskLine, g_personParam.mask);
+  }
+
   /*Channel_3  end*/
 
   /*Channel_4*/
@@ -1460,10 +1476,17 @@ CPersonDetect::PersenDetect_Process(CFrameContainer* pFrame_matlabFunced,
         {
             Draw_Warning_Line(&Warning_Line[2],pFrame_RgbSmoothed/*pRgbhumaninfo*/);    
             ImgMoveObjectDetect(pFrame_RgbSmoothed/*pRgbhumaninfo*/);
-            cvLine(const_cast<IplImage*>(pFrame_RgbSmoothed->getImage()), 
-                cvPoint(g_personParam.warnLine[0].x,  g_personParam.warnLine[0].y), 
-                cvPoint(g_personParam.warnLine[1].x,  g_personParam.warnLine[0].y), 
-                cvScalar(0, 0, 255, 0), 2, CV_AA, 0 );
+
+
+//             warning_pt1_x = (int16_t)g_personParam.warnLine[0].x;
+//             warning_pt1_y = (int16_t)g_personParam.warnLine[0].y;
+//             warning_pt2_x = (int16_t)g_personParam.warnLine[1].x;
+//             warning_pt2_y = (int16_t)g_personParam.warnLine[1].y;
+// 
+//             cvLine(const_cast<IplImage*>(pFrame_RgbSmoothed->getImage()), 
+//                 cvPoint(g_personParam.warnLine[0].x,  g_personParam.warnLine[0].y), 
+//                 cvPoint(g_personParam.warnLine[1].x,  g_personParam.warnLine[1].y), 
+//                 cvScalar(0, 0, 255, 0), 2, CV_AA, 0 );
             SHOW_IMAGE("smooth", pFrame_RgbSmoothed->getImage());
         }
 

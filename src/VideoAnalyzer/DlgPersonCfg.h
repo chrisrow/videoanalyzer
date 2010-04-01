@@ -22,7 +22,6 @@ public:
 public:
     virtual BOOL OnInitDialog();
     void setImage(const IplImage *pImage);
-    void makeMask();
 
 private:
     IplImage *m_pImage;
