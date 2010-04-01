@@ -73,6 +73,6 @@ void CPersonWarpper::updateFrame(const IplImage *pFrame)
         SHOW_IMAGE("alarm", m_pFrameContainer->getImage());
 
         //±¨¾¯
-        FOR_EACH(IAlerter*, alert, m_pFrame_matlabFunced->getImage());
+        FOR_EACH(IAlerter*, alert, m_pFrameContainer->getImage());
     }
 }

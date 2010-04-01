@@ -359,7 +359,7 @@ void CVideoAnalyzerDlg::alert(const IplImage *pFrame)
         Systemtime.wMonth,Systemtime.wDay,
         iChannel,
         Systemtime.wHour, Systemtime.wMinute, Systemtime.wSecond );
-    cvFlip(pFrame, NULL, 0);//垂直镜像
+//     cvFlip(pFrame, NULL, 0);//垂直镜像
     int iResult = cvSaveImage((LPCTSTR)strFile, pFrame);
 
     //列表框提示
