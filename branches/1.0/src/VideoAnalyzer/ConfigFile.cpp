@@ -976,12 +976,6 @@ int CCfgParse::GetElemValue(TiXmlElement* xParentElement, const char* szName, Po
 
 int CCfgParse::SetElemValue(TiXmlElement* xParentElement, const char* szName, PolyLine *pValue)
 {
-    if (pValue->size() < 2)
-    {
-        LOG_DEBUG(DEBUG_ERR, "Number of points is %d", pValue->size());
-        return 0;
-    }
-
     const char* NODE_POINT = "Point";
     const char* ATTR_X = "x";
     const char* ATTR_Y = "y";
