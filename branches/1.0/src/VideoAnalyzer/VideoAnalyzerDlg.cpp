@@ -10,6 +10,7 @@
 #include "Algorithm/PersonWarpper.h"
 #include "Algorithm/Macro.h"
 #include "Option.h"
+#include "Common.h"
 
 #include "DlgSetting.h"
 #include "DlgPersonCfg.h"
@@ -24,6 +25,8 @@ extern struct ParamStruct ParamSet;
 extern struct ParamDistinguish ParamDsting;
 
 extern struct TPersonDetect g_personParam;
+
+extern struct TCommonParam g_commParam;
 
 
 // 用于应用程序“关于”菜单项的 CAboutDlg 对话框
@@ -665,25 +668,6 @@ bool CVideoAnalyzerDlg::openSource(TVideoSource& tSource)
     {
         m_pVideoGraber->addListener(m_pAnalyzer);
     }
-
-    //获取远程、本地IP地址和端口
-    unsigned char local[4] = {0, 0, 0, 0};
-    unsigned char remote[4] = {127, 0, 0, 1}; // {192, 168, 1, 74}
-    int port = 0;
-
-    int tmp[4] = {0};
-    const char* ip = NULL;
-    if ( NULL == (ip = m_cfgParse.GetGolbalParam("UDPServer")) )
-    {
-        this->AddRunStatus("获取UDPServer的IP地址失败，使用默认地址'192.168.1.74'");
-        ip = "192.168.1.74";
-    }
-    m_cfgParse.GetGolbalParam("UDPServer");
-    sscanf(ip, "%d.%d.%d.%d:%d", &tmp[0], &tmp[1], &tmp[2], &tmp[3], &port);
-    remote[0] = (unsigned char)tmp[0];
-    remote[1] = (unsigned char)tmp[1];
-    remote[2] = (unsigned char)tmp[2];
-    remote[3] = (unsigned char)tmp[3];    
     
     //通道号
     int iChannel = 0;
@@ -701,18 +685,11 @@ bool CVideoAnalyzerDlg::openSource(TVideoSource& tSource)
     {
         m_pHeartBeat = new CHeartBeat;
     }
-    int iInterval = 0;
-    const char* pInterval = NULL;
-    if ( NULL == (pInterval = m_cfgParse.GetGolbalParam("HeartBeat")) )
-    {
-        this->AddRunStatus("获取发送心跳消息间隔时间失败，使用默认时间：180秒");
-        iInterval = 180;
-    }
-    else
-    {
-        iInterval = atoi(pInterval);
-    }
-    if (!m_pHeartBeat->init(iChannel, local, remote, port, iInterval))
+    if (!m_pHeartBeat->init(iChannel, 
+                            g_commParam.szLocalAddr, 
+                            g_commParam.szUDPServerIP, 
+                            g_commParam.iUDPServerPort, 
+                            g_commParam.iHeartBeat))
     {
         this->AddRunStatus("初始化心跳消息失败");
         return false;
@@ -722,12 +699,19 @@ bool CVideoAnalyzerDlg::openSource(TVideoSource& tSource)
     //设置报警器
     if (m_pAnalyzer && NULL == m_pUDPAlerter)
     {
-        CUDPAlerter* pUDPAlerter = new CUDPAlerter ;
-
-        int iAlarmType = 1;
         this->AddRunStatus("报警中心：%d.%d.%d.%d:%d", 
-            remote[0], remote[1], remote[2], remote[3], port);
-        (void)pUDPAlerter->init(iAlarmType, iChannel, local, remote, port);
+            g_commParam.szUDPServerIP[0], g_commParam.szUDPServerIP[1], 
+            g_commParam.szUDPServerIP[2], g_commParam.szUDPServerIP[3], g_commParam.iUDPServerPort);
+
+        CUDPAlerter* pUDPAlerter = new CUDPAlerter ;
+        int iAlarmType = 1;
+
+        (void)pUDPAlerter->init(iAlarmType, 
+                                iChannel, 
+                                g_commParam.szLocalAddr, 
+                                g_commParam.szUDPServerIP, 
+                                g_commParam.iUDPServerPort);
+
         m_pUDPAlerter = pUDPAlerter;
     }
     if (m_pAnalyzer)
@@ -1059,6 +1043,11 @@ bool CVideoAnalyzerDlg::loadConfig()
     if (!m_cfgParse.Load((LPCTSTR)strConfigFile))
     {
         this->AddRunStatus("载入失败：%s", (LPCTSTR)strConfigFile);
+        return false;
+    }
+
+    if(::loadCommonParam((LPCTSTR)strConfigFile))
+    {
         return false;
     }
 

@@ -313,6 +313,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\VideoAnalyzer\Common.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\VideoAnalyzer\Common.h"
+				>
+			</File>
+			<File
 				RelativePath=".\VideoAnalyzer\ConfigFile.cpp"
 				>
 			</File>
