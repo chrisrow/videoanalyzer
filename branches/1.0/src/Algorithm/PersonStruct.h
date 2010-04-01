@@ -16,7 +16,7 @@ struct TPersonDetect
     IplImage* mask;
 
     TPersonDetect(): mask(NULL) {}
-    ~TPersonDetect() { reset(); }
+    virtual ~TPersonDetect() { reset(); }
 
     inline void reset();
 };

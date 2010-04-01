@@ -446,6 +446,7 @@ public:
   /*用pRGB_template做模板，将pFrame_in_out遮罩*/
   ErrVal  Shadow_Mask (CFrameContainer* pFrame_in_out,
                        const uint8_t* const pRGB_template);
+  ErrVal  Shadow_Mask (CFrameContainer* pFrame_in,CFrameContainer* pFrame_out);
 
   void DeleteAdditionalLine();
   int ReadIni(char *FilePath,char* pSectionName,char *pKeyName) ;

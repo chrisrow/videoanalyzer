@@ -1417,7 +1417,7 @@ CPersonDetect::PersenDetect_Process(CFrameContainer* pFrame_matlabFunced,
 {
     if(0 == CurFrameNum%BKUPDATE_INTERVAL)
     {
-        Shadow_Mask(pFrame_curr_in,pRGB_template);
+        Shadow_Mask(pFrame_curr_in, pRGB_template);
         EXM_NOK( averagesmoothRgb( pFrame_RgbSmoothed,pFrame_curr_in/*, SMOOTHSTARTLINE */), "smoothRgb fail!" );
         if (0 == CurFrameNum)
         {
@@ -1435,9 +1435,9 @@ CPersonDetect::PersenDetect_Process(CFrameContainer* pFrame_matlabFunced,
 #if (1 == SY_DEBUG)
         *pRgbhumaninfo = *pFrame_curr_in;
 #endif
-        Shadow_Mask(pFrame_curr_in,pRGB_template);
-        EXM_NOK( averagesmoothRgb( pFrame_RgbSmoothed,pFrame_curr_in/*, SMOOTHSTARTLINE */), "smoothRgb fail!" );
+        Shadow_Mask(pFrame_curr_in, pRGB_template);
 
+        EXM_NOK( averagesmoothRgb( pFrame_RgbSmoothed,pFrame_curr_in/*, SMOOTHSTARTLINE */), "smoothRgb fail!" );
 
         CFrameContainer*   pFrame_RgbSmoothed_low   = new CFrameContainer(pFrame_curr_in->getWidth()/2,pFrame_curr_in->getHeight()/2,pFrame_curr_in->getYuvType());
         CFrameContainer*   pFrame_bkgndDetected_low = new CFrameContainer(pFrame_curr_in->getWidth()/2,pFrame_curr_in->getHeight()/2,pFrame_curr_in->getYuvType());
@@ -1474,8 +1474,12 @@ CPersonDetect::PersenDetect_Process(CFrameContainer* pFrame_matlabFunced,
         //
         if (g_debug)
         {
-            Draw_Warning_Line(&Warning_Line[2],pFrame_RgbSmoothed/*pRgbhumaninfo*/);    
-            ImgMoveObjectDetect(pFrame_RgbSmoothed/*pRgbhumaninfo*/);
+            Draw_Warning_Line(&Warning_Line[2],pFrame_RgbSmoothed/*pRgbhumaninfo*/);   
+//             cvLine(const_cast<IplImage*>(pFrame_RgbSmoothed->getImage()), 
+//                 cvPoint(g_personParam.warnLine[0].x, g_personParam.warnLine[0].y),
+//                 cvPoint(g_personParam.warnLine[1].x, g_personParam.warnLine[1].y),
+//                 cvScalar(0, 0, 255, 0), 1, 8);
+//             ImgMoveObjectDetect(pFrame_RgbSmoothed/*pRgbhumaninfo*/);
             SHOW_IMAGE("smooth", pFrame_RgbSmoothed->getImage());
         }
 
@@ -1486,352 +1490,8 @@ CPersonDetect::PersenDetect_Process(CFrameContainer* pFrame_matlabFunced,
     CurFrameNum = ( CurFrameNum >= MAXFRAMENUM ) ? 1 : ++CurFrameNum;
     ROK();
 }
-// 
-// // *1~4通道*/
-// ErrVal
-// CPersonDetect::PersenDetect_Process_Channel_1(CFrameContainer* pFrame_matlabFunced,       
-//                                               CFrameContainer* pRgbhumaninfo,
-//                                               CFrameContainer* pFrame_curr_in,
-//                                               const uint8_t* const pRGB_template, 
-//                                               const ALARMTYPE alarm_type,
-//                                               uint16_t demarcation_line,
-//                                               const uint32_t framenum)
-// {
-//   if(0 == CurFrameNum%BKUPDATE_INTERVAL)
-//   {
-//     Shadow_Mask(pFrame_curr_in,pRGB_template);
-//     EXM_NOK( averagesmoothRgb( pFrame_RgbSmoothed,pFrame_curr_in/*, SMOOTHSTARTLINE */), "smoothRgb fail!" );
-//     if (0 == CurFrameNum)
-//     {
-//       clearUpdateBk();
-//       initUpdateBk(pFrame_curr_in->getWidth(),pFrame_curr_in->getHeight(),pFrame_curr_in->getYuvType());
-//       *pFrame_bkgndDetected = *pFrame_RgbSmoothed/*pFrame_curr_in*/;
-//     }
-//     else
-//     {
-//       UpdateBk(pFrame_bkgndDetected,pFrame_RgbSmoothed,70,8,8,framenum);  /*2,3*/
-//     }
-//   }
-//   if ( 0 == CurFrameNum%SAMPLING_INTERVAL)
-//   {
-// #if (1 == SY_DEBUG)
-//     *pRgbhumaninfo = *pFrame_curr_in;
-//     memset(pFrame_matlabFunced->m_YuvPlane[0], 0, pFrame_matlabFunced->getRSize());
-// #endif
-//     Shadow_Mask(pFrame_curr_in,pRGB_template);
-//     EXM_NOK( averagesmoothRgb( pFrame_RgbSmoothed,pFrame_curr_in/*, SMOOTHSTARTLINE */), "smoothRgb fail!" );
-// 
-//     CFrameContainer*   pFrame_RgbSmoothed_low   = new CFrameContainer(pFrame_curr_in->getWidth()/2,pFrame_curr_in->getHeight()/2,pFrame_curr_in->getYuvType());
-//     CFrameContainer*   pFrame_bkgndDetected_low = new CFrameContainer(pFrame_curr_in->getWidth()/2,pFrame_curr_in->getHeight()/2,pFrame_curr_in->getYuvType());
-//     CFrameContainer*   pFrame_matlabFunced_low  = new CFrameContainer(pFrame_curr_in->getWidth()/2,pFrame_curr_in->getHeight()/2,pFrame_curr_in->getYuvType());
-// 
-//     Interlaced_Scanning(pFrame_RgbSmoothed_low,pFrame_RgbSmoothed);
-//     Interlaced_Scanning(pFrame_bkgndDetected_low,pFrame_bkgndDetected);
-//     EXM_NOK( binarizeY_fromRgbBkgnd(pFrame_matlabFunced_low ,pFrame_RgbSmoothed_low,pFrame_bkgndDetected_low ,MAXTHRESHOLD), "pMatlabFunc fail!" );//pFramesBuffer->getFrame(1)
-//     EXM_NOK( pMatlabFunc->labelObj( ObjectLabeledDList, pFrame_matlabFunced_low, pFrame_RgbSmoothed_low), "labelObject fail!" );
-//     binRgbtoY_LowtoHigh( pFrame_matlabFunced, pFrame_RgbSmoothed,pFrame_bkgndDetected, ObjectLabeledDList, 70,45,demarcation_line);//pFramesBuffer->getFrame(1)
-//     ObjectLabeledDList->DestroyAll();
-//     erodeY( pFrame_matlabFunced, 7,18,5,1);
-//     dilateY( pFrame_matlabFunced, 1 );
-//     EXM_NOK( pMatlabFunc->labelObj(ObjectLabeledDList, pFrame_matlabFunced ,pFrame_RgbSmoothed), "labelObject fail!" );
-//     deletminobj(ObjectLabeledDList, demarcation_line);
-//     ForecastObjectDetect(ObjectLabeledDList, pFrame_curr_in/*pRgbhumaninfo*/, pFrame_matlabFunced,&Warning_Line[0],&Alarm_Line[0] , alarm_type);
-//     ObjectLabeledDList->DestroyAll();
-// 
-// #if (1 == SY_DEBUG)
-//     Draw_Warning_Line(&Warning_Line[0],pFrame_curr_in/*pRgbhumaninfo*/);
-//     ImgMoveObjectDetect(pFrame_curr_in/*pRgbhumaninfo*/);
-//     if (b_First_Alarm /*|| b_Second_Alarm*/)
-//     {
-//       SaveJpeg_File_color(pFrame_curr_in/*pRgbhumaninfo*/,1);
-//     }
-// #endif
-//     SAFEDELETE( pFrame_RgbSmoothed_low);
-//     SAFEDELETE( pFrame_bkgndDetected_low);
-//     SAFEDELETE( pFrame_matlabFunced_low);
-//   }
-//   CurFrameNum = ( CurFrameNum >= MAXFRAMENUM ) ? 1 : ++CurFrameNum;
-//   ROK();
-// }
-// 
-// ErrVal
-// CPersonDetect::PersenDetect_Process_Channel_2(CFrameContainer* pFrame_matlabFunced,       
-//                                               CFrameContainer* pRgbhumaninfo,
-//                                               CFrameContainer* pFrame_curr_in,
-//                                               const uint8_t* const pRGB_template,
-//                                               const ALARMTYPE alarm_type,
-//                                               uint16_t demarcation_line,
-//                                               const uint32_t framenum)
-// 
-// {
-//   if(0 == CurFrameNum%BKUPDATE_INTERVAL)
-//   {
-//     Shadow_Mask(pFrame_curr_in,pRGB_template);
-//     EXM_NOK( averagesmoothRgb( pFrame_RgbSmoothed,pFrame_curr_in/*, SMOOTHSTARTLINE */), "smoothRgb fail!" );
-//     if (0 == CurFrameNum)
-//     {
-//       clearUpdateBk();
-//       initUpdateBk(pFrame_curr_in->getWidth(),pFrame_curr_in->getHeight(),pFrame_curr_in->getYuvType());
-//       *pFrame_bkgndDetected = *pFrame_RgbSmoothed/*pFrame_curr_in*/;
-//     }
-//     else
-//     {
-//       UpdateBk(pFrame_bkgndDetected,pFrame_RgbSmoothed,70,2,2,framenum);  /*2,3*/
-//     }
-//   }
-//   if ( 0 == CurFrameNum%SAMPLING_INTERVAL) 
-//   {
-// #if (1 == SY_DEBUG)
-//     *pRgbhumaninfo = *pFrame_curr_in;
-//     memset(pFrame_matlabFunced->m_YuvPlane[0], 0, pFrame_matlabFunced->getRSize());
-// #endif
-//     Shadow_Mask(pFrame_curr_in,pRGB_template);
-//     EXM_NOK( averagesmoothRgb( pFrame_RgbSmoothed,pFrame_curr_in/*, SMOOTHSTARTLINE */), "smoothRgb fail!" );
-// 
-//     CFrameContainer*   pFrame_RgbSmoothed_low   = new CFrameContainer(pFrame_curr_in->getWidth()/2,pFrame_curr_in->getHeight()/2,pFrame_curr_in->getYuvType());
-//     CFrameContainer*   pFrame_bkgndDetected_low = new CFrameContainer(pFrame_curr_in->getWidth()/2,pFrame_curr_in->getHeight()/2,pFrame_curr_in->getYuvType());
-//     CFrameContainer*   pFrame_matlabFunced_low  = new CFrameContainer(pFrame_curr_in->getWidth()/2,pFrame_curr_in->getHeight()/2,pFrame_curr_in->getYuvType());
-// 
-//     Interlaced_Scanning(pFrame_RgbSmoothed_low,pFrame_RgbSmoothed);
-//     Interlaced_Scanning(pFrame_bkgndDetected_low,pFrame_bkgndDetected);
-//     EXM_NOK( binarizeY_fromRgbBkgnd(pFrame_matlabFunced_low ,pFrame_RgbSmoothed_low,pFrame_bkgndDetected_low ,MAXTHRESHOLD), "pMatlabFunc fail!" );//pFramesBuffer->getFrame(1)
-//     EXM_NOK( pMatlabFunc->labelObj( ObjectLabeledDList, pFrame_matlabFunced_low, pFrame_RgbSmoothed_low), "labelObject fail!" );
-//     binRgbtoY_LowtoHigh( pFrame_matlabFunced, pFrame_RgbSmoothed,pFrame_bkgndDetected, ObjectLabeledDList, 70,35,demarcation_line);//pFramesBuffer->getFrame(1)
-//     ObjectLabeledDList->DestroyAll();
-//     erodeY( pFrame_matlabFunced, 3,3,5,1);
-//     dilateY( pFrame_matlabFunced, 1 );
-//     EXM_NOK( pMatlabFunc->labelObj( ObjectLabeledDList, pFrame_matlabFunced ,pFrame_RgbSmoothed), "labelObject fail!" );
-//     deletminobj(ObjectLabeledDList, demarcation_line);
-//     ForecastObjectDetect(ObjectLabeledDList, pFrame_curr_in/*pRgbhumaninfo*/, pFrame_matlabFunced,&Warning_Line[1],&Alarm_Line[1] ,alarm_type);
-//     ObjectLabeledDList->DestroyAll();
-// 
-// #if (1 == SY_DEBUG)
-//     Draw_Warning_Line(&Warning_Line[1],pFrame_curr_in/*pRgbhumaninfo*/);  
-//     ImgMoveObjectDetect(pFrame_curr_in/*pRgbhumaninfo*/);
-//     if (b_First_Alarm /*|| b_Second_Alarm*/)
-//     {
-//       SaveJpeg_File_color(pFrame_curr_in/*pRgbhumaninfo*/,2);
-//     }
-// #endif
-//     SAFEDELETE( pFrame_RgbSmoothed_low);
-//     SAFEDELETE( pFrame_bkgndDetected_low);
-//     SAFEDELETE( pFrame_matlabFunced_low);
-//   }
-//   CurFrameNum = ( CurFrameNum >= MAXFRAMENUM ) ? 1 : ++CurFrameNum;
-//   ROK();
-// }
-// 
-// ErrVal
-// CPersonDetect::PersenDetect_Process_Channel_3(CFrameContainer* pFrame_matlabFunced,       
-//                                               CFrameContainer* pRgbhumaninfo,
-//                                               CFrameContainer* pFrame_curr_in,
-//                                               const uint8_t* const pRGB_template,
-//                                               const ALARMTYPE alarm_type,
-//                                               uint16_t demarcation_line,
-//                                               const uint32_t framenum)
-// 
-// 
-// {
-//   if(0 == CurFrameNum%BKUPDATE_INTERVAL)
-//   {
-//     Shadow_Mask(pFrame_curr_in,pRGB_template);
-//     EXM_NOK( averagesmoothRgb( pFrame_RgbSmoothed,pFrame_curr_in/*, SMOOTHSTARTLINE */), "smoothRgb fail!" );
-//     if (0 == CurFrameNum)
-//     {
-//       clearUpdateBk();
-//       initUpdateBk(pFrame_curr_in->getWidth(),pFrame_curr_in->getHeight(),pFrame_curr_in->getYuvType());
-//       *pFrame_bkgndDetected = *pFrame_RgbSmoothed/*pFrame_curr_in*/;
-//     }
-//     else
-//     {
-//       UpdateBk(pFrame_bkgndDetected,pFrame_RgbSmoothed,70,5,5,framenum);  /*2,3*/
-//     }
-//   }
-//   if ( 0 == CurFrameNum%SAMPLING_INTERVAL) 
-//   {
-// #if (1 == SY_DEBUG)
-//     *pRgbhumaninfo = *pFrame_curr_in;
-// #endif
-//     Shadow_Mask(pFrame_curr_in,pRGB_template);
-//     EXM_NOK( averagesmoothRgb( pFrame_RgbSmoothed,pFrame_curr_in/*, SMOOTHSTARTLINE */), "smoothRgb fail!" );
-// 
-// 
-//     CFrameContainer*   pFrame_RgbSmoothed_low   = new CFrameContainer(pFrame_curr_in->getWidth()/2,pFrame_curr_in->getHeight()/2,pFrame_curr_in->getYuvType());
-//     CFrameContainer*   pFrame_bkgndDetected_low = new CFrameContainer(pFrame_curr_in->getWidth()/2,pFrame_curr_in->getHeight()/2,pFrame_curr_in->getYuvType());
-//     CFrameContainer*   pFrame_matlabFunced_low  = new CFrameContainer(pFrame_curr_in->getWidth()/2,pFrame_curr_in->getHeight()/2,pFrame_curr_in->getYuvType());
-// 
-//     //隔行采样
-//     Interlaced_Scanning(pFrame_RgbSmoothed_low,pFrame_RgbSmoothed);
-//     Interlaced_Scanning(pFrame_bkgndDetected_low,pFrame_bkgndDetected);
-// 
-//     //二值
-//     EXM_NOK( binarizeY_fromRgbBkgnd(pFrame_matlabFunced_low ,pFrame_RgbSmoothed_low,pFrame_bkgndDetected_low ,MAXTHRESHOLD), "pMatlabFunc fail!" );//pFramesBuffer->getFrame(1)
-// 
-//     //标定，顺便得到他们的RGB信息（暂时没用）
-//     EXM_NOK( pMatlabFunc->labelObj( ObjectLabeledDList, pFrame_matlabFunced_low, pFrame_RgbSmoothed_low), "labelObject fail!" );
-// 
-//     //根据标定信息对原图进行二值
-//     memset(pFrame_matlabFunced->m_YuvPlane[0], 0, pFrame_matlabFunced->getWidth()*pFrame_matlabFunced->getHeight());
-//     binRgbtoY_LowtoHigh( pFrame_matlabFunced, pFrame_RgbSmoothed,pFrame_bkgndDetected, ObjectLabeledDList, 70,45,demarcation_line);//pFramesBuffer->getFrame(1)
-// 
-//     SHOW_BIN_IMAGE("pFrame_matlabFunced", 
-//         pFrame_matlabFunced->getWidth(), 
-//         pFrame_matlabFunced->getHeight(), 
-//         (char*)pFrame_matlabFunced->m_YuvPlane[0]);
-// 
-//     ObjectLabeledDList->DestroyAll();
-//     erodeY( pFrame_matlabFunced, 3,3,5,1);  //腐蚀
-//     dilateY( pFrame_matlabFunced, 1 );      //膨胀
-// 
-//     EXM_NOK( pMatlabFunc->labelObj( ObjectLabeledDList, pFrame_matlabFunced ,pFrame_RgbSmoothed), "labelObject fail!" );
-//     deletminobj(ObjectLabeledDList, demarcation_line);
-//     ForecastObjectDetect(ObjectLabeledDList, pFrame_curr_in/*pRgbhumaninfo*/, pFrame_matlabFunced,&Warning_Line[2],&Alarm_Line[2] , alarm_type);
-//     ObjectLabeledDList->DestroyAll();
-// 
-//     Draw_Warning_Line(&Warning_Line[2],pFrame_RgbSmoothed/*pRgbhumaninfo*/);    
-//     ImgMoveObjectDetect(pFrame_RgbSmoothed/*pRgbhumaninfo*/);
-//     SHOW_IMAGE("smooth", pFrame_RgbSmoothed->getImage());
-// 
-// 
-// #if (1 == SY_DEBUG)
-//     Draw_Warning_Line(&Warning_Line[2],pFrame_curr_in/*pRgbhumaninfo*/);    
-//     ImgMoveObjectDetect(pFrame_curr_in/*pRgbhumaninfo*/);
-//     if (b_First_Alarm /*|| b_Second_Alarm*/)
-//     {
-// //       SaveJpeg_File_color(pFrame_curr_in/*pRgbhumaninfo*/,3);
-//     }
-// #endif
-//     SAFEDELETE( pFrame_RgbSmoothed_low);
-//     SAFEDELETE( pFrame_bkgndDetected_low);
-//     SAFEDELETE( pFrame_matlabFunced_low);
-//   }
-//   CurFrameNum = ( CurFrameNum >= MAXFRAMENUM ) ? 1 : ++CurFrameNum;
-//   ROK();
-// }
-// ErrVal
-// CPersonDetect::PersenDetect_Process_Channel_4(CFrameContainer* pFrame_matlabFunced,       
-//                                               CFrameContainer* pRgbhumaninfo,
-//                                               CFrameContainer* pFrame_curr_in,
-//                                               const uint8_t* const pRGB_template,
-//                                               const ALARMTYPE alarm_type,
-//                                               uint16_t demarcation_line,
-//                                               const uint32_t framenum)
-// {
-//   if(0 == CurFrameNum%BKUPDATE_INTERVAL)
-//   {
-//     Shadow_Mask(pFrame_curr_in,pRGB_template);
-//     EXM_NOK( averagesmoothRgb( pFrame_RgbSmoothed,pFrame_curr_in/*, SMOOTHSTARTLINE */), "smoothRgb fail!" );
-//     if (0 == CurFrameNum)
-//     {
-//       clearUpdateBk();
-//       initUpdateBk(pFrame_curr_in->getWidth(),pFrame_curr_in->getHeight(),pFrame_curr_in->getYuvType());
-//       *pFrame_bkgndDetected = *pFrame_RgbSmoothed/*pFrame_curr_in*/;
-//     }
-//     else
-//     {
-//       UpdateBk(pFrame_bkgndDetected,pFrame_RgbSmoothed,70,10,10,framenum);  /*2,3*/
-//     }
-//   }
-//   if ( 0 == CurFrameNum%SAMPLING_INTERVAL) 
-//   {
-// #if (1 == SY_DEBUG)
-//     *pRgbhumaninfo = *pFrame_curr_in;
-// #endif
-//     if (0 != CurFrameNum%BKUPDATE_INTERVAL)
-//     {
-//       Shadow_Mask(pFrame_curr_in,pRGB_template);
-//       EXM_NOK( averagesmoothRgb( pFrame_RgbSmoothed,pFrame_curr_in/*, SMOOTHSTARTLINE */), "smoothRgb fail!" );
-//     }
-//     CFrameContainer*   pFrame_RgbSmoothed_low   = new CFrameContainer(pFrame_curr_in->getWidth()/2,pFrame_curr_in->getHeight()/2,pFrame_curr_in->getYuvType());
-//     CFrameContainer*   pFrame_bkgndDetected_low = new CFrameContainer(pFrame_curr_in->getWidth()/2,pFrame_curr_in->getHeight()/2,pFrame_curr_in->getYuvType());
-//     CFrameContainer*   pFrame_matlabFunced_low  = new CFrameContainer(pFrame_curr_in->getWidth()/2,pFrame_curr_in->getHeight()/2,pFrame_curr_in->getYuvType());
-//     Interlaced_Scanning(pFrame_RgbSmoothed_low,pFrame_RgbSmoothed);
-//     Interlaced_Scanning(pFrame_bkgndDetected_low,pFrame_bkgndDetected);
-//     EXM_NOK( binarizeY_fromRgbBkgnd(pFrame_matlabFunced_low ,pFrame_RgbSmoothed_low,pFrame_bkgndDetected_low ,MAXTHRESHOLD), "pMatlabFunc fail!" );//pFramesBuffer->getFrame(1)
-//     EXM_NOK( pMatlabFunc->labelObj( ObjectLabeledDList, pFrame_matlabFunced_low, pFrame_RgbSmoothed_low), "labelObject fail!" );
-//     binRgbtoY_LowtoHigh( pFrame_matlabFunced, pFrame_RgbSmoothed,pFrame_bkgndDetected, ObjectLabeledDList, 70,45,demarcation_line);//pFramesBuffer->getFrame(1)
-//     ObjectLabeledDList->DestroyAll();
-//     erodeY( pFrame_matlabFunced, 7,30,1,1);
-//     EXM_NOK( pMatlabFunc->labelObj( ObjectLabeledDList, pFrame_matlabFunced ,pFrame_RgbSmoothed), "labelObject fail!" );
-//     deletminobj(ObjectLabeledDList, demarcation_line);
-//     ForecastObjectDetect(ObjectLabeledDList, pFrame_curr_in/*pRgbhumaninfo*/, pFrame_matlabFunced,&Warning_Line[3],&Alarm_Line[3] ,alarm_type);
-//     ObjectLabeledDList->DestroyAll();
-// #if (1 == SY_DEBUG)
-//     Draw_Warning_Line(&Warning_Line[3],pFrame_curr_in/*pRgbhumaninfo*/);
-//     ImgMoveObjectDetect(pFrame_curr_in/*pRgbhumaninfo*/);
-//     if (b_First_Alarm /*|| b_Second_Alarm*/)
-//     {
-//       SaveJpeg_File_color(pFrame_curr_in/*pRgbhumaninfo*/,4);
-//     }
-// #endif
-//     SAFEDELETE( pFrame_RgbSmoothed_low);
-//     SAFEDELETE( pFrame_bkgndDetected_low);
-//     SAFEDELETE( pFrame_matlabFunced_low);
-//   }
-//   CurFrameNum = ( CurFrameNum >= MAXFRAMENUM ) ? 1 : ++CurFrameNum;
-//   ROK();
-// }
 
-// 
-// // *多路处理主函数*/
-// ErrVal
-// CPersonDetect::PersenDetect_Process_Main(CFrameContainer* pFrame_matlabFunced,       
-//                                          CFrameContainer* pRgbhumaninfo,
-//                                          CFrameContainer* pFrame_input,
-//                                          const uint8_t* const pRGB_template,
-//                                          const ALARMTYPE alarm_type_channle_1,
-//                                          const ALARMTYPE alarm_type_channle_2,
-//                                          const ALARMTYPE alarm_type_channle_3,
-//                                          const ALARMTYPE alarm_type_channle_4,
-//                                          uint16_t demarcation_line_channel_1,
-//                                          uint16_t demarcation_line_channel_2,
-//                                          uint16_t demarcation_line_channel_3,
-//                                          uint16_t demarcation_line_channel_4,
-//                                          const uint32_t framenum)
-// 
-// {
-//   switch (m_nChannel_ID)
-//   {
-//   case 0 :
-//     PersenDetect_Process_Channel_1( pFrame_matlabFunced,       
-//       pRgbhumaninfo,
-//       pFrame_input,
-//       pRGB_template,
-//       alarm_type_channle_1,
-//       demarcation_line_channel_1,
-//       framenum);
-//     break;
-//   case 1 :
-//     PersenDetect_Process_Channel_2( pFrame_matlabFunced,       
-//       pRgbhumaninfo,
-//       pFrame_input,
-//       pRGB_template,
-//       alarm_type_channle_2,
-//       demarcation_line_channel_2,
-//       framenum);
-//     break;
-//   case 2 :
-//     PersenDetect_Process_Channel_3( pFrame_matlabFunced,       
-//       pRgbhumaninfo,
-//       pFrame_input,
-//       pRGB_template,
-//       alarm_type_channle_3,
-//       demarcation_line_channel_3,
-//       framenum);
-//     break;
-//   case 3 :
-//     PersenDetect_Process_Channel_4( pFrame_matlabFunced,       
-//       pRgbhumaninfo,
-//       pFrame_input,
-//       pRGB_template,
-//       alarm_type_channle_4,
-//       demarcation_line_channel_4,
-//       framenum);
-//     break;
-//   }
-//   ROK();
-// 
-// }
+
 ErrVal
 CPersonDetect::ForecastObjectDetect (const CDList< CObjLabeled*, CPointerDNode >* const objDList_inout ,
                                      CFrameContainer* pFrame_in,
@@ -2658,6 +2318,17 @@ CPersonDetect::Interlaced_Scanning (CFrameContainer* pFrame_low,const CFrameCont
 }
 
 ErrVal
+CPersonDetect::Shadow_Mask (CFrameContainer* pFrame_in,CFrameContainer* pFrame_out)
+{
+    if (g_personParam.mask != NULL)
+    {
+        cvMul(pFrame_in->getImage(), g_personParam.mask, 
+            const_cast<IplImage*>(pFrame_out->getImage()));
+    }
+    ROK();
+}
+
+ErrVal
 CPersonDetect::Shadow_Mask (CFrameContainer* pFrame_in_out,const uint8_t* const pRGB_template)
 {
     if (g_personParam.mask != NULL)
@@ -2665,21 +2336,22 @@ CPersonDetect::Shadow_Mask (CFrameContainer* pFrame_in_out,const uint8_t* const 
         cvMul(pFrame_in_out->getImage(), g_personParam.mask, 
             const_cast<IplImage*>(pFrame_in_out->getImage()));
     }
+    ROK();
 
-//   ASSERT(pFrame_in_out);
-//   ASSERT(pRGB_template);
-//   uint16_t imWidth = pFrame_in_out->getWidth();
-//   uint16_t imHeight = pFrame_in_out->getHeight();
-//   for (int j = 0; j < imHeight; ++j )
-//   {
-//     for (int i = 0 ; i < imWidth; ++i)
-//     {
-//       if (0 == pRGB_template[j*imWidth + i] )
-//       {
-//         memset(&pFrame_in_out->m_BmpBuffer[3*j*imWidth + 3*i], 0 , 3);
-//       }
-//     }
-//   }
+    ASSERT(pFrame_in_out);
+  ASSERT(pRGB_template);
+  uint16_t imWidth = pFrame_in_out->getWidth();
+  uint16_t imHeight = pFrame_in_out->getHeight();
+  for (int j = 0; j < imHeight; ++j )
+  {
+    for (int i = 0 ; i < imWidth; ++i)
+    {
+      if (0 == pRGB_template[j*imWidth + i] )
+      {
+        memset(&pFrame_in_out->m_BmpBuffer[3*j*imWidth + 3*i], 0 , 3);
+      }
+    }
+  }
   ROK();
 }
 void CPersonDetect::SavetoFile(int channel)
