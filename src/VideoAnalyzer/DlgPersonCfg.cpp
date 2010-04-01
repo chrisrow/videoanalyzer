@@ -103,8 +103,7 @@ void CDlgPersonCfg::OnBnClickedButtonClearWarningLine()
         m_warningLine.pop_back();
         m_ctrlImage.ShowImage(m_pImage);
     }
-    m_btnWarnLine.SetState(TRUE);
-    m_btnMask.SetState(FALSE);
+    OnBnClickedButtonWarningLine();
 }
 
 void CDlgPersonCfg::OnBnClickedButtonPoly()
@@ -123,8 +122,7 @@ void CDlgPersonCfg::OnBnClickedButtonClearPoly()
         m_mask.pop_back();
         m_ctrlImage.ShowImage(m_pImage);
     }
-    m_btnWarnLine.SetState(FALSE);
-    m_btnMask.SetState(TRUE);
+    OnBnClickedButtonPoly();
 }
 
 void CDlgPersonCfg::OnBnClickedButtonFill()
@@ -169,9 +167,6 @@ void CDlgPersonCfg::OnBnClickedOk()
     g_personParam.warnLine.push_back(CPoint(m_warningLine[0][1].x, m_warningLine[0][1].y));
 
     //由折线生成遮罩图像
-    delete g_personParam.mask;
-    g_personParam.mask = NULL;
-
     if (m_mask.size() > 0)
     {
         g_personParam.maskLine = m_mask;
