@@ -169,54 +169,18 @@ void CDlgPersonCfg::OnBnClickedOk()
     g_personParam.warnLine.push_back(CPoint(m_warningLine[0][1].x, m_warningLine[0][1].y));
 
     //由折线生成遮罩图像
-    makeMask();
-
-    OnOK();
-}
-
-void CDlgPersonCfg::makeMask()
-{
     delete g_personParam.mask;
     g_personParam.mask = NULL;
 
-    if (m_mask.size() <= 0)
+    if (m_mask.size() > 0)
     {
-        return;
+        g_personParam.maskLine = m_mask;
+        CRect rect;
+        m_ctrlImage.GetWindowRect(&rect);
+        g_personParam.mask = cvCreateImage(cvSize(rect.Width(), rect.Height()), 8, 3);
+
+        ::makeMask(m_mask, g_personParam.mask);
     }
 
-    CRect rect;
-    m_ctrlImage.GetWindowRect(&rect);
-    g_personParam.mask = cvCreateImage(cvSize(rect.Width(), rect.Height()), 8, 3);
-    cvSet(g_personParam.mask, cvScalar(1, 1, 1, 1));
-//     memset(g_personParam.mask->imageData, 255, g_personParam.mask->imageSize);
-
-    IplImage* mask = g_personParam.mask;
-    CvScalar color = cvScalar(0, 0, 0, 0);
-    for (unsigned i = 0; i < m_mask.size(); i++)
-    {
-        PolyLine& line = m_mask[i];
-
-        if (line.size() < 2)
-        {
-            continue;
-        }
-
-        for (unsigned j = 0; j < line.size() - 1; j++)
-        {
-            cvLine(mask, cvPoint(line[j].x, line[j].y), cvPoint(line[j+1].x, line[j+1].y), 
-                color, 1, CV_AA, 0 );
-        }
-
-        int arr[1];
-        arr[0] = line.size();
-        CvPoint ** pt = new CvPoint*[1];
-        pt[0] = new CvPoint[line.size()];
-        for (unsigned j = 0; j < line.size(); j++)
-        {
-            pt[0][j] = cvPoint(line[j].x, line[j].y);
-        }
-        cvFillPoly(mask, pt, arr, 1, color);
-    }
-
-//     cvShowImage("mask", mask);
+    OnOK();
 }
