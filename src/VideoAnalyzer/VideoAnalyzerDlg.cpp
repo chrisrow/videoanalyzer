@@ -847,13 +847,14 @@ void CVideoAnalyzerDlg::OnBnClickedButtonRestart()
     if (!m_pVideoGraber || m_pVideoGraber->getStatus() == STAT_STOPPED)
     {
         this->openSource(m_tSource);
+        m_eVideoCtrl = VC_OPEN;
     } 
     else
     {
         m_btnRestart.EnableWindow(FALSE);
         this->closeSource();
+        m_eVideoCtrl = VC_RESTART;
     }
-    m_eVideoCtrl = VC_RESTART;
 }
 
 void CVideoAnalyzerDlg::OnBnClickedButtonPause()
