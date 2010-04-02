@@ -20,9 +20,6 @@
 
 
 #include <math.h>
-// #include "..\\..\\..\\MultiThreadTestGUI\\src\\TonyJpegEncoder.h" 
-#include <Winsock2.h>
-// #pragma comment(lib,Ws2_32.lib)
 
 #include "PersonStruct.h"
 
@@ -197,32 +194,6 @@ public:
   }; 
 
 public:/*处理主函数*/
-//   /*室外场景，人形勾勒*/
-//   ErrVal  PersenDetect_Process1(CFrameContainer* pFrame_matlabFunced,
-//                                 CFrameContainer* pRgbhumaninfo,
-//                                 CFrameContainer* Binremovebody ,
-//                                 const CFrameContainer*  const   pFrame_input)  ;
-//   /*对D1图像，先隔行扫描找目标，再返回D1图像小阈值分析目标*/
-//   ErrVal  PersenDetect_Process2(CFrameContainer* pFrame_matlabFunced,
-//                                 CFrameContainer* pRgbhumaninfo,
-//                                 CFrameContainer* Binremovebody,
-//                                 CFrameContainer* pFrame_curr_in, 
-//                                 const uint8_t* const pRGB_template ); 
-//   /*大门口区分人与车*/
-//   ErrVal  PersenDetect_Process3(CFrameContainer* pFrame_matlabFunced,
-//                                 CFrameContainer* pRgbhumaninfo,
-//                                 CFrameContainer* Binremovebody,
-//                                 CFrameContainer* pFrame_curr_in,
-//                                 const uint8_t* const pRGB_template ); 
-//   /*新背景算法*/
-//   ErrVal  PersenDetect_Process4(CFrameContainer* pFrame_matlabFunced,
-//                                 CFrameContainer* pRgbhumaninfo,
-//                                 CFrameContainer* Binremovebody,
-//                                 CFrameContainer* pFrame_curr_in, 
-//                                 const uint8_t* const pRGB_template ,
-//                                 const ALARMTYPE alarm_type,
-//                                 uint16_t demarcation_line,  //! 远近景的分界线
-//                                 const uint32_t framenum/* = 0*/); 
 
     ErrVal  PersenDetect_Process(CFrameContainer* pFrame_matlabFunced,  
                                  CFrameContainer* pRgbhumaninfo,
@@ -231,53 +202,6 @@ public:/*处理主函数*/
                                  const ALARMTYPE alarm_type,
                                  uint16_t demarcation_line,
                                  const uint32_t framenum = 0); 
-
-//   /*多线程处理，channel_1*/
-//   ErrVal  PersenDetect_Process_Channel_1(CFrameContainer* pFrame_matlabFunced,  
-//                                          CFrameContainer* pRgbhumaninfo,
-//                                          CFrameContainer*    pFrame_input,  
-//                                          const uint8_t* const pRGB_template,  
-//                                          const ALARMTYPE alarm_type,
-//                                          uint16_t demarcation_line,
-//                                          const uint32_t framenum = 0); 
-//   /*多线程处理，channel_2*/
-//   ErrVal  PersenDetect_Process_Channel_2(CFrameContainer* pFrame_matlabFunced,  
-//                                           CFrameContainer* pRgbhumaninfo,
-//                                           CFrameContainer*    pFrame_input,  
-//                                           const uint8_t* const pRGB_template,
-//                                           const ALARMTYPE alarm_type,
-//                                           uint16_t demarcation_line,
-//                                          const uint32_t framenum = 0); 
-//   /*多线程处理，channel_3*/
-//   ErrVal  PersenDetect_Process_Channel_3(CFrameContainer* pFrame_matlabFunced,  
-//                                          CFrameContainer* pRgbhumaninfo,
-//                                          CFrameContainer*    pFrame_input,  
-//                                          const uint8_t* const pRGB_template,  
-//                                          const ALARMTYPE alarm_type,
-//                                          uint16_t demarcation_line,
-//                                        const uint32_t framenum = 0); 
-//   /*多线程处理，channel_4*/
-//   ErrVal  PersenDetect_Process_Channel_4(CFrameContainer* pFrame_matlabFunced,  
-//                                         CFrameContainer* pRgbhumaninfo,  
-//                                         CFrameContainer*    pFrame_input,  
-//                                         const uint8_t* const pRGB_template,  
-//                                         const ALARMTYPE alarm_type,
-//                                         uint16_t demarcation_line,
-//                                         const uint32_t framenum = 0); 
-//   /*多路处理主函数*/
-//   ErrVal  PersenDetect_Process_Main     (CFrameContainer* pFrame_matlabFunced,  
-//                                          CFrameContainer* pRgbhumaninfo,  
-//                                          CFrameContainer*    pFrame_input,  
-//                                          const uint8_t* const pRGB_template,  
-//                                          const ALARMTYPE alarm_type_channle_1,
-//                                          const ALARMTYPE alarm_type_channle_2,
-//                                          const ALARMTYPE alarm_type_channle_3,
-//                                          const ALARMTYPE alarm_type_channle_4,
-//                                          uint16_t demarcation_line_channel_1,
-//                                          uint16_t demarcation_line_channel_2,
-//                                          uint16_t demarcation_line_channel_3,
-//                                          uint16_t demarcation_line_channel_4,
-//                                         const uint32_t framenum = 0); 
 
 
   /*************************************
@@ -356,29 +280,11 @@ public:
   bool  b_Second_Alarm;    //二级报警信号
 
   uint32_t delay_counter;
-//   CFrameContainer*   pFrame_input_low;
-//   CFrameContainer*   pFrame_matlabFunced_low ;
-//   CFrameContainer*   pFrame_RgbSmoothed_low ;
-//   CFrameContainer*   pFrame_bkgndDetected_low ;
 
+public:
 
-  public:
-
-
-    inline uint16_t const& getTrackNum()             const { return m_TrackNum; }
-//     inline uint16_t const& getFirst_Alarm_State()    const { return b_First_Alarm; }
-//     inline uint16_t const& getSecond_Alarm_State()   const { return b_Second_Alarm; }
-//     inline uint16_t const& getDelay_counter()        const { return delay_counter; }
     void   setDelay_counter()                              { delay_counter = 0; }
 
-  /*保存数据文件，调试用。channel用于区分文件名。channel = DEFAULTCHANNELMODE，单路调试模式用；channel = other ,多路调试模式用 */
-  void SavetoFile(int channel = DEFAULTCHANNELMODE);
-  /*保存彩色图像文件，调试用.channel用于区分文件名。channel = DEFAULTCHANNELMODE，单路调试模式用；channel = other ,多路调试模式用 */
- void SaveJpeg_File_color(const CFrameContainer* const pFrame_in,const  int channel = DEFAULTCHANNELMODE);
- /*保存二值化图像文件，调试用*/
- void SaveJpeg_File_bin(const CFrameContainer* const pFrame_in,
-                         const uint32_t framenum = 0,
-                         const uint32_t whitedots = 0/*,const  int channel */);    
  /*检测移动目标  指定区域画框*/
  ErrVal ImgMoveObjectDetect(CFrameContainer* p_frame_in_out);
 
