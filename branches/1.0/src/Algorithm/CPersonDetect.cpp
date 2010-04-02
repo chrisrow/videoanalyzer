@@ -1439,7 +1439,7 @@ CPersonDetect::PersenDetect_Process(CFrameContainer* pFrame_matlabFunced,
         }
         else
         {
-            UpdateBk(pFrame_bkgndDetected,pFrame_RgbSmoothed,70,5,5,framenum);  /*2,3*/
+            UpdateBk(pFrame_bkgndDetected,pFrame_RgbSmoothed,70,2,2,framenum);  /*2,3*/
         }
     }
     if ( 0 == CurFrameNum%SAMPLING_INTERVAL) 
@@ -1467,17 +1467,19 @@ CPersonDetect::PersenDetect_Process(CFrameContainer* pFrame_matlabFunced,
 
         //根据标定信息对原图进行二值
         memset(pFrame_matlabFunced->m_YuvPlane[0], 0, pFrame_matlabFunced->getWidth()*pFrame_matlabFunced->getHeight());
-        binRgbtoY_LowtoHigh( pFrame_matlabFunced, pFrame_RgbSmoothed,pFrame_bkgndDetected, ObjectLabeledDList, 70,45,demarcation_line);//pFramesBuffer->getFrame(1)
-
+        binRgbtoY_LowtoHigh( pFrame_matlabFunced, pFrame_RgbSmoothed,pFrame_bkgndDetected, ObjectLabeledDList, 70,35,demarcation_line);//pFramesBuffer->getFrame(1)
+#if 0
+       Drawtrack(pFrame_matlabFunced);
         SHOW_BIN_IMAGE("pFrame_matlabFunced", 
             pFrame_matlabFunced->getWidth(), 
             pFrame_matlabFunced->getHeight(), 
             (char*)pFrame_matlabFunced->m_YuvPlane[0]);
-
+#endif
         ObjectLabeledDList->DestroyAll();
         erodeY( pFrame_matlabFunced, 3,3,5,1);  //腐蚀
+        
         dilateY( pFrame_matlabFunced, 1 );      //膨胀
-
+        
         EXM_NOK( pMatlabFunc->labelObj( ObjectLabeledDList, pFrame_matlabFunced ,pFrame_RgbSmoothed), "labelObject fail!" );
         deletminobj(ObjectLabeledDList, demarcation_line);
         ForecastObjectDetect(ObjectLabeledDList, pFrame_curr_in/*pRgbhumaninfo*/, pFrame_matlabFunced,&Warning_Line[2],&Alarm_Line[2] , alarm_type);
@@ -1492,7 +1494,16 @@ CPersonDetect::PersenDetect_Process(CFrameContainer* pFrame_matlabFunced,
 //                 cvPoint(g_personParam.warnLine[1].x, g_personParam.warnLine[1].y),
 //                 cvScalar(0, 0, 255, 0), 1, 8);
 //             ImgMoveObjectDetect(pFrame_RgbSmoothed/*pRgbhumaninfo*/);
+            Drawtrack(pFrame_RgbSmoothed);
             SHOW_IMAGE("smooth", pFrame_RgbSmoothed->getImage());
+
+		Drawtrack((CFrameContainer *)pFrame_matlabFunced->m_YuvPlane[0]);
+
+		SHOW_BIN_IMAGE("pFrame_matlabFunced", 
+            pFrame_matlabFunced->getWidth(), 
+            pFrame_matlabFunced->getHeight(), 
+            (char*)pFrame_matlabFunced->m_YuvPlane[0]);			
+
         }
 
         SAFEDELETE( pFrame_RgbSmoothed_low);
@@ -1650,9 +1661,9 @@ CPersonDetect::ForecastObjectDetect (const CDList< CObjLabeled*, CPointerDNode >
       m_TrackNum = m_nTempTrackObjNum;
       m_tracked_obj_flg = TRUE;
     }
-#if ( 1 == SY_DEBUG)
+
     Drawtrack(pFrame_in);//! 调试用，以后删
-#endif
+
     ROK();
   }
   ROK();
@@ -2248,13 +2259,13 @@ void CPersonDetect::Drawtrack(CFrameContainer*  pFrame_curr_in)
 
       if (cen_y>5 && cen_y < imHeight-5 && cen_x < imWidth-5 &&cen_x > 5 )
       {
-        pFrame_curr_in->m_BmpBuffer[3 * cen_y * imWidth + 3 * cen_x + 0] = 0;
-        pFrame_curr_in->m_BmpBuffer[3 * cen_y * imWidth + 3 * cen_x + 1] = 0;
-        pFrame_curr_in->m_BmpBuffer[3 * cen_y * imWidth + 3 * cen_x + 2] = 255;
+        pFrame_curr_in->m_BmpBuffer[3 * cen_y * imWidth + 3 * cen_x + 0] = 255;
+        pFrame_curr_in->m_BmpBuffer[3 * cen_y * imWidth + 3 * cen_x + 1] = 255;
+        pFrame_curr_in->m_BmpBuffer[3 * cen_y * imWidth + 3 * cen_x + 2] = 0;
 
-        pFrame_curr_in->m_BmpBuffer[3 * cen_y * imWidth + MIN(3*(imWidth - 1) , 3 * cen_x + 3)] = 0;
-        pFrame_curr_in->m_BmpBuffer[3 * cen_y * imWidth + MIN(3*(imWidth - 1) , 3 * cen_x + 4)] = 0;
-        pFrame_curr_in->m_BmpBuffer[3 * cen_y * imWidth + MIN(3*(imWidth - 1) , 3 * cen_x + 5)] = 255;
+        //pFrame_curr_in->m_BmpBuffer[3 * cen_y * imWidth + MIN(3*(imWidth - 1) , 3 * cen_x + 3)] = 255;
+        //pFrame_curr_in->m_BmpBuffer[3 * cen_y * imWidth + MIN(3*(imWidth - 1) , 3 * cen_x + 4)] = 255;
+        //pFrame_curr_in->m_BmpBuffer[3 * cen_y * imWidth + MIN(3*(imWidth - 1) , 3 * cen_x + 5)] = 0;
 
         //         pFrame_curr_in->m_BmpBuffer[3 * cen_y * imWidth + MAX(0 , 3 * cen_x - 3)] = 0;
         //         pFrame_curr_in->m_BmpBuffer[3 * cen_y * imWidth + MAX(0 , 3 * cen_x - 2)] = 0;
