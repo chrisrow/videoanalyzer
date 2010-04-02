@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 #include "MaskStatic.h"
 
-const int LINE_WIDTH = 2;
+const int LINE_WIDTH = 1;
 
 CMaskStatic::CMaskStatic(void)
     : m_pImage(NULL)

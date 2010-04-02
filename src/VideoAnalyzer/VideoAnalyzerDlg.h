@@ -16,6 +16,8 @@
 #include "afxcmn.h"
 #include "HeartBeat.h"
 
+#include "Common/timer.h"
+
 enum SOURCETYPE
 {
     TYPE_CAMERA,
@@ -85,6 +87,7 @@ protected:
     CVideoRecorder* m_pVideoRecoder;
     CHeartBeat* m_pHeartBeat;
 
+    CTimer m_timer;
     CString m_strAppPath;
     VIDEO_CONTROL m_eVideoCtrl;
     TVideoSource m_tSource;
