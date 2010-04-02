@@ -2,13 +2,6 @@
 // Microsoft Visual C++ generated include file.
 // Used by VideoAnalyzer.rc
 //
-#define IDC_BTN_REFRESH                 3
-#define IDC_BTN_FILL                    4
-#define IDC_BTN_CAR                     5
-#define IDC_BTN_UNDO                    6
-#define IDC_BTN_OUTPUT                  7
-#define IDC_BTN_SAVE                    8
-#define IDC_BTN_INVERSE                 9
 #define IDM_ABOUTBOX                    0x0010
 #define IDD_ABOUTBOX                    100
 #define IDS_ABOUTBOX                    101
@@ -19,7 +12,6 @@
 #define IDD_DIALOG1                     130
 #define IDD_DLGSETTING                  130
 #define IDD_SETTING                     130
-#define IDD_SETDLG                      131
 #define IDD_PERSON_CFG                  132
 #define IDC_BUTTON_OPEN_FILE            1002
 #define IDC_COMBO_CAMERA                1003
@@ -95,7 +87,6 @@
 #define IDC_EDIT1                       1060
 #define IDC_EDIT_REC_PATH               1060
 #define IDC_BUTTON_WARNING_LINE         1063
-#define IDC_BUTTON_FILL_MASK            1064
 #define IDC_BUTTON_FILL                 1064
 #define ID_32771                        32771
 #define ID_MENU_CLEAR                   32772
