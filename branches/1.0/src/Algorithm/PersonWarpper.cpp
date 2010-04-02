@@ -49,7 +49,7 @@ const IplImage* CPersonWarpper::analysis(const IplImage *pFrame)
 
 	memcpy(m_pFrameContainer->m_BmpBuffer, pFrame->imageData, pFrame->imageSize);
 
-    m_pDetector->PersenDetect_Process(m_pFrame_matlabFunced, m_pOutFrameContainer,
+        m_pDetector->PersenDetect_Process(m_pFrame_matlabFunced, m_pOutFrameContainer,
         m_pFrameContainer, NULL, m_pDetector->LEFTTORIGNT, 60/*m_nInputFrameNum*/); 
 
 	return m_pOutFrameContainer->getImage();
