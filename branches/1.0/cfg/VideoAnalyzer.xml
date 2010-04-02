@@ -5,7 +5,7 @@
         <UDPServer>10.2.1.13:10116</UDPServer>
         <HeartBeat>180</HeartBeat>
         <!-- 发送心跳消息的间隔时间(秒) -->
-        <ImagePath>d:/</ImagePath>
+        <ImagePath>d:</ImagePath>
     </golbal>
     <camera channel="0">
         <PersonDetect>
