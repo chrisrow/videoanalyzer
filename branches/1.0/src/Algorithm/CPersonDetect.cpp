@@ -25,6 +25,10 @@ CPersonDetect::CPersonDetect(uint16_t const  nYWidth_in, uint16_t const  nYHeigh
   initUpdateBk( nYWidth_in, nYHeight_in, YUVTYPE_444 );
   init_detect( nYWidth_in, nYHeight_in, YUVTYPE_444 ,nChannel);
   init_pudong( nYWidth_in, nYHeight_in, YUVTYPE_444 );
+
+  m_pFrame_RgbSmoothed_low   = NULL;
+  m_pFrame_bkgndDetected_low = NULL;
+  m_pFrame_matlabFunced_low  = NULL;
 }
 
 CPersonDetect::~CPersonDetect()
@@ -33,6 +37,10 @@ CPersonDetect::~CPersonDetect()
   clear_detect();
   clear_pudong();
   clearUpdateBk();
+
+  SAFEDELETE( m_pFrame_RgbSmoothed_low);
+  SAFEDELETE( m_pFrame_bkgndDetected_low);
+  SAFEDELETE( m_pFrame_matlabFunced_low);
 }
 
 //==求背景
@@ -171,12 +179,6 @@ ErrVal
 CPersonDetect::init_pudong (uint16_t const  nYWidth_in, uint16_t const  nYHeight_in, YUVTYPE const  YuvType_in)
 {
   /*浦东机场，人员越过预警线检测并报警功能。*/
-
-  /*低分辨率用*/
-  //   pFrame_matlabFunced_low   = new CFrameContainer(nYWidth_in/2, nYHeight_in/2, YuvType_in);
-  //   pFrame_input_low          = new CFrameContainer(nYWidth_in/2, nYHeight_in/2, YuvType_in);
-  //   pFrame_RgbSmoothed_low    = new CFrameContainer(nYWidth_in/2, nYHeight_in/2, YuvType_in);
-  //   pFrame_bkgndDetected_low  = new CFrameContainer(nYWidth_in/2, nYHeight_in/2, YuvType_in);
 
   /*Initialize obj match and track*/
   init_match_track( );
@@ -325,9 +327,9 @@ CPersonDetect::clear_pudong()
   /*浦东机场，人员越过预警线检测并报警功能。*/
   /*低分辨率用*/
   //   SAFEDELETE( pFrame_input_low );
-  //   SAFEDELETE( pFrame_matlabFunced_low );
-  //   SAFEDELETE( pFrame_RgbSmoothed_low );
-  //   SAFEDELETE( pFrame_bkgndDetected_low );
+  //   SAFEDELETE( m_pFrame_matlabFunced_low );
+  //   SAFEDELETE( m_pFrame_RgbSmoothed_low );
+  //   SAFEDELETE( m_pFrame_bkgndDetected_low );
   ROK();
 }
 ErrVal
@@ -349,38 +351,42 @@ CPersonDetect::averagesmoothRgb(  CFrameContainer* pFrame_RgbSmoothed_inout , \
                                 const CFrameContainer*  const pFrame_decoded_in,\
                                 const uint16_t NoSmoothLineNum ) const//均值平滑
 {
-  ASSERT( pFrame_RgbSmoothed_inout );
-  ASSERT( pFrame_decoded_in );
+    //用OpenCV的均值滤波函数代替
+    cvSmooth(pFrame_decoded_in->getImage(), pFrame_RgbSmoothed_inout->m_pIplImage, CV_BLUR);
+    ROK();
 
-  const uint16_t imWidth  = pFrame_decoded_in->getWidth();
-  const uint16_t imHeight = pFrame_decoded_in->getHeight();
-
-  if( (NoSmoothLineNum >= imHeight) || (NoSmoothLineNum <1) )
-    return 0;
-
-  *pFrame_RgbSmoothed_inout = *pFrame_decoded_in;
-  int16_t i = 0, j = 0, m = 0, n = 0; 
-  uint16_t sumB = 0, sumG = 0, sumR = 0;
-  for( i = NoSmoothLineNum; i < imHeight-1; ++i )
-  {
-    for( j = 1; j < imWidth-1; ++j )
-    {
-      sumB = 0, sumG = 0, sumR = 0;
-      for (m = -1; m < 2; m++)
-      {
-        for (n = -1; n < 2; n++)
-        {
-          sumB += pFrame_RgbSmoothed_inout->m_BmpBuffer[ 3 * ( i + m ) * imWidth + 3 * ( j + n ) + 0];
-          sumG += pFrame_RgbSmoothed_inout->m_BmpBuffer[ 3 * ( i + m ) * imWidth + 3 * ( j + n ) + 1];
-          sumR += pFrame_RgbSmoothed_inout->m_BmpBuffer[ 3 * ( i + m ) * imWidth + 3 * ( j + n ) + 2];
-        }
-      }
-      pFrame_RgbSmoothed_inout->m_BmpBuffer[ 3 * i * imWidth + 3 * j + 0] = ( sumB / 9 );
-      pFrame_RgbSmoothed_inout->m_BmpBuffer[ 3 * i * imWidth + 3 * j + 1] = ( sumG / 9 );
-      pFrame_RgbSmoothed_inout->m_BmpBuffer[ 3 * i * imWidth + 3 * j + 2] = ( sumR / 9 );
-    }
-  }
-  ROK();
+//   ASSERT( pFrame_RgbSmoothed_inout );
+//   ASSERT( pFrame_decoded_in );
+// 
+//   const uint16_t imWidth  = pFrame_decoded_in->getWidth();
+//   const uint16_t imHeight = pFrame_decoded_in->getHeight();
+// 
+//   if( (NoSmoothLineNum >= imHeight) || (NoSmoothLineNum <1) )
+//     return 0;
+// 
+//   *pFrame_RgbSmoothed_inout = *pFrame_decoded_in;
+//   int16_t i = 0, j = 0, m = 0, n = 0; 
+//   uint16_t sumB = 0, sumG = 0, sumR = 0;
+//   for( i = NoSmoothLineNum; i < imHeight-1; ++i )
+//   {
+//     for( j = 1; j < imWidth-1; ++j )
+//     {
+//       sumB = 0, sumG = 0, sumR = 0;
+//       for (m = -1; m < 2; m++)
+//       {
+//         for (n = -1; n < 2; n++)
+//         {
+//           sumB += pFrame_RgbSmoothed_inout->m_BmpBuffer[ 3 * ( i + m ) * imWidth + 3 * ( j + n ) + 0];
+//           sumG += pFrame_RgbSmoothed_inout->m_BmpBuffer[ 3 * ( i + m ) * imWidth + 3 * ( j + n ) + 1];
+//           sumR += pFrame_RgbSmoothed_inout->m_BmpBuffer[ 3 * ( i + m ) * imWidth + 3 * ( j + n ) + 2];
+//         }
+//       }
+//       pFrame_RgbSmoothed_inout->m_BmpBuffer[ 3 * i * imWidth + 3 * j + 0] = ( sumB / 9 );
+//       pFrame_RgbSmoothed_inout->m_BmpBuffer[ 3 * i * imWidth + 3 * j + 1] = ( sumG / 9 );
+//       pFrame_RgbSmoothed_inout->m_BmpBuffer[ 3 * i * imWidth + 3 * j + 2] = ( sumR / 9 );
+//     }
+//   }
+//   ROK();
 }
 
 ErrVal CPersonDetect::binarizeY_fromRgbBkgnd( CFrameContainer* pFrame_RgbtoYBinarized_inout,  \
@@ -1108,6 +1114,25 @@ void CPersonDetect::Calculate_BGR_Mean( uint8_t& b_mean,uint8_t& g_mean,uint8_t&
   }
 }
 
+void CPersonDetect::initTempImage(int iWidth, int iHeight, YUVTYPE YuvType_in)
+{
+    int iHalfWidth  = iWidth / 2;
+    int iHalfHeight = iHeight / 2;
+
+    if (!m_pFrame_RgbSmoothed_low
+        || m_pFrame_RgbSmoothed_low->getWidth() != iHalfWidth
+        || m_pFrame_RgbSmoothed_low->getHeight() != iHalfHeight)
+    {
+        delete m_pFrame_RgbSmoothed_low;
+        delete m_pFrame_RgbSmoothed_low;
+        delete m_pFrame_RgbSmoothed_low;
+
+        m_pFrame_RgbSmoothed_low   = new CFrameContainer(iHalfWidth, iHalfHeight, YuvType_in);
+        m_pFrame_bkgndDetected_low = new CFrameContainer(iHalfWidth, iHalfHeight, YuvType_in);
+        m_pFrame_matlabFunced_low  = new CFrameContainer(iHalfWidth, iHalfHeight, YuvType_in);
+    }
+}
+
 ErrVal
 CPersonDetect::PersenDetect_Process(CFrameContainer* pFrame_matlabFunced,       
                                     CFrameContainer* pRgbhumaninfo,
@@ -1136,48 +1161,49 @@ CPersonDetect::PersenDetect_Process(CFrameContainer* pFrame_matlabFunced,
     }
     if ( 0 == CurFrameNum%SAMPLING_INTERVAL) 
     {
-#if (1 == SY_DEBUG)
-        *pRgbhumaninfo = *pFrame_curr_in;
-#endif
         Shadow_Mask(pFrame_curr_in, pRGB_template);
 
         EXM_NOK( averagesmoothRgb( pFrame_RgbSmoothed,pFrame_curr_in/*, SMOOTHSTARTLINE */), "smoothRgb fail!" );
 
-        CFrameContainer*   pFrame_RgbSmoothed_low   = new CFrameContainer(pFrame_curr_in->getWidth()/2,pFrame_curr_in->getHeight()/2,pFrame_curr_in->getYuvType());
-        CFrameContainer*   pFrame_bkgndDetected_low = new CFrameContainer(pFrame_curr_in->getWidth()/2,pFrame_curr_in->getHeight()/2,pFrame_curr_in->getYuvType());
-        CFrameContainer*   pFrame_matlabFunced_low  = new CFrameContainer(pFrame_curr_in->getWidth()/2,pFrame_curr_in->getHeight()/2,pFrame_curr_in->getYuvType());
+        this->initTempImage(pFrame_curr_in->getWidth(), pFrame_curr_in->getHeight(), YUVTYPE_444);
 
         //隔行采样
-        Interlaced_Scanning(pFrame_RgbSmoothed_low,pFrame_RgbSmoothed);
-        Interlaced_Scanning(pFrame_bkgndDetected_low,pFrame_bkgndDetected);
+        Interlaced_Scanning(m_pFrame_RgbSmoothed_low,pFrame_RgbSmoothed);
+        Interlaced_Scanning(m_pFrame_bkgndDetected_low,pFrame_bkgndDetected);
 
         //二值
-        EXM_NOK( binarizeY_fromRgbBkgnd(pFrame_matlabFunced_low ,pFrame_RgbSmoothed_low,pFrame_bkgndDetected_low ,MAXTHRESHOLD), "pMatlabFunc fail!" );//pFramesBuffer->getFrame(1)
+        EXM_NOK( binarizeY_fromRgbBkgnd(m_pFrame_matlabFunced_low ,
+                                        m_pFrame_RgbSmoothed_low,
+                                        m_pFrame_bkgndDetected_low ,MAXTHRESHOLD), "pMatlabFunc fail!" );
 
         //标定，顺便得到他们的RGB信息（暂时没用）
-        EXM_NOK( pMatlabFunc->labelObj( ObjectLabeledDList, pFrame_matlabFunced_low, pFrame_RgbSmoothed_low), "labelObject fail!" );
+        EXM_NOK( pMatlabFunc->labelObj( ObjectLabeledDList, 
+                                        m_pFrame_matlabFunced_low, 
+                                        m_pFrame_RgbSmoothed_low), "labelObject fail!" );
 
         //根据标定信息对原图进行二值
         memset(pFrame_matlabFunced->m_YuvPlane[0], 0, pFrame_matlabFunced->getWidth()*pFrame_matlabFunced->getHeight());
-        binRgbtoY_LowtoHigh( pFrame_matlabFunced, pFrame_RgbSmoothed,pFrame_bkgndDetected, ObjectLabeledDList, 70,35,demarcation_line);//pFramesBuffer->getFrame(1)
-#if 0
-       Drawtrack(pFrame_matlabFunced);
-        SHOW_BIN_IMAGE("pFrame_matlabFunced", 
-            pFrame_matlabFunced->getWidth(), 
-            pFrame_matlabFunced->getHeight(), 
-            (char*)pFrame_matlabFunced->m_YuvPlane[0]);
-#endif
+        binRgbtoY_LowtoHigh( pFrame_matlabFunced, 
+                             pFrame_RgbSmoothed,pFrame_bkgndDetected, 
+                             ObjectLabeledDList, 70, 35, demarcation_line);
+
         ObjectLabeledDList->DestroyAll();
         erodeY( pFrame_matlabFunced, 3,3,5,1);  //腐蚀
         
         dilateY( pFrame_matlabFunced, 1 );      //膨胀
         
-        EXM_NOK( pMatlabFunc->labelObj( ObjectLabeledDList, pFrame_matlabFunced ,pFrame_RgbSmoothed), "labelObject fail!" );
+        EXM_NOK( pMatlabFunc->labelObj( ObjectLabeledDList, 
+                                        pFrame_matlabFunced ,
+                                        pFrame_RgbSmoothed), "labelObject fail!" );
         deletminobj(ObjectLabeledDList, demarcation_line);
-        ForecastObjectDetect(ObjectLabeledDList, pFrame_curr_in/*pRgbhumaninfo*/, pFrame_matlabFunced,&Warning_Line[2],&Alarm_Line[2] , alarm_type);
+
+        ForecastObjectDetect(ObjectLabeledDList, 
+                             pFrame_curr_in, 
+                             pFrame_matlabFunced,
+                             &Warning_Line[2], &Alarm_Line[2] , alarm_type);
+
         ObjectLabeledDList->DestroyAll();
 
-        //
         if (g_debug)
         {
             Draw_Warning_Line(&Warning_Line[2],pFrame_RgbSmoothed/*pRgbhumaninfo*/);   
@@ -1189,18 +1215,14 @@ CPersonDetect::PersenDetect_Process(CFrameContainer* pFrame_matlabFunced,
             Drawtrack(pFrame_RgbSmoothed);
             SHOW_IMAGE("smooth", pFrame_RgbSmoothed->getImage());
 
-		Drawtrack((CFrameContainer *)pFrame_matlabFunced->m_YuvPlane[0]);
+            Drawtrack((CFrameContainer *)pFrame_matlabFunced->m_YuvPlane[0]);
 
-		SHOW_BIN_IMAGE("pFrame_matlabFunced", 
-            pFrame_matlabFunced->getWidth(), 
-            pFrame_matlabFunced->getHeight(), 
-            (char*)pFrame_matlabFunced->m_YuvPlane[0]);			
+	        SHOW_BIN_IMAGE("pFrame_matlabFunced", 
+                pFrame_matlabFunced->getWidth(), 
+                pFrame_matlabFunced->getHeight(), 
+                (char*)pFrame_matlabFunced->m_YuvPlane[0]);			
 
         }
-
-        SAFEDELETE( pFrame_RgbSmoothed_low);
-        SAFEDELETE( pFrame_bkgndDetected_low);
-        SAFEDELETE( pFrame_matlabFunced_low);
     }
     CurFrameNum = ( CurFrameNum >= MAXFRAMENUM ) ? 1 : ++CurFrameNum;
     ROK();
@@ -2046,6 +2068,7 @@ CPersonDetect::Shadow_Mask (CFrameContainer* pFrame_in,CFrameContainer* pFrame_o
 ErrVal
 CPersonDetect::Shadow_Mask (CFrameContainer* pFrame_in_out,const uint8_t* const pRGB_template)
 {
+    //用OpenCV的矩阵乘法函数代替
     if (g_personParam.mask != NULL)
     {
         cvMul(pFrame_in_out->getImage(), g_personParam.mask, 
@@ -2053,108 +2076,126 @@ CPersonDetect::Shadow_Mask (CFrameContainer* pFrame_in_out,const uint8_t* const 
     }
     ROK();
 
-    ASSERT(pFrame_in_out);
-  ASSERT(pRGB_template);
-  uint16_t imWidth = pFrame_in_out->getWidth();
-  uint16_t imHeight = pFrame_in_out->getHeight();
-  for (int j = 0; j < imHeight; ++j )
-  {
-    for (int i = 0 ; i < imWidth; ++i)
-    {
-      if (0 == pRGB_template[j*imWidth + i] )
-      {
-        memset(&pFrame_in_out->m_BmpBuffer[3*j*imWidth + 3*i], 0 , 3);
-      }
-    }
-  }
-  ROK();
+//   ASSERT(pFrame_in_out);
+//   ASSERT(pRGB_template);
+//   uint16_t imWidth = pFrame_in_out->getWidth();
+//   uint16_t imHeight = pFrame_in_out->getHeight();
+//   for (int j = 0; j < imHeight; ++j )
+//   {
+//     for (int i = 0 ; i < imWidth; ++i)
+//     {
+//       if (0 == pRGB_template[j*imWidth + i] )
+//       {
+//         memset(&pFrame_in_out->m_BmpBuffer[3*j*imWidth + 3*i], 0 , 3);
+//       }
+//     }
+//   }
+//   ROK();
 }
 
 
 ErrVal CPersonDetect::ImgMoveObjectDetect(CFrameContainer* p_frame_in_out)
 {
-  ASSERT (p_frame_in_out );
-  CFrameContainer* pFrame_temp = new CFrameContainer(p_frame_in_out->getWidth(), p_frame_in_out->getHeight(), p_frame_in_out->getYuvType());
-  ASSERT(pFrame_temp);
-  *pFrame_temp = *p_frame_in_out;
-  int16_t i = 0, j = 0, k = 0;
-  int16_t rect[4] = {0, 0, 0, 0};
-  int16_t tmp_top = 0, tmp_right = 0;
-  uint16_t v_R = 0, v_G = 0, v_B = 255;
-  uint8_t* p_data_in  = p_frame_in_out->m_BmpBuffer ;
-  uint8_t* p_data_out = pFrame_temp->m_BmpBuffer ;
-
-  uint16_t img_width  = p_frame_in_out->getWidth()* 3 ;
-  uint16_t img_height = p_frame_in_out->getHeight()   ;
-  uint16_t img_size   = p_frame_in_out->getRgbSize()  ;
-
-  memcpy(p_data_out,p_data_in, img_size);
-
-  for (i = 0; i < m_TrackNum; i++ )
-  {
-    if (TrackObject[i].b_Warning /*&& TrackObject[i].b_Alarm*/)//! 若启动b_Second_Alarm报警，将此注释打开
+    //用OpenCV的画矩形函数来代替
+    int thickness = 1;
+    int line_type = 8;
+    int shift     = 0;
+    for (int i = 0; i < m_TrackNum; i++ )
     {
-      rect[0] = TrackObject[i].m_nObjRect[0] *3 ;// /3 * 9;
-      rect[1] = TrackObject[i].m_nObjRect[1] ;
-      rect[2] = TrackObject[i].m_nObjRect[2] ;
-      rect[3] = TrackObject[i].m_nObjRect[3] ;
-      tmp_top = TrackObject[i].m_nObjRect[1] + TrackObject[i].m_nObjRect[3] ;
-      tmp_right = ( TrackObject[i].m_nObjRect[0] + TrackObject[i].m_nObjRect[2] )*3 ;// /3 * 9;
-      for (j = rect[1]; j < tmp_top; j++ ) //left 
-      {
-        p_data_out[img_width * j + rect[0]   ] = (uint8_t)v_R ;
-        p_data_out[img_width * j + rect[0]+1 ] = (uint8_t)v_G ;
-        p_data_out[img_width * j + rect[0]+2 ] = (uint8_t)v_B ;
-      }
-      for (j = rect[1]; j < tmp_top; j++ ) //right
-      {
-        p_data_out[img_width * j + tmp_right   ] = (uint8_t)v_R ;
-        p_data_out[img_width * j + tmp_right+1 ] = (uint8_t)v_G ;
-        p_data_out[img_width * j + tmp_right+2 ] = (uint8_t)v_B ;
-      }
-      for (j = rect[0]; j < tmp_right; j+=3 ) //top
-      {
-        p_data_out[img_width * tmp_top + j   ] = (uint8_t)v_R ;
-        p_data_out[img_width * tmp_top + j+1 ] = (uint8_t)v_G ;
-        p_data_out[img_width * tmp_top + j+2 ] = (uint8_t)v_B ;
-      }
-      for (j = rect[0]; j < tmp_right; j+=3 ) //bottom
-      {
-        p_data_out[img_width * rect[1] + j   ] = (uint8_t)v_R ;
-        p_data_out[img_width * rect[1] + j+1 ] = (uint8_t)v_G ;
-        p_data_out[img_width * rect[1] + j+2 ] = (uint8_t)v_B ;
-      }
-
-      /*double lines*/
-      for (j = rect[1]; j < tmp_top; j++ ) //left 
-      {
-        p_data_out[img_width * j + MIN(rect[0] + 3 , img_width - 3)] = (uint8_t)v_R ;
-        p_data_out[img_width * j + MIN(rect[0] + 4 , img_width - 3)] = (uint8_t)v_G ;
-        p_data_out[img_width * j + MIN(rect[0] + 5 , img_width - 3)] = (uint8_t)v_B ;
-      }
-      for (j = rect[1]; j < tmp_top; j++ ) //right
-      {
-        p_data_out[img_width * j + MAX(0 , tmp_right - 3)] = (uint8_t)v_R ;
-        p_data_out[img_width * j + MAX(0 , tmp_right - 2)] = (uint8_t)v_G ;
-        p_data_out[img_width * j + MAX(0 , tmp_right - 1)] = (uint8_t)v_B ;
-      }
-      for (j = rect[0]; j < tmp_right; j+=3 ) //top
-      {
-        p_data_out[img_width * MIN(img_height - 1 , tmp_top + 1) + j    ] = (uint8_t)v_R ;
-        p_data_out[img_width * MIN(img_height - 1 , tmp_top + 1) + j + 1] = (uint8_t)v_G ;
-        p_data_out[img_width * MIN(img_height - 1 , tmp_top + 1) + j + 2] = (uint8_t)v_B ;
-      }
-      for (j = rect[0]; j < tmp_right; j+=3 ) //bottom
-      {
-        p_data_out[img_width * MAX(0 , rect[1] - 1) + j    ] = (uint8_t)v_R ;
-        p_data_out[img_width * MAX(0 , rect[1] - 1) + j + 1] = (uint8_t)v_G ;
-        p_data_out[img_width * MAX(0 , rect[1] - 1) + j + 2] = (uint8_t)v_B ;
-      }
+        if (TrackObject[i].b_Warning /*&& TrackObject[i].b_Alarm*/)//! 若启动b_Second_Alarm报警，将此注释打开
+        {
+            cvRectangle(const_cast<IplImage*>(p_frame_in_out->getImage()), 
+                cvPoint(TrackObject[i].m_nObjRect[0], TrackObject[i].m_nObjRect[1]), 
+                cvPoint(TrackObject[i].m_nObjRect[0] + TrackObject[i].m_nObjRect[2], 
+                TrackObject[i].m_nObjRect[1] + TrackObject[i].m_nObjRect[3]), 
+                cvScalar(0, 0, 255, 0), thickness, line_type, shift);
+            continue;
+        }
     }
-  }
-  *p_frame_in_out = *pFrame_temp;
-  SAFEDELETE(pFrame_temp);
-  ROK(); 
+    ROK();
+
+//   ASSERT (p_frame_in_out );
+//   CFrameContainer* pFrame_temp = new CFrameContainer(p_frame_in_out->getWidth(), p_frame_in_out->getHeight(), p_frame_in_out->getYuvType());
+//   ASSERT(pFrame_temp);
+//   *pFrame_temp = *p_frame_in_out;
+//   int16_t i = 0, j = 0, k = 0;
+//   int16_t rect[4] = {0, 0, 0, 0};
+//   int16_t tmp_top = 0, tmp_right = 0;
+//   uint16_t v_R = 0, v_G = 0, v_B = 255;
+//   uint8_t* p_data_in  = p_frame_in_out->m_BmpBuffer ;
+//   uint8_t* p_data_out = pFrame_temp->m_BmpBuffer ;
+// 
+//   uint16_t img_width  = p_frame_in_out->getWidth()* 3 ;
+//   uint16_t img_height = p_frame_in_out->getHeight()   ;
+//   uint16_t img_size   = p_frame_in_out->getRgbSize()  ;
+// 
+//   memcpy(p_data_out,p_data_in, img_size);
+// 
+//   for (i = 0; i < m_TrackNum; i++ )
+//   {
+//     if (TrackObject[i].b_Warning /*&& TrackObject[i].b_Alarm*/)//! 若启动b_Second_Alarm报警，将此注释打开
+//     {
+//       rect[0] = TrackObject[i].m_nObjRect[0] *3 ;// /3 * 9;
+//       rect[1] = TrackObject[i].m_nObjRect[1] ;
+//       rect[2] = TrackObject[i].m_nObjRect[2] ;
+//       rect[3] = TrackObject[i].m_nObjRect[3] ;
+//       tmp_top = TrackObject[i].m_nObjRect[1] + TrackObject[i].m_nObjRect[3] ;
+//       tmp_right = ( TrackObject[i].m_nObjRect[0] + TrackObject[i].m_nObjRect[2] )*3 ;// /3 * 9;
+//       for (j = rect[1]; j < tmp_top; j++ ) //left 
+//       {
+//         p_data_out[img_width * j + rect[0]   ] = (uint8_t)v_R ;
+//         p_data_out[img_width * j + rect[0]+1 ] = (uint8_t)v_G ;
+//         p_data_out[img_width * j + rect[0]+2 ] = (uint8_t)v_B ;
+//       }
+//       for (j = rect[1]; j < tmp_top; j++ ) //right
+//       {
+//         p_data_out[img_width * j + tmp_right   ] = (uint8_t)v_R ;
+//         p_data_out[img_width * j + tmp_right+1 ] = (uint8_t)v_G ;
+//         p_data_out[img_width * j + tmp_right+2 ] = (uint8_t)v_B ;
+//       }
+//       for (j = rect[0]; j < tmp_right; j+=3 ) //top
+//       {
+//         p_data_out[img_width * tmp_top + j   ] = (uint8_t)v_R ;
+//         p_data_out[img_width * tmp_top + j+1 ] = (uint8_t)v_G ;
+//         p_data_out[img_width * tmp_top + j+2 ] = (uint8_t)v_B ;
+//       }
+//       for (j = rect[0]; j < tmp_right; j+=3 ) //bottom
+//       {
+//         p_data_out[img_width * rect[1] + j   ] = (uint8_t)v_R ;
+//         p_data_out[img_width * rect[1] + j+1 ] = (uint8_t)v_G ;
+//         p_data_out[img_width * rect[1] + j+2 ] = (uint8_t)v_B ;
+//       }
+// 
+//       /*double lines*/
+//       for (j = rect[1]; j < tmp_top; j++ ) //left 
+//       {
+//         p_data_out[img_width * j + MIN(rect[0] + 3 , img_width - 3)] = (uint8_t)v_R ;
+//         p_data_out[img_width * j + MIN(rect[0] + 4 , img_width - 3)] = (uint8_t)v_G ;
+//         p_data_out[img_width * j + MIN(rect[0] + 5 , img_width - 3)] = (uint8_t)v_B ;
+//       }
+//       for (j = rect[1]; j < tmp_top; j++ ) //right
+//       {
+//         p_data_out[img_width * j + MAX(0 , tmp_right - 3)] = (uint8_t)v_R ;
+//         p_data_out[img_width * j + MAX(0 , tmp_right - 2)] = (uint8_t)v_G ;
+//         p_data_out[img_width * j + MAX(0 , tmp_right - 1)] = (uint8_t)v_B ;
+//       }
+//       for (j = rect[0]; j < tmp_right; j+=3 ) //top
+//       {
+//         p_data_out[img_width * MIN(img_height - 1 , tmp_top + 1) + j    ] = (uint8_t)v_R ;
+//         p_data_out[img_width * MIN(img_height - 1 , tmp_top + 1) + j + 1] = (uint8_t)v_G ;
+//         p_data_out[img_width * MIN(img_height - 1 , tmp_top + 1) + j + 2] = (uint8_t)v_B ;
+//       }
+//       for (j = rect[0]; j < tmp_right; j+=3 ) //bottom
+//       {
+//         p_data_out[img_width * MAX(0 , rect[1] - 1) + j    ] = (uint8_t)v_R ;
+//         p_data_out[img_width * MAX(0 , rect[1] - 1) + j + 1] = (uint8_t)v_G ;
+//         p_data_out[img_width * MAX(0 , rect[1] - 1) + j + 2] = (uint8_t)v_B ;
+//       }
+//     }
+//   }
+//   *p_frame_in_out = *pFrame_temp;
+//   SAFEDELETE(pFrame_temp);
+//   ROK(); 
 }
 /***************************************************
 *删除多余的轨迹

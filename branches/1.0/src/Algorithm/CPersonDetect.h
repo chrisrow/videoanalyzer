@@ -281,6 +281,10 @@ public:
 
   uint32_t delay_counter;
 
+  CFrameContainer*   m_pFrame_RgbSmoothed_low;
+  CFrameContainer*   m_pFrame_bkgndDetected_low;
+  CFrameContainer*   m_pFrame_matlabFunced_low;
+
 public:
 
     void   setDelay_counter()                              { delay_counter = 0; }
@@ -359,6 +363,8 @@ public:
   void GetIpAddress(sockaddr_in &sa);
   float ComputeObjHeigth(int ObjCoordinate,float slope1,
                           float pitch1,float slope2,float pitch2);
+
+  void initTempImage(int iWidth, int iHeight, YUVTYPE YuvType_in);
 };
 
 

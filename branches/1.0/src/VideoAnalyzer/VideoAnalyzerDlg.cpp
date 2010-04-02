@@ -292,7 +292,8 @@ LRESULT CVideoAnalyzerDlg::OnMsgVideoEnd(WPARAM wParam,LPARAM lParam)
     delete m_pVideoGraber;
     m_pVideoGraber = NULL;
 
-    this->AddRunStatus("已关闭");
+    m_timer.stop();
+    this->AddRunStatus("已关闭，耗时%f秒", m_timer.getElapsedTimeInSec());
 
     switch (m_eVideoCtrl)
     {
@@ -719,6 +720,8 @@ bool CVideoAnalyzerDlg::openSource(TVideoSource& tSource)
 
     INIT_IMAGE();
     this->AddRunStatus("正在播放");
+
+    m_timer.start();
     m_pVideoGraber->loopGetFrame();
 
     return true;
