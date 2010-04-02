@@ -358,7 +358,8 @@ void CVideoAnalyzerDlg::alert(const IplImage *pFrame)
     //保存图片
     CString strFile, strChannel;
     m_cbChannel.GetWindowText(strChannel);
-    strFile.Format("D:\\%d月%d日\\%d_%d_%d_%d.jpg",
+    strFile.Format("%s/%d月%d日/%d_%d_%d_%d.jpg",
+        g_commParam.szImagePath,
         Systemtime.wMonth,Systemtime.wDay,
         iChannel,
         Systemtime.wHour, Systemtime.wMinute, Systemtime.wSecond );
