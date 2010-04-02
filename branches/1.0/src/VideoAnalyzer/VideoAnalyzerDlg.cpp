@@ -318,12 +318,9 @@ void CVideoAnalyzerDlg::updateFrame(const IplImage *pFrame)
 {
     m_uCurrentFrame++;
 
-//     if (m_chkDebug.GetCheck())
-    {
-        CString str;
-        str.Format("%u", m_uCurrentFrame);
-        m_txtCurrentFrame.SetWindowText(str);
-    }
+    CString str;
+    str.Format("%u", m_uCurrentFrame);
+    m_txtCurrentFrame.SetWindowText(str);
 
     m_ctlVideo.showImage(pFrame);
 }
@@ -337,7 +334,7 @@ void CVideoAnalyzerDlg::alert(const IplImage *pFrame)
     
     //创建目录
     CString strPath;
-    strPath.Format(_T("D:\\%d月%d日"),Systemtime.wMonth,Systemtime.wDay);
+    strPath.Format(_T("%s/%d月%d日"),g_commParam.szImagePath,Systemtime.wMonth,Systemtime.wDay);
     CreateDirectory(strPath, NULL);
     
     int iChannel = 0;
