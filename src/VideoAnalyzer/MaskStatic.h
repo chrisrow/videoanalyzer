@@ -10,6 +10,7 @@ enum GraphicsType_2
 {
     GT2_Polyline = 0, //折线
     GT2_Line,         //直线
+    GT2_RefLine,
     GT2_Rectangle
 };
 
@@ -47,7 +48,9 @@ protected:
     //直线
     Line m_tmpLine;
     LineArray* m_pLineArray;
+    LineArray* m_pReferLineArray;
     CvScalar m_lineColor;
+    CvScalar m_ReflineColor;
 
     CRect m_tmpRect;
     RectArray* m_pRectArray;
@@ -75,7 +78,10 @@ public:
     //直线
     inline void setLine(LineArray& line);
     inline void clearLine();
-
+	
+    //参考直线
+    inline void setRefLine(LineArray& line);
+    inline void clearRefLine();
     //设置、清空矩形数组
     inline void setRectArray(RectArray& array);
     inline void clearRectArray();
@@ -114,6 +120,9 @@ void CMaskStatic::SetGraphicsType(GraphicsType_2 type, COLORREF color)
     case GT2_Line:
         m_lineColor = cvScalar(GetBValue(color), GetGValue(color), GetRValue(color), 0);
         break;
+    case GT2_RefLine:
+	  m_ReflineColor = cvScalar(GetBValue(color), GetGValue(color), GetRValue(color), 0);
+        break;
     case GT2_Rectangle:
         m_rectColor = cvScalar(GetBValue(color), GetGValue(color), GetRValue(color), 0);
         break;
@@ -146,6 +155,19 @@ void CMaskStatic::clearLine()
     }
 }
 
+void CMaskStatic::setRefLine(LineArray& line)
+{ 
+    m_pReferLineArray = &line; 
+}
+
+void CMaskStatic::clearRefLine() 
+{ 
+    if (m_pLineArray)
+    {
+        m_pReferLineArray->clear(); 
+    }
+}
+
 void CMaskStatic::setRectArray(RectArray& array) 
 { 
     m_pRectArray = &array; 
@@ -167,6 +189,7 @@ CvScalar& CMaskStatic::getColor(GraphicsType_2 type)
     case GT2_Line :      return m_lineColor;
     case GT2_Polyline :  return m_polyLineColor;
     case GT2_Rectangle : return m_rectColor;
+    case GT2_RefLine : return m_ReflineColor;
     default: 
         return black;
     }
