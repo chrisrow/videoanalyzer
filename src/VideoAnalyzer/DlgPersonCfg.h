@@ -29,9 +29,11 @@ private:
 
     PolyLineArray m_mask; //екеж
     LineArray m_warningLine;   //дЄОЏЯп
+    LineArray m_referLine;//
     RectArray m_rect;
 
     CButton m_btnWarnLine;
+    CButton m_btnReferLine;
     CButton m_btnMask;
     CButton m_btnFill;
 
@@ -47,4 +49,6 @@ public:
     afx_msg void OnBnClickedButtonFill();
     afx_msg void OnBnClickedButtonClearall();
     afx_msg void OnBnClickedOk();
+    afx_msg void OnBnClickedButtonReferLine();
+    afx_msg void OnBnClickedButtonClearReferLine();
 };
