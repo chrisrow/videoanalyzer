@@ -16,7 +16,7 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// 中文(中华人民共和国) resources
+// Chinese (P.R.C.) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
 #ifdef _WIN32
@@ -205,13 +205,15 @@ FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
     DEFPUSHBUTTON   "确定",IDOK,302,208,56,25
     PUSHBUTTON      "取消",IDCANCEL,386,208,56,25
-    CONTROL         "",IDC_IMAGE,"Static",SS_OWNERDRAW | SS_NOTIFY,7,7,227,167
-    PUSHBUTTON      "清除上一个",IDC_BUTTON_CLEAR_POLY,318,52,50,20
-    PUSHBUTTON      "清除所有",IDC_BUTTON_CLEARALL,269,86,35,20
-    PUSHBUTTON      "预警线",IDC_BUTTON_WARNING_LINE,269,18,35,20
-    PUSHBUTTON      "遮罩",IDC_BUTTON_POLY,269,52,35,20
-    PUSHBUTTON      "填充",IDC_BUTTON_FILL,380,52,35,20
-    PUSHBUTTON      "清除上一个",IDC_BUTTON_CLEAR_WARNING_LINE,318,18,51,20
+    CONTROL         "",IDC_IMAGE,"Static",SS_OWNERDRAW | SS_NOTIFY,10,9,227,167
+    PUSHBUTTON      "清除上一个",IDC_BUTTON_CLEAR_POLY,314,53,45,17
+    PUSHBUTTON      "清除所有",IDC_BUTTON_CLEARALL,263,120,40,19
+    PUSHBUTTON      "预警线",IDC_BUTTON_WARNING_LINE,265,17,35,18
+    PUSHBUTTON      "遮罩",IDC_BUTTON_POLY,265,52,36,18
+    PUSHBUTTON      "填充",IDC_BUTTON_FILL,380,52,33,18
+    PUSHBUTTON      "清除上一个",IDC_BUTTON_CLEAR_WARNING_LINE,314,17,45,18
+    PUSHBUTTON      "参考线",IDC_BUTTON_REFER_LINE,265,89,36,17
+    PUSHBUTTON      "清除线段",IDC_BUTTON_CLEAR_REFER_LINE,314,89,45,17
 END
 
 
@@ -321,7 +323,7 @@ BEGIN
     IDS_ABOUTBOX            "关于 VideoAnalyzer(&A)..."
 END
 
-#endif    // 中文(中华人民共和国) resources
+#endif    // Chinese (P.R.C.) resources
 /////////////////////////////////////////////////////////////////////////////
 
 
