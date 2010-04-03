@@ -12,6 +12,7 @@ typedef std::vector<PolyLine> PolyLineArray;
 struct TPersonDetect
 {
     Line warnLine;
+    Line referLine;
     PolyLineArray maskLine;
     IplImage* mask;
 
@@ -24,6 +25,7 @@ struct TPersonDetect
 void TPersonDetect::reset()
 {
     warnLine.clear();
+    referLine.clear();
     maskLine.clear();
     if (mask)
     {
