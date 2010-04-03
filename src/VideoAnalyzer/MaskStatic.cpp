@@ -12,6 +12,7 @@ CMaskStatic::CMaskStatic(void)
     , m_grapType(GT2_Polyline)
     , m_pPolyLineArray(NULL)
     , m_pLineArray(NULL)
+    , m_pReferLineArray(NULL)
     , m_pRectArray(NULL)
 {
     m_OrgPoint.x = 0 ;
@@ -22,6 +23,7 @@ CMaskStatic::CMaskStatic(void)
 
     m_polyLineColor = cvScalar(0, 0, 255, 0);
     m_lineColor = cvScalar(255, 0, 0, 0);
+    m_ReflineColor = cvScalar(0, 255, 0, 0);
     m_rectColor = cvScalar(255, 255, 0, 0);
 }
 
@@ -88,6 +90,10 @@ bool CMaskStatic::ShowImage(const IplImage* pFrame)
     if (m_pLineArray)
     {
         DrawPolylineArray(m_pImage, m_pLineArray, &m_lineColor);
+    }
+    if(m_pReferLineArray)
+    {
+        DrawPolylineArray(m_pImage, m_pReferLineArray, &m_ReflineColor);
     }
     if (m_pRectArray)
     {
@@ -203,6 +209,7 @@ void CMaskStatic::Reset()
 
     m_pPolyLineArray = NULL;
     m_pLineArray = NULL;
+    m_pReferLineArray = NULL;
     m_pRectArray = NULL;
 }
 
@@ -234,7 +241,7 @@ void CMaskStatic::OnLButtonDown(UINT nFlags, CPoint point)
     cvCopy(m_pImageOrg, m_pImage);
 
     // 第一次画点
-	if (GT2_Polyline == m_grapType || GT2_Line == m_grapType)
+	if (GT2_Polyline == m_grapType || GT2_Line == m_grapType ||GT2_RefLine == m_grapType)
 	{
 	   if (!m_bStart)
 	   {
@@ -251,9 +258,16 @@ void CMaskStatic::OnLButtonDown(UINT nFlags, CPoint point)
            if (GT2_Line == m_grapType)
            {
 		       m_pLineArray->push_back(m_tmpPolyLine);
-               m_tmpPolyLine.clear();
+                    m_tmpPolyLine.clear();
 		       m_bStart = false;
            } 
+
+	     if(GT2_RefLine == m_grapType)
+	     {
+		  m_pReferLineArray->push_back(m_tmpPolyLine);
+		  m_tmpPolyLine.clear();
+		  m_bStart = false;
+	     }
 	   }
 	} 
 	else //矩形
@@ -276,8 +290,9 @@ void CMaskStatic::OnLButtonDown(UINT nFlags, CPoint point)
 	}
 
     DrawPolylineArray(m_pImage, m_pLineArray, &getColor(GT2_Line));
-
+    DrawPolylineArray(m_pImage, m_pReferLineArray, &getColor(GT2_RefLine));
     DrawPolylineArray(m_pImage, m_pPolyLineArray, &getColor(GT2_Polyline));
+	
     DrawPolyline(m_pImage, &m_tmpPolyLine, &getColor(GT2_Polyline));
 
     DrawRect(m_pImage, m_pRectArray, &getColor(GT2_Rectangle));
@@ -304,6 +319,11 @@ void CMaskStatic::OnMouseMove(UINT nFlags, CPoint point)
     {
         cvLine(m_pImageDraft, cvPoint(m_OrgPoint.x, m_OrgPoint.y), cvPoint(point.x, point.y), 
             getColor(GT2_Line), LINE_WIDTH, CV_AA, 0 );
+    }
+    else if(GT2_RefLine == m_grapType)
+    {
+        cvLine(m_pImageDraft, cvPoint(m_OrgPoint.x, m_OrgPoint.y), cvPoint(point.x, point.y), 
+            getColor(GT2_RefLine), LINE_WIDTH, CV_AA, 0 );
     }
     else //矩形
     {
@@ -336,6 +356,10 @@ void CMaskStatic::OnRButtonDown(UINT nFlags, CPoint point)
         else if (GT2_Line == m_grapType)
         {
         }
+        else if(GT2_RefLine == m_grapType)
+	 {
+	 
+	 }
         else if(GT2_Rectangle == m_grapType)
         {
         }
