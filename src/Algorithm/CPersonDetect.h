@@ -274,6 +274,7 @@ public:
   Cordon_Par  Alarm_Line[m_nMaxCameraNum];
   Cordon_Par  Border_line[m_nMaxCameraNum];
 
+  Cordon_Par Refer_Line[2];
 
   //只对每条轨迹报警，这里不需要了dubing
   bool  b_First_Alarm;    //一级报警信号
