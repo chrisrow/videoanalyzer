@@ -277,6 +277,30 @@ CPersonDetect::init_pudong (uint16_t const  nYWidth_in, uint16_t const  nYHeight
       alarm_pt2_x = 0;
       alarm_pt2_y = 0;
   }
+  
+  int16_t refer1_pt1_x,refer1_pt1_y,refer1_pt2_x,refer1_pt2_y;
+  int16_t refer2_pt1_x,refer2_pt1_y,refer2_pt2_x,refer2_pt2_y;
+  if(g_personParam.referLine.size() >= 4)
+ {
+      refer2_pt1_x = (int16_t)g_personParam.referLine[2].x;
+      refer2_pt1_y = (int16_t)g_personParam.referLine[2].y;
+      refer2_pt2_x = (int16_t)g_personParam.referLine[3].x;
+      refer2_pt2_y = (int16_t)g_personParam.referLine[3].y;
+	  
+      refer1_pt1_x = (int16_t)g_personParam.referLine[0].x;
+      refer1_pt1_y = (int16_t)g_personParam.referLine[0].y;
+      refer1_pt2_x = (int16_t)g_personParam.referLine[1].x;
+      refer1_pt2_y = (int16_t)g_personParam.referLine[1].y;	 
+	  
+      Calculate_Line_Parameter(Refer_Line[0].m_slope,Refer_Line[0].m_pitch,refer1_pt1_x,refer1_pt1_y,refer1_pt2_x,refer1_pt2_y);	  
+      Calculate_Line_Parameter(Refer_Line[0].m_slope,Refer_Line[0].m_pitch,refer2_pt1_x,refer2_pt1_y,refer2_pt2_x,refer2_pt2_y);	  
+
+  }
+  else
+  {
+      Refer_Line[0].m_slope = 0;
+      Refer_Line[1].m_slope = 0;
+  }
 
   Warning_Line[2].m_distancetotop     = 0;
   Warning_Line[2].m_distancetobottom  = nYHeight_in;
@@ -1549,6 +1573,7 @@ CPersonDetect::ChangeObjectValue(ObjLabelInfoStruct* pLabelObjStatus,
     {
       pTrackObjInfo->b_Warning = Judge_Slop_Over_Line(pTrackObjInfo,Warning_Line_Pra,/*LEFTTORIGNT*/ alarm_type);
     }
+	
     if (pTrackObjInfo->b_Warning)
     {
       b_First_Alarm = true;
@@ -1865,6 +1890,27 @@ bool CPersonDetect::Judge_Slop_Over_Line(LabelObjStatus* pTrackObjInfo, Cordon_P
   //     pTrackObjInfo->m_nTrack_pt[1][pTrackObjInfo->track_pot_count]    = 92;
   //     pTrackObjInfo->m_nTrack_pt[0][pTrackObjInfo->track_pot_count-1]  = 255;
   //     pTrackObjInfo->m_nTrack_pt[1][pTrackObjInfo->track_pot_count-1]  = 115;
+
+  // 判断跟踪目标是不是人
+  if(pTrackObjInfo->m_nObjRect[2] / pTrackObjInfo->m_nObjRect[3] >= 1)
+  {
+     return false;
+  }
+
+
+  float referLength = 3.0;  //围栏长度
+  float factLength = 1.8;   //人的高度
+  float personHeigh = 0.0;
+  
+  personHeigh =  referLength/personHeigh*((fabs(Refer_Line[0].m_slope- Refer_Line[1].m_slope))*pTrackObjInfo->m_nObjRect[1]+(Refer_Line[0].m_pitch-Refer_Line[1].m_pitch));
+
+
+  if((personHeigh/(float)pTrackObjInfo->m_nObjRect[3] >1.2)&&(personHeigh/(float)pTrackObjInfo->m_nObjRect[3] <=0.8))
+  {
+       return false;
+  }
+
+
   switch (alarm_type)
   {
   case DOUBLE_DIRECTION:
