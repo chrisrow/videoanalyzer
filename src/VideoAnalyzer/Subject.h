@@ -38,9 +38,17 @@ public:
     void destroyListener();
 
 protected:
+    enum TO_DO{ TO_ADD, TO_REM };
+    struct TTodo
+    {
+        TO_DO flag;
+        T elem;
+
+        TTodo(TO_DO t, T e): flag(t), elem(e) {}
+    };
+
     std::vector<T> m_elem;  //
-    std::list<T>   m_tmpAddElem;
-    std::list<T>   m_tmpRemElem;
+    std::vector<TTodo> m_todoList;
 
     CCriticalSection m_CSect;
 };
@@ -51,7 +59,7 @@ void CSubject<T>::addListener(T elem)
     if (elem != NULL)
     {
         CGuard guard(m_CSect);
-        m_tmpAddElem.push_back(elem);
+        m_todoList.push_back(TTodo(TO_ADD, elem));
     }
 }
 
@@ -61,7 +69,7 @@ void CSubject<T>::removeListener(T elem)
     if (elem != NULL)
     {
         CGuard guard(m_CSect);
-        m_tmpRemElem.push_back(elem);
+        m_todoList.push_back(TTodo(TO_REM, elem));
     }
 }
 
@@ -70,77 +78,42 @@ void CSubject<T>::retrieveListener()
 {
     CGuard guard(m_CSect);
 
-    std::list<T>::iterator itToAdd = m_tmpAddElem.begin();
-    for (; itToAdd != m_tmpAddElem.end(); itToAdd++)
+    std::vector<TTodo>::iterator itTodo = m_todoList.begin();
+    for (; itTodo != m_todoList.end(); itTodo++)
     {
         std::vector<T>::iterator it = m_elem.begin();
         for (; it != m_elem.end(); it++)
         {
-            if (*itToAdd == *it)
+            if (TO_ADD == itTodo->flag)
             {
-                break;
-            }
-            else if (NULL == *it)
+                if (itTodo->elem == *it)
+                {
+                    break;
+                }
+                else if (NULL == *it)
+                {
+                    *it = itTodo->elem;
+                    break;
+                }
+            } 
+            else // TO_REM == itTodo->flag
             {
-                *it = *itToAdd;
-                break;
-            }
+                if (itTodo->elem == *it)
+                {
+                    *it = NULL;
+                    break;
+                }
+           }
         }
-        if (it == m_elem.end())
+        if (it == m_elem.end() && TO_ADD == itTodo->flag)
         {
-            m_elem.push_back(*itToAdd);
+            m_elem.push_back(itTodo->elem);
         }
-    }
-    m_tmpAddElem.clear();
 
-    std::list<T>::iterator itToRem = m_tmpRemElem.begin();
-    for (; itToRem != m_tmpRemElem.end(); itToRem++)
-    {
-        std::vector<T>::iterator it = m_elem.begin();
-        for (; it != m_elem.end(); it++)
-        {
-            if (*itToRem == *it)
-            {
-                *it = NULL;
-                break;
-            }
-        }
     }
-    m_tmpRemElem.clear();
+
+    m_todoList.clear();
 }
-
-// template<typename T>
-// void CSubject<T>::addListenerT elem)
-// {
-//     std::vector<T>::iterator it = m_elem.begin();
-//     for (; it != m_elem.end(); it++)
-//     {
-//         if (elem == *it)
-//         {
-//             return;
-//         }
-// 
-//         if (NULL == *it)
-//         {
-//             *it = elem;
-//             return;
-//         }
-//     }
-//     m_elem.push_back(elem);
-// }
-// 
-// template<typename T>
-// void CSubject<T>::removeListener(T elem)
-// {
-//     std::vector<T>::iterator it = m_elem.begin();
-//     for (; it != m_elem.end(); it++)
-//     {
-//         if (elem == *it)
-//         {
-//             *it = NULL;
-//         }
-//     }
-// }
 
 template<typename T>
 void CSubject<T>::clearListener()

@@ -71,6 +71,7 @@ CVideoAnalyzerDlg::CVideoAnalyzerDlg(CWnd* pParent /*=NULL*/)
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
     m_pVideoGraber = NULL;
     m_pAnalyzer = NULL;
+    m_pDlgCfg = NULL;
     m_pUDPAlerter = NULL;
     m_eVideoCtrl   = VC_NO;
     m_bPause = false;
@@ -194,8 +195,13 @@ BOOL CVideoAnalyzerDlg::OnInitDialog()
     OnCbnDropdownComboCamera();
 
     //选择分析器
-    m_cbAnalyzer.AddString("抛物检测");
-    m_cbAnalyzer.AddString("无");
+    m_analyzerMgr.push_back(CAnalyzerMgr(new CPersonWarpper, new CDlgPersonCfg, "人员检测"));
+    m_analyzerMgr.push_back(CAnalyzerMgr(new CParabolaWarpper, new CDlgSetting, "抛物检测"));
+    m_analyzerMgr.push_back(CAnalyzerMgr(NULL, NULL, "无"));
+    for (unsigned i = 0; i < m_analyzerMgr.size(); i++)
+    {
+        m_cbAnalyzer.InsertString(i, m_analyzerMgr[i].pComment);
+    }
     m_cbAnalyzer.SetCurSel(0);
     this->OnCbnSelchangeComboAyalyzer();
 
@@ -893,8 +899,12 @@ void CVideoAnalyzerDlg::OnClose()
             pSubject->clearListener();
         }
 
-        delete m_pAnalyzer;
-        m_pAnalyzer = NULL;
+        for (unsigned i = 0; i < m_analyzerMgr.size(); i++)
+        {
+            delete m_analyzerMgr[i].pAnalyzer;
+            delete m_analyzerMgr[i].pDlgCfg;
+        }
+        m_analyzerMgr.clear();
 
         delete m_pVideoRecoder;
         m_pVideoRecoder = NULL;
@@ -950,11 +960,29 @@ void CVideoAnalyzerDlg::OnBnClickedButtonApplyFr()
 
 void CVideoAnalyzerDlg::OnCbnSelchangeComboAyalyzer()
 {
-    delete m_pAnalyzer;
-    m_pAnalyzer = NULL;
-//     m_pAnalyzer = new CParabolaWarpper;
-    m_pAnalyzer = new CPersonWarpper;
-    m_pAnalyzer->addListener(this);
+    if (m_pVideoGraber)
+    {
+        m_pVideoGraber->removeListener(m_pAnalyzer);
+    }
+
+    unsigned iSel = m_cbAnalyzer.GetCurSel();
+    if (iSel+1 > m_analyzerMgr.size())
+    {
+        AfxMessageBox("无效的分析器");
+        return;
+    }
+
+    m_pAnalyzer = m_analyzerMgr[iSel].pAnalyzer;
+    m_pDlgCfg = m_analyzerMgr[iSel].pDlgCfg;
+
+    if (m_pAnalyzer)
+    {
+        m_pAnalyzer->addListener(this);
+        if (m_pVideoGraber)
+        {
+            m_pVideoGraber->addListener(m_pAnalyzer);
+        }
+    }
 }
 
 void CVideoAnalyzerDlg::AddRunStatus(const char* szStatus, ...)
@@ -1012,7 +1040,20 @@ void CVideoAnalyzerDlg::OnBnClickedButtonSetup()
         AfxMessageBox("载入配置数据失败");
     }
 
-//     CDlgSetting dlgSetting;
+    CDlgCfgBase* pDlgCfg = dynamic_cast<CDlgCfgBase*>(m_pDlgCfg);
+    if (NULL == pDlgCfg)
+    {
+        AfxMessageBox("错误的配置窗口");
+        return;
+    }
+    pDlgCfg->setImage(m_ctlVideo.getImage());
+    if (m_pDlgCfg->DoModal() != IDOK)
+    {
+        return;
+    }
+
+
+    //     CDlgSetting dlgSetting;
 //     dlgSetting.setImage(m_ctlVideo.getImage());
 //     if (dlgSetting.DoModal() != IDOK)
 //     {
@@ -1021,14 +1062,17 @@ void CVideoAnalyzerDlg::OnBnClickedButtonSetup()
 //     }
 // 
 
-    CDlgPersonCfg dlg;
-    dlg.setImage(m_ctlVideo.getImage());
-    if (dlg.DoModal() != IDOK)
-    {
-        return;
-    }
+//     CDlgPersonCfg dlg;
+//     dlg.setImage(m_ctlVideo.getImage());
+//     if (dlg.DoModal() != IDOK)
+//     {
+//         return;
+//     }
 
     this->saveConfig();
+
+//     m_pVideoGraber->addListener(m_pAnalyzer);
+//     m_pVideoGraber->addListener(this);
 }
 
 bool CVideoAnalyzerDlg::loadConfig()

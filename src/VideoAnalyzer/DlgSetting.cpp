@@ -213,18 +213,6 @@ BOOL CDlgSetting::OnInitDialog()
     // EXCEPTION: OCX Property Pages should return FALSE
 }
 
-void CDlgSetting::setImage(const IplImage *pImage)
-{
-    if (pImage)
-    {
-        m_pImage = cvCloneImage(pImage);
-    }
-    else
-    {
-        m_pImage = NULL;
-    }
-}
-
 void CDlgSetting::OnBnClickedButtonClear()
 {
     m_ctrlImage.Refresh();
