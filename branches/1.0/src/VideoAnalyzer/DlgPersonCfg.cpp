@@ -45,18 +45,6 @@ BEGIN_MESSAGE_MAP(CDlgPersonCfg, CDialog)
     ON_BN_CLICKED(IDC_BUTTON_CLEAR_REFER_LINE, &CDlgPersonCfg::OnBnClickedButtonClearReferLine)
 END_MESSAGE_MAP()
 
-void CDlgPersonCfg::setImage(const IplImage *pImage)
-{
-    if (pImage)
-    {
-        m_pImage = cvCloneImage(pImage);
-    }
-    else
-    {
-        m_pImage = NULL;
-    }
-}
-
 // CDlgPersonCfg 消息处理程序
 
 BOOL CDlgPersonCfg::OnInitDialog()

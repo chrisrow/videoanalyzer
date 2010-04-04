@@ -1,10 +1,10 @@
 #pragma once
 
+#include "DlgCfg.h"
+#include "GraphicsStatic.h"
 #include "cv.h"
 #include "highgui.h"
-#include "GraphicsStatic.h"
 
-#include "ConfigFile.h"
 #include "afxwin.h"
 
 // CDlgSetting dialog
@@ -25,7 +25,7 @@ enum
     COMBOBOX_ITEM_LITTLE_REGION_Y_LINE    = 12
 };
 
-class CDlgSetting : public CDialog
+class CDlgSetting : public CDialog, public CDlgCfgBase
 {
 	DECLARE_DYNAMIC(CDlgSetting)
 
@@ -42,9 +42,8 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	virtual BOOL OnInitDialog();
-	void setImage(const IplImage *pImage);
+
 private:
-	IplImage *m_pImage;
 	CGraphicsStatic m_ctrlImage;
 
     enum {COMBOBOX_ITEM_NUM = 13};

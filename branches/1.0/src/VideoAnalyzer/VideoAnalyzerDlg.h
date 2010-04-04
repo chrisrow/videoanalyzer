@@ -18,6 +18,8 @@
 
 #include "Common/timer.h"
 
+#include <vector>
+
 enum SOURCETYPE
 {
     TYPE_CAMERA,
@@ -46,6 +48,19 @@ struct TVideoSource
     CString strFileName;
 
     TVideoSource(): eType(TYPE_CAMERA), iCamID(-1) {}
+};
+
+class CDlgCfgBase;
+
+struct CAnalyzerMgr
+{
+    CAnalyzer* pAnalyzer;
+    CDialog* pDlgCfg;
+    const char* pComment;
+
+    CAnalyzerMgr(): pAnalyzer(NULL), pDlgCfg(NULL), pComment(NULL) {}
+    CAnalyzerMgr(CAnalyzer* a, CDialog* d, const char* c)
+        : pAnalyzer(a), pDlgCfg(d), pComment(c) {}
 };
 
 // CVideoAnalyzerDlg ¶Ô»°¿ò
@@ -83,6 +98,7 @@ protected:
 
     CVideoGraber* m_pVideoGraber;
     CAnalyzer* m_pAnalyzer;
+    CDialog* m_pDlgCfg;
     IAlerter* m_pUDPAlerter;
     CVideoRecorder* m_pVideoRecoder;
     CHeartBeat* m_pHeartBeat;
@@ -97,6 +113,7 @@ protected:
     unsigned int m_uCurrentFrame;
     unsigned int m_uAlert;
     bool m_bRecord;
+    std::vector<CAnalyzerMgr> m_analyzerMgr;
 
     CButton m_btnRestart;
     CButton m_btnPause;

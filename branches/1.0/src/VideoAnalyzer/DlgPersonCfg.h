@@ -1,13 +1,15 @@
 #pragma once
 
+#include "DlgCfg.h"
 #include "MaskStatic.h"
 #include "cv.h"
 #include "highgui.h"
 #include "afxwin.h"
 
+
 // CDlgPersonCfg ╤т╩╟©Р
 
-class CDlgPersonCfg : public CDialog
+class CDlgPersonCfg : public CDialog, public CDlgCfgBase
 {
 	DECLARE_DYNAMIC(CDlgPersonCfg)
 
@@ -21,10 +23,8 @@ public:
 
 public:
     virtual BOOL OnInitDialog();
-    void setImage(const IplImage *pImage);
 
 private:
-    IplImage *m_pImage;
     CMaskStatic m_ctrlImage;
 
     PolyLineArray m_mask; //узуж

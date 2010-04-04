@@ -329,6 +329,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\VideoAnalyzer\DlgCfg.h"
+				>
+			</File>
+			<File
 				RelativePath=".\VideoAnalyzer\DlgPersonCfg.cpp"
 				>
 			</File>
