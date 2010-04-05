@@ -1898,18 +1898,16 @@ bool CPersonDetect::Judge_Slop_Over_Line(LabelObjStatus* pTrackObjInfo, Cordon_P
   }
 
 
+#if 0
   float referLength = 3.0;  //围栏长度
   float factLength = 1.8f;   //人的高度    f:消除编译警告
   float personHeigh = 0.0;
-  
   personHeigh =  referLength/personHeigh*((fabs(Refer_Line[0].m_slope- Refer_Line[1].m_slope))*pTrackObjInfo->m_nObjRect[1]+(Refer_Line[0].m_pitch-Refer_Line[1].m_pitch));
-
-
   if((personHeigh/(float)pTrackObjInfo->m_nObjRect[3] >1.2)&&(personHeigh/(float)pTrackObjInfo->m_nObjRect[3] <=0.8))
   {
        return false;
   }
-
+#endif
 
   switch (alarm_type)
   {
