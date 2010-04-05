@@ -53,10 +53,6 @@ BOOL CDlgPersonCfg::OnInitDialog()
 
     m_ctrlImage.ShowImage(m_pImage);
 
-    m_ctrlImage.SetGraphicsType(GT2_Line, RGB(255, 0, 0));
-    m_ctrlImage.setLine(m_warningLine);
-    m_btnWarnLine.SetState(TRUE);
-
     m_ctrlImage.SetGraphicsType(GT2_RefLine, RGB(255, 255, 0));
     m_ctrlImage.setRefLine(m_referLine);
     m_btnReferLine.SetState(FALSE);
@@ -66,6 +62,10 @@ BOOL CDlgPersonCfg::OnInitDialog()
     m_ctrlImage.setPolyLineArray(m_mask);
     m_btnMask.SetState(FALSE);
 	
+    m_ctrlImage.SetGraphicsType(GT2_Line, RGB(255, 0, 0));
+    m_ctrlImage.setLine(m_warningLine);
+    m_btnWarnLine.SetState(TRUE);
+
     m_warningLine.clear();
     if (g_personParam.warnLine.size() > 0)
     {

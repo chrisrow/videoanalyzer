@@ -195,13 +195,7 @@ BOOL CVideoAnalyzerDlg::OnInitDialog()
     OnCbnDropdownComboCamera();
 
     //选择分析器
-    m_analyzerMgr.push_back(CAnalyzerMgr(new CPersonWarpper, new CDlgPersonCfg, "人员检测"));
-    m_analyzerMgr.push_back(CAnalyzerMgr(new CParabolaWarpper, new CDlgSetting, "抛物检测"));
-    m_analyzerMgr.push_back(CAnalyzerMgr(NULL, NULL, "无"));
-    for (unsigned i = 0; i < m_analyzerMgr.size(); i++)
-    {
-        m_cbAnalyzer.InsertString(i, m_analyzerMgr[i].pComment);
-    }
+    this->ResetAnalyzer();
     m_cbAnalyzer.SetCurSel(0);
     this->OnCbnSelchangeComboAyalyzer();
 
@@ -668,7 +662,8 @@ bool CVideoAnalyzerDlg::openSource(TVideoSource& tSource)
     m_txtAlert.SetWindowText("0");
 
     //设置视频分析器
-    this->OnCbnSelchangeComboAyalyzer(); //临时
+    ResetAnalyzer();
+    this->OnCbnSelchangeComboAyalyzer();
     if(m_pAnalyzer)
     {
         m_pVideoGraber->addListener(m_pAnalyzer);
@@ -958,6 +953,27 @@ void CVideoAnalyzerDlg::OnBnClickedButtonApplyFr()
     }
 }
 
+void CVideoAnalyzerDlg::ResetAnalyzer()
+{
+    int iSel = m_cbAnalyzer.GetCurSel();
+    for (unsigned i = 0; i < m_analyzerMgr.size(); i++)
+    {
+        delete m_analyzerMgr[i].pAnalyzer;
+        delete m_analyzerMgr[i].pDlgCfg;
+    }
+    m_analyzerMgr.clear();
+    m_cbAnalyzer.ResetContent();
+
+    m_analyzerMgr.push_back(CAnalyzerMgr(new CPersonWarpper, new CDlgPersonCfg, "人员检测"));
+    m_analyzerMgr.push_back(CAnalyzerMgr(new CParabolaWarpper, new CDlgSetting, "抛物检测"));
+    m_analyzerMgr.push_back(CAnalyzerMgr(NULL, NULL, "无"));
+    for (unsigned i = 0; i < m_analyzerMgr.size(); i++)
+    {
+        m_cbAnalyzer.InsertString(i, m_analyzerMgr[i].pComment);
+    }
+    m_cbAnalyzer.SetCurSel(iSel);
+}
+
 void CVideoAnalyzerDlg::OnCbnSelchangeComboAyalyzer()
 {
     if (m_pVideoGraber)
@@ -965,8 +981,8 @@ void CVideoAnalyzerDlg::OnCbnSelchangeComboAyalyzer()
         m_pVideoGraber->removeListener(m_pAnalyzer);
     }
 
-    unsigned iSel = m_cbAnalyzer.GetCurSel();
-    if (iSel+1 > m_analyzerMgr.size())
+    int iSel = m_cbAnalyzer.GetCurSel();
+    if (iSel+1 > (int)m_analyzerMgr.size())
     {
         AfxMessageBox("无效的分析器");
         return;

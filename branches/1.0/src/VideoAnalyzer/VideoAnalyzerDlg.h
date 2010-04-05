@@ -92,6 +92,8 @@ protected:
     bool loadConfig();
     bool saveConfig();
 
+    void ResetAnalyzer();
+
 // й╣ож
 protected:
 	HICON m_hIcon;
