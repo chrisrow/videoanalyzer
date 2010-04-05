@@ -1219,6 +1219,8 @@ CPersonDetect::PersenDetect_Process(CFrameContainer* pFrame_matlabFunced,
         EXM_NOK( pMatlabFunc->labelObj( ObjectLabeledDList, 
                                         pFrame_matlabFunced ,
                                         pFrame_RgbSmoothed), "labelObject fail!" );
+
+        //宽或高过小，则过滤掉
         deletminobj(ObjectLabeledDList, demarcation_line);
 
         ForecastObjectDetect(ObjectLabeledDList, 
@@ -1238,8 +1240,6 @@ CPersonDetect::PersenDetect_Process(CFrameContainer* pFrame_matlabFunced,
 //             ImgMoveObjectDetect(pFrame_RgbSmoothed/*pRgbhumaninfo*/);
             Drawtrack(pFrame_RgbSmoothed);
             SHOW_IMAGE("smooth", pFrame_RgbSmoothed->getImage());
-
-            Drawtrack((CFrameContainer *)pFrame_matlabFunced->m_YuvPlane[0]);
 
 	        SHOW_BIN_IMAGE("pFrame_matlabFunced", 
                 pFrame_matlabFunced->getWidth(), 
@@ -1300,6 +1300,7 @@ CPersonDetect::ForecastObjectDetect (const CDList< CObjLabeled*, CPointerDNode >
   }
   else
   {
+    //目标数过多
     if (m_curr_frm_num > m_nTrackObjectMaxNum || m_pre_frm_num > m_nTrackObjectMaxNum )
     {
       m_tracked_obj_flg = false ;
@@ -1330,26 +1331,6 @@ CPersonDetect::ForecastObjectDetect (const CDList< CObjLabeled*, CPointerDNode >
     //     {
     //       DeleteAdditionalLine();
     //     }
-#if ( 1 == SY_DEBUG)
-//     switch (m_nChannel_ID)
-//     {
-//     case 0 :
-//       SavetoFile(m_nChannel_ID + 1);
-//       break;
-//     case 1 :
-//       SavetoFile(m_nChannel_ID + 1);
-//       break;
-//     case 2 :
-//       SavetoFile(m_nChannel_ID + 1);
-//       break;
-//     case 3 :
-//       SavetoFile(m_nChannel_ID + 1);
-//       break;
-//     case DEFAULTCHANNELMODE :    //! 调试用
-//       SavetoFile();
-//       break;
-//     }
-#endif
     memcpy(PreLabelInfo, ObjLabelInfo,sizeof(ObjLabelInfoStruct) * m_curr_frm_num) ;
     memset(ObjLabelInfo, 0, sizeof(ObjLabelInfoStruct) * m_nTrackObjectMaxNum) ;
 
@@ -1399,8 +1380,6 @@ CPersonDetect::ForecastObjectDetect (const CDList< CObjLabeled*, CPointerDNode >
       m_TrackNum = m_nTempTrackObjNum;
       m_tracked_obj_flg = TRUE;
     }
-
-    Drawtrack(pFrame_in);//! 调试用，以后删
 
     ROK();
   }
@@ -2017,18 +1996,9 @@ void CPersonDetect::Drawtrack(CFrameContainer*  pFrame_curr_in)
 
       if (cen_y>5 && cen_y < imHeight-5 && cen_x < imWidth-5 &&cen_x > 5 )
       {
-        pFrame_curr_in->m_BmpBuffer[3 * cen_y * imWidth + 3 * cen_x + 0] = 255;
-        pFrame_curr_in->m_BmpBuffer[3 * cen_y * imWidth + 3 * cen_x + 1] = 255;
-        pFrame_curr_in->m_BmpBuffer[3 * cen_y * imWidth + 3 * cen_x + 2] = 0;
-
-        //pFrame_curr_in->m_BmpBuffer[3 * cen_y * imWidth + MIN(3*(imWidth - 1) , 3 * cen_x + 3)] = 255;
-        //pFrame_curr_in->m_BmpBuffer[3 * cen_y * imWidth + MIN(3*(imWidth - 1) , 3 * cen_x + 4)] = 255;
-        //pFrame_curr_in->m_BmpBuffer[3 * cen_y * imWidth + MIN(3*(imWidth - 1) , 3 * cen_x + 5)] = 0;
-
-        //         pFrame_curr_in->m_BmpBuffer[3 * cen_y * imWidth + MAX(0 , 3 * cen_x - 3)] = 0;
-        //         pFrame_curr_in->m_BmpBuffer[3 * cen_y * imWidth + MAX(0 , 3 * cen_x - 2)] = 0;
-        //         pFrame_curr_in->m_BmpBuffer[3 * cen_y * imWidth + MAX(0 , 3 * cen_x - 1)] = 255;
-
+        pFrame_curr_in->m_BmpBuffer[3 * cen_y * imWidth + 3 * cen_x + 0] = 0;
+        pFrame_curr_in->m_BmpBuffer[3 * cen_y * imWidth + 3 * cen_x + 1] = 0;
+        pFrame_curr_in->m_BmpBuffer[3 * cen_y * imWidth + 3 * cen_x + 2] = 255;
       }
     }
   }
