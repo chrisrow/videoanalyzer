@@ -449,8 +449,18 @@ void CVideoAnalyzerDlg::EnableVisibleChildren()
 
 bool CVideoAnalyzerDlg::autoStart()
 {
-    bool bAutoStart = false;
     COption& option = COption::Instance();
+
+    //指定xml配置文件
+    const char* szXMLFile = option.getXMLFile();
+    if (szXMLFile)
+    {
+        m_cbConfigFile.InsertString(0, szXMLFile);
+        m_cbConfigFile.SetCurSel(0);
+    }
+
+    //指定视频源
+    bool bAutoStart = false;
     if (option.getFileName() != NULL)
     {
         m_tSource.eType = TYPE_FILE;
