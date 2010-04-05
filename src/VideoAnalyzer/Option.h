@@ -24,14 +24,17 @@ inline const char* Basename(const char* path)
     return path;
 }
 
-//!@brief 获取执行参数
-//!@brief Usage: utmain [-a] [-h] [-f FilterString] [-r RepeatTimes]
-//!@brief 
-//!@brief    命令参数：
-//!@brief    - -a 输出所有test的执行结果。默认只输出失败的test的结果
-//!@brief    - -h 显示帮助
-//!@brief    - -f FilterString 设置过滤器，执行指定的test
-//!@brief    - -r RepeatTimes  指定每个test的执行次数
+//!@brief  va <-f filename|-c cameraid|-n rtsp://xxx/yy> [-r record filename] [-s WxH;(PosX,PosY)] [-d] [-l] [-p]
+// 
+//!@brief  -f filename:        播放本地视频文件
+//!@brief  -c cameraid:        打开本地摄像机
+//!@brief  -n rtsp://xxx/yy:   打开远程视频
+//!@brief  -r record filename: 录像输出的文件路径
+//!@brief  -s WxH;(PosX,PosY): 使用最简界面模式（只包含视频图像）W和H分别为窗口的宽和高,PosX和PosY为窗口左上角的坐标
+//!@brief  -x xml file:        载入对应的xml配置文件             
+//!@brief  -d:                 使用调测模式
+//!@brief  -l:                 输出日志。以程序文件名命名，以log为后缀
+//!@brief  -p:                 打开视频预览
 //!@note 从环境变量和命令行中获取参数。如果两者都设置了同一个参数，则以命令行中的为准。
 class COption
 {
@@ -53,6 +56,7 @@ public:
     const char* getURL();         //流媒体网址
     const char* getRecordName();  //录像文件名
     const char* getSimple();      //简单界面模式，窗口大小和窗口位置
+    const char* getXMLFile();     //xml配置文件 
     bool isDebug();               //调测模式
     bool isLogOn();               //记录日志
     bool isPreview();             //显示预览

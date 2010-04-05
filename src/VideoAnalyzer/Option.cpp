@@ -16,6 +16,7 @@ extern int optind, opterr, optopt;
 // -n rtsp://xxx/yy:   打开远程视频
 // -r record filename: 录像输出的文件路径
 // -s WxH;(PosX,PosY): 使用最简界面模式（只包含视频图像）W和H分别为窗口的宽和高,PosX和PosY为窗口左上角的坐标
+// -x xml file:        载入对应的xml配置文件             
 // -d:                 使用调测模式
 // -l:                 输出日志。以程序文件名命名，以log为后缀
 // -p:                 打开视频预览
@@ -35,6 +36,7 @@ struct TOption
     {'n', false, "VA_STREAM",  "URL",       NULL, "Open net stream."},
     {'r', false, "VA_RECORD",  "file name", NULL, "Record video."},
     {'s', false, "VA_SIMPLE",  "352x288;(100,100)",   NULL, "Simplest interface mode."},
+    {'x', false, "VA_XMLFILE", "xml file name", NULL, "Load specific xml file."},
     {'d', false, "VA_DEBUG",   NULL,        NULL, "Debug mode."},
     {'l', false, "VA_LOGON",   NULL,        NULL, "Write log file."},
     {'p', false, "VA_PREVIEW", NULL,        NULL, "Display video image."},
@@ -123,6 +125,11 @@ const char* COption::getRecordName()
 const char* COption::getSimple()
 {
     return getOption('s');
+}
+
+const char* COption::getXMLFile()
+{
+    return getOption('x');
 }
 
 bool COption::isDebug()
