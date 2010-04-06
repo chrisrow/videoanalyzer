@@ -177,7 +177,7 @@ BOOL CVideoAnalyzerDlg::OnInitDialog()
     m_menu.LoadMenu(IDR_MENU_LIST);
 
     //选项
-    g_debug = 1;
+    g_debug = 0;
     m_chkDebug.SetCheck(g_debug);//改动
     m_chkPreview.SetCheck(1);
     
