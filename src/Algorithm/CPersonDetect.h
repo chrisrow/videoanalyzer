@@ -332,6 +332,9 @@ public:
                             Cordon_Par* Slop_Over_Line_Pra,
                             ALARMTYPE alarm_type);
 
+
+  bool Judge_Alarm_InFrame(LabelObjStatus* pTrackObjInfo, ALARMTYPE alarm_type);
+
   /*区分人车，缺少算法，待完善*/
   int Differentiate_From_Car_Man(LabelObjStatus* pTrackObjInfo);
 
