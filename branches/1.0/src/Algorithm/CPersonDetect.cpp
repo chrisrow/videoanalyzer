@@ -1945,6 +1945,35 @@ bool CPersonDetect::Judge_Slop_Over_Line(LabelObjStatus* pTrackObjInfo, Cordon_P
   }
   return false;
 }
+
+
+
+bool CPersonDetect::Judge_Alarm_InFrame(LabelObjStatus* pTrackObjInfo, ALARMTYPE alarm_type)
+{
+  if (pTrackObjInfo->track_pot_count < 1) 
+  {
+    return false;
+  }
+
+
+  // 判断跟踪目标是不是人
+  if(pTrackObjInfo->m_nObjRect[2] / pTrackObjInfo->m_nObjRect[3] >= 1)
+  {
+      return false;
+  }
+
+  
+  if(pTrackObjInfo->WhiteSpotNum < 20)
+  {
+      return false;
+  }
+
+
+  return true;
+  
+}
+
+
 /*
 *       1 车
 *       2 人
