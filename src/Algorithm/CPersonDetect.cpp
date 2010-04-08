@@ -1883,7 +1883,8 @@ bool CPersonDetect::Judge_Slop_Over_Line(LabelObjStatus* pTrackObjInfo, Cordon_P
   float personHeigh = 0.0;
   personHeigh =  referLength/personHeigh*((fabs(Refer_Line[0].m_slope- Refer_Line[1].m_slope))*pTrackObjInfo->m_nObjRect[1]+(Refer_Line[0].m_pitch-Refer_Line[1].m_pitch));
   if((personHeigh/(float)pTrackObjInfo->m_nObjRect[3] >1.2)&&(personHeigh/(float)pTrackObjInfo->m_nObjRect[3] <=0.8))
-  {
+  {
+
        return false;
   }
 #endif
@@ -2059,20 +2060,63 @@ void CPersonDetect::Draw_Warning_Line(Cordon_Par* Slop_Over_Line_Pra,CFrameConta
     return;
   }
 
-  //   for (int j = Slop_Over_Line_Pra->m_distancetotop;j < imHeight - 5;j++)
-  for (int j = Slop_Over_Line_Pra->m_distancetotop;j <Slop_Over_Line_Pra->m_distancetobottom;j++)
+  float a = Slop_Over_Line_Pra->m_slope;
+  float b = Slop_Over_Line_Pra->m_pitch;
+  float x = 0, y = 0;
+  std::vector<CPoint> pt;
+
+  x = 0;
+  y = a * x + b;
+  if(y >= 0 && (y <= imHeight - 1))
   {
-    for (int i = 0; i < imWidth ;i++)
-    {
-      if (abs(j - Slop_Over_Line_Pra->m_slope * i - Slop_Over_Line_Pra->m_pitch )<1)
-      {
-        //            memset(&pFrame_in->m_BmpBuffer[3*j*imWidth+3*i+0],255,3);
-        pFrame_in->m_BmpBuffer[3*j*imWidth+3*i+0] = 0;
-        pFrame_in->m_BmpBuffer[3*j*imWidth+3*i+1] = 0;
-        pFrame_in->m_BmpBuffer[3*j*imWidth+3*i+2] = 255;
-      }
-    }
+       pt.push_back(CPoint((int)x, (int)y));
   }
+  
+  x = (float)imWidth - 1;
+  y = a * x + b;
+  if(y >= 0 && (y <= imHeight - 1))
+  {
+      pt.push_back(CPoint((int)x, (int)y));
+  }
+  
+  y = 0;
+  x = (y - b) / a;
+  if(x >= 0 && (x <= imWidth - 1))
+  {
+      pt.push_back(CPoint((int)x, (int)y));
+  }
+
+  y = (float)imHeight - 1;
+  x = (y - b) / a;
+  if(x >= 0 && (x <= imWidth - 1))
+  {
+      pt.push_back(CPoint((int)x, (int)y));
+  }
+
+  //Ьожи
+  vector<CPoint>::iterator it = unique(pt.begin(), pt.end());
+  pt.erase(it, pt.end());
+
+  if (pt.size() == 2)
+  {
+       cvLine(pFrame_in->m_pIplImage, cvPoint(pt[0].x, pt[0].y), 
+           cvPoint(pt[1].x, pt[1].y), cvScalar(0, 0, 255, 0));
+  }
+
+  //   for (int j = Slop_Over_Line_Pra->m_distancetotop;j < imHeight - 5;j++)
+//   for (int j = Slop_Over_Line_Pra->m_distancetotop;j <Slop_Over_Line_Pra->m_distancetobottom;j++)
+//   {
+//     for (int i = 0; i < imWidth ;i++)
+//     {
+//       if (abs(j - Slop_Over_Line_Pra->m_slope * i - Slop_Over_Line_Pra->m_pitch )<1)
+//       {
+//         //            memset(&pFrame_in->m_BmpBuffer[3*j*imWidth+3*i+0],255,3);
+//         pFrame_in->m_BmpBuffer[3*j*imWidth+3*i+0] = 0;
+//         pFrame_in->m_BmpBuffer[3*j*imWidth+3*i+1] = 0;
+//         pFrame_in->m_BmpBuffer[3*j*imWidth+3*i+2] = 255;
+//       }
+//     }
+//   }
 }
 
 ErrVal 
