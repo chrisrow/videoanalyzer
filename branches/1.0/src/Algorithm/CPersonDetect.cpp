@@ -1979,11 +1979,19 @@ bool CPersonDetect::Judge_Alarm_InFrame(LabelObjStatus* pTrackObjInfo, ALARMTYPE
   }
 
   
-  if(pTrackObjInfo->WhiteSpotNum < 20  || pTrackObjInfo->WhiteSpotNum > 40000)
+  if(pTrackObjInfo->WhiteSpotNum < 20  || pTrackObjInfo->WhiteSpotNum > 8000)
   {
       return false;
   }
-
+  
+  if(pTrackObjInfo->m_nObjRect[3] / pTrackObjInfo->m_nObjRect[2] >= 4)
+  {
+      return false;
+  }
+  if((pTrackObjInfo->m_nObjRect[2] > 100 || pTrackObjInfo->m_nObjRect[3] > 100))
+  {
+      return false;
+  }
 
   return true;
   
