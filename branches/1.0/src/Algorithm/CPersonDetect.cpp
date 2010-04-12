@@ -1205,6 +1205,11 @@ CPersonDetect::PersenDetect_Process(CFrameContainer* pFrame_matlabFunced,
                                         m_pFrame_matlabFunced_low, 
                                         m_pFrame_RgbSmoothed_low), "labelObject fail!" );
 
+        if (judge_car_light(ObjectLabeledDList))
+        {
+            return 0; // 判断有车灯，返回0
+        }
+        
         //根据标定信息对原图进行二值
         memset(pFrame_matlabFunced->m_YuvPlane[0], 0, pFrame_matlabFunced->getWidth()*pFrame_matlabFunced->getHeight());
         binRgbtoY_LowtoHigh( pFrame_matlabFunced, 
@@ -2360,3 +2365,30 @@ float CPersonDetect::ComputeObjHeigth(int ObjCoordinate,float slope1,
   return objLength;
 }
 
+
+bool CPersonDetect::judge_car_light(const CDList< CObjLabeled*, CPointerDNode >* const objDList_inout )
+{
+    ASSERT(objDList_inout);
+
+    uint32_t blocknum = objDList_inout->GetCount();
+    if (0 == blocknum)
+    {
+        return false; 
+    }
+
+    const uint16_t obj_max_width = 100;
+    const uint16_t obj_max_height = 100;
+    const uint32_t obj_max_ratio = 8000;
+
+    for (uint32_t k = 1; k <= blocknum; k++)
+    {
+        if (obj_max_width <= objDList_inout->GetAt(k)->m_nOuterRect[3]
+            &&obj_max_height <= objDList_inout->GetAt(k)->m_nOuterRect[4]
+            &&objDList_inout->GetAt(k)->m_nXYDotPlus[2] >= obj_max_ratio)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}

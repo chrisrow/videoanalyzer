@@ -369,6 +369,10 @@ public:
                           float pitch1,float slope2,float pitch2);
 
   void initTempImage(int iWidth, int iHeight, YUVTYPE YuvType_in);
+  
+  //判断是否有长、宽太大的目标。有：返回ture；无：返回false。
+  bool judge_car_light(const CDList< CObjLabeled*, CPointerDNode >* const objDList_inout );
+
 };
 
 
