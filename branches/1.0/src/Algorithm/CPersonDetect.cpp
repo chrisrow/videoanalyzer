@@ -1067,7 +1067,7 @@ void  CPersonDetect::deletminobj(CDList< CObjLabeled*, CPointerDNode >* objDList
   for (k = 1; k <= (uint32_t)objDList_inout->GetCount(); )
   {
     if (objDList_inout->GetAt(k)->m_nOuterRect[1] + objDList_inout->GetAt(k)->m_nOuterRect[3] > demarcation_line   \
-      &&(objDList_inout->GetAt(k)->m_nOuterRect[2] < PARABOLAWIDTHNEAR                                             \
+      &&(objDList_inout->GetAt(k)->m_nOuterRect[2] < PARABOLAHEIGHTNEAR                                             \
       ||objDList_inout->GetAt(k)->m_nOuterRect[3] < PARABOLAHEIGHTNEAR))                                   
     {
       objDList_inout->DestroyAtPos(k);
@@ -1205,16 +1205,17 @@ CPersonDetect::PersenDetect_Process(CFrameContainer* pFrame_matlabFunced,
                                         m_pFrame_matlabFunced_low, 
                                         m_pFrame_RgbSmoothed_low), "labelObject fail!" );
 
-        if (judge_car_light(ObjectLabeledDList))
-        {
-            return 0; // 判断有车灯，返回0
-        }
+        //在告警时候再进行判断
+        //if (judge_car_light(ObjectLabeledDList))
+        //{
+           // return 0; // 判断有车灯，返回0
+        //}
         
         //根据标定信息对原图进行二值
         memset(pFrame_matlabFunced->m_YuvPlane[0], 0, pFrame_matlabFunced->getWidth()*pFrame_matlabFunced->getHeight());
         binRgbtoY_LowtoHigh( pFrame_matlabFunced, 
                              pFrame_RgbSmoothed,pFrame_bkgndDetected, 
-                             ObjectLabeledDList, 70, 35, demarcation_line);
+                             ObjectLabeledDList, 70, 40, demarcation_line);
 
         ObjectLabeledDList->DestroyAll();
         erodeY( pFrame_matlabFunced, 3,3,5,1);  //腐蚀
@@ -1876,12 +1877,21 @@ bool CPersonDetect::Judge_Slop_Over_Line(LabelObjStatus* pTrackObjInfo, Cordon_P
   //     pTrackObjInfo->m_nTrack_pt[1][pTrackObjInfo->track_pot_count-1]  = 115;
 
   // 判断跟踪目标是不是人
-  if(pTrackObjInfo->m_nObjRect[2] / pTrackObjInfo->m_nObjRect[3] >= 1)
+  if(pTrackObjInfo->m_nObjRect[2] /pTrackObjInfo->m_nObjRect[3] >= 1)
   {
      return false;
   }
 
-
+  if(pTrackObjInfo->m_nObjRect[3] / pTrackObjInfo->m_nObjRect[2] >= 4)
+  {
+     return false;
+  }
+  
+  if((pTrackObjInfo->m_nObjRect[2] > 100 && pTrackObjInfo->m_nObjRect[3] > 100) ||(pTrackObjInfo->WhiteSpotNum > 8000))
+  {
+      return false;
+  }
+  
 #if 0
   float referLength = 3.0;  //围栏长度
   float factLength = 1.8f;   //人的高度    f:消除编译警告
@@ -1969,7 +1979,7 @@ bool CPersonDetect::Judge_Alarm_InFrame(LabelObjStatus* pTrackObjInfo, ALARMTYPE
   }
 
   
-  if(pTrackObjInfo->WhiteSpotNum < 20)
+  if(pTrackObjInfo->WhiteSpotNum < 20  || pTrackObjInfo->WhiteSpotNum > 40000)
   {
       return false;
   }
@@ -2382,8 +2392,8 @@ bool CPersonDetect::judge_car_light(const CDList< CObjLabeled*, CPointerDNode >*
 
     for (uint32_t k = 1; k <= blocknum; k++)
     {
-        if (obj_max_width <= objDList_inout->GetAt(k)->m_nOuterRect[3]
-            &&obj_max_height <= objDList_inout->GetAt(k)->m_nOuterRect[4]
+        if (obj_max_width <= objDList_inout->GetAt(k)->m_nOuterRect[2]
+            &&obj_max_height <= objDList_inout->GetAt(k)->m_nOuterRect[3]
             &&objDList_inout->GetAt(k)->m_nXYDotPlus[2] >= obj_max_ratio)
         {
             return true;
