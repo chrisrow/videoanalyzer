@@ -1205,11 +1205,11 @@ CPersonDetect::PersenDetect_Process(CFrameContainer* pFrame_matlabFunced,
                                         m_pFrame_matlabFunced_low, 
                                         m_pFrame_RgbSmoothed_low), "labelObject fail!" );
 
-        //在告警时候再进行判断
-        //if (judge_car_light(ObjectLabeledDList))
-        //{
-           // return 0; // 判断有车灯，返回0
-        //}
+        if (judge_car_light(ObjectLabeledDList))
+        {
+           ObjectLabeledDList->DestroyAll();
+           return 0; // 判断有车灯，返回0
+        }
         
         //根据标定信息对原图进行二值
         memset(pFrame_matlabFunced->m_YuvPlane[0], 0, pFrame_matlabFunced->getWidth()*pFrame_matlabFunced->getHeight());
