@@ -306,6 +306,14 @@ LRESULT CVideoAnalyzerDlg::OnMsgVideoEnd(WPARAM wParam,LPARAM lParam)
         break;
     case VC_CLOSE:
     default:
+        {
+            COption& option = COption::Instance();
+            if (option.isZZZ() && TYPE_FILE == m_tSource.eType)
+            {
+                DeleteFile(LPCTSTR(m_tSource.strFileName));
+                SendMessage(WM_CLOSE, 0, 0);
+            }
+        }
         break;
     }
 

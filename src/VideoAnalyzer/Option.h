@@ -61,6 +61,8 @@ public:
     bool isLogOn();               //记录日志
     bool isPreview();             //显示预览
 
+    bool isZZZ();
+
 protected:
     COption();
     
