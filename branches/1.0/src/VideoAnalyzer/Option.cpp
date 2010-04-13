@@ -40,6 +40,7 @@ struct TOption
     {'d', false, "VA_DEBUG",   NULL,        NULL, "Debug mode."},
     {'l', false, "VA_LOGON",   NULL,        NULL, "Write log file."},
     {'p', false, "VA_PREVIEW", NULL,        NULL, "Display video image."},
+    {'z', false, "VA_ZZZ",     NULL,        NULL, "Auto delete file and exit."},
 };
 
 //! Î´Öª²ÎÊý
@@ -156,6 +157,16 @@ bool COption::isPreview()
 {
     if(OptTab[getIndex('p')].usable && 
         OptTab[getIndex('p')].param1 != NULL && atoi(OptTab[getIndex('p')].param1) != 0)
+    {
+        return true;
+    }
+    return false;
+}
+
+bool COption::isZZZ()
+{
+    if(OptTab[getIndex('z')].usable && 
+        OptTab[getIndex('z')].param1 != NULL && atoi(OptTab[getIndex('z')].param1) != 0)
     {
         return true;
     }
