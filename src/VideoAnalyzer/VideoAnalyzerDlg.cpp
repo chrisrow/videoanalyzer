@@ -1086,27 +1086,7 @@ void CVideoAnalyzerDlg::OnBnClickedButtonSetup()
         return;
     }
 
-
-    //     CDlgSetting dlgSetting;
-//     dlgSetting.setImage(m_ctlVideo.getImage());
-//     if (dlgSetting.DoModal() != IDOK)
-//     {
-// 		
-//         return;
-//     }
-// 
-
-//     CDlgPersonCfg dlg;
-//     dlg.setImage(m_ctlVideo.getImage());
-//     if (dlg.DoModal() != IDOK)
-//     {
-//         return;
-//     }
-
     this->saveConfig();
-
-//     m_pVideoGraber->addListener(m_pAnalyzer);
-//     m_pVideoGraber->addListener(this);
 }
 
 bool CVideoAnalyzerDlg::loadConfig()
