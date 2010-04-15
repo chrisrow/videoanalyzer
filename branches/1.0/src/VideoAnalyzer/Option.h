@@ -61,7 +61,9 @@ public:
     bool isLogOn();               //记录日志
     bool isPreview();             //显示预览
 
+    //浦东机场垃圾需求
     bool isZZZ();
+    unsigned int getAlarmID();
 
 protected:
     COption();

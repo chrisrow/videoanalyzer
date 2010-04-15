@@ -4,6 +4,7 @@
 #pragma pack(push) 
 #pragma pack(1)
 
+//一般的报警
 struct TVIAlarmHead
 {
     unsigned char ucHeadConst;
@@ -17,6 +18,15 @@ struct TVIAlarmHead
     unsigned char ucReserver3;
 };
 
+//过滤报警后的处理结果
+struct TVIAlarmConfirm
+{
+    unsigned char ucMessageType;
+    unsigned short usMessageLen;
+    unsigned int uiAlarmID;
+    unsigned short usResult;
+};
+
 #pragma   pack(pop)
 
 enum
@@ -26,3 +36,10 @@ enum
 };
 
 const unsigned char VI_CONST = 50;
+
+const unsigned char VI_ALARM_CONFIRM = 53;
+
+enum
+{
+    ALARM_CONFIRM = 1
+};

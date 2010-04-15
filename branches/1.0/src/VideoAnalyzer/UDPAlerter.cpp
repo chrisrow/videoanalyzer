@@ -72,3 +72,67 @@ bool CUDPAlerter::destroy()
     return true;
 }
 
+//////////////////////////////////////////////////////////////////////////
+
+CAlarmConfirm::CAlarmConfirm()
+{
+}
+
+CAlarmConfirm::~CAlarmConfirm()
+{
+    this->destroy();
+}
+
+void CAlarmConfirm::alert(const IplImage *pFrame)
+{
+    CTaskBase::run();
+}
+
+void CAlarmConfirm::doRun()
+{
+    sendto( m_sockClient, (const char*)m_szBuf, sizeof(TVIAlarmConfirm), 0, 
+        (SOCKADDR*)&m_addrClient, sizeof(SOCKADDR) );
+}
+
+bool CAlarmConfirm::init(unsigned uiAlarmID, unsigned char ucRemoteIP[4], int iPort)
+{
+    WORD wVersionRequested;
+    WSADATA wsaData;
+
+    wVersionRequested = MAKEWORD( 2, 2 );
+    if ( WSAStartup( wVersionRequested, &wsaData ) != 0 ) 
+    {
+        return false;
+    }
+
+    if( LOBYTE( wsaData.wVersion ) != 2 || HIBYTE( wsaData.wVersion ) != 2 ) 
+    {
+        WSACleanup( );
+        return false;
+    }
+
+    //³õÊ¼»¯socket
+    m_sockClient=socket(AF_INET,SOCK_DGRAM,0);
+    TVIAlarmConfirm *pHead = (TVIAlarmConfirm*)m_szBuf;
+    memset(pHead, 0, sizeof(TVIAlarmConfirm));
+
+    pHead->ucMessageType = VI_ALARM_CONFIRM;
+    pHead->usMessageLen = sizeof(TVIAlarmConfirm);
+    pHead->uiAlarmID = uiAlarmID;
+    pHead->usResult = ALARM_CONFIRM;
+
+    char szRemoteIP[20] = {0};
+    sprintf(szRemoteIP, "%d.%d.%d.%d", ucRemoteIP[0], ucRemoteIP[1], ucRemoteIP[2], ucRemoteIP[3]);
+    m_addrClient.sin_addr.S_un.S_addr = inet_addr(szRemoteIP);
+    m_addrClient.sin_family = AF_INET;
+    m_addrClient.sin_port = htons(iPort);
+
+    return true;
+}
+
+bool CAlarmConfirm::destroy()
+{
+    closesocket(m_sockClient);
+    WSACleanup( );
+    return true;
+}
