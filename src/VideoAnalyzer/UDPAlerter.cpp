@@ -117,9 +117,9 @@ bool CAlarmConfirm::init(unsigned uiAlarmID, unsigned char ucRemoteIP[4], int iP
     memset(pHead, 0, sizeof(TVIAlarmConfirm));
 
     pHead->ucMessageType = VI_ALARM_CONFIRM;
-    pHead->usMessageLen = sizeof(TVIAlarmConfirm);
-    pHead->uiAlarmID = uiAlarmID;
-    pHead->usResult = ALARM_CONFIRM;
+    pHead->usMessageLen = htons(sizeof(TVIAlarmConfirm));
+    pHead->uiAlarmID = htonl(uiAlarmID);
+    pHead->usResult = htons(ALARM_CONFIRM);
 
     char szRemoteIP[20] = {0};
     sprintf(szRemoteIP, "%d.%d.%d.%d", ucRemoteIP[0], ucRemoteIP[1], ucRemoteIP[2], ucRemoteIP[3]);
