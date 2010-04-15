@@ -41,6 +41,7 @@ struct TOption
     {'l', false, "VA_LOGON",   NULL,        NULL, "Write log file."},
     {'p', false, "VA_PREVIEW", NULL,        NULL, "Display video image."},
     {'z', false, "VA_ZZZ",     NULL,        NULL, "Auto delete file and exit."},
+    {'y', false, "VA_YYY",     NULL,        NULL, "Alarm ID."}
 };
 
 //! Î´Öª²ÎÊý
@@ -171,6 +172,19 @@ bool COption::isZZZ()
         return true;
     }
     return false;
+}
+
+unsigned int COption::getAlarmID()
+{
+    const char* p = getOption('y');
+    if (NULL == p)
+    {
+        return -1;
+    } 
+    else
+    {
+        return atoi(p);
+    }
 }
 
 bool COption::initOption()

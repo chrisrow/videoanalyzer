@@ -721,16 +721,26 @@ bool CVideoAnalyzerDlg::openSource(TVideoSource& tSource)
             g_commParam.szUDPServerIP[0], g_commParam.szUDPServerIP[1], 
             g_commParam.szUDPServerIP[2], g_commParam.szUDPServerIP[3], g_commParam.iUDPServerPort);
 
-        CUDPAlerter* pUDPAlerter = new CUDPAlerter ;
-        int iAlarmType = 1;
+        COption& option = COption::Instance();
+        unsigned int uiAlarmID = option.getAlarmID();
+        if (uiAlarmID < 0)
+        {
+            CUDPAlerter* pUDPAlerter = new CUDPAlerter ;
+            int iAlarmType = 1;
 
-        (void)pUDPAlerter->init(iAlarmType, 
-                                iChannel, 
-                                g_commParam.szLocalAddr, 
-                                g_commParam.szUDPServerIP, 
-                                g_commParam.iUDPServerPort);
-
-        m_pUDPAlerter = pUDPAlerter;
+            (void)pUDPAlerter->init(iAlarmType, 
+                iChannel, 
+                g_commParam.szLocalAddr, 
+                g_commParam.szUDPServerIP, 
+                g_commParam.iUDPServerPort);
+            m_pUDPAlerter = pUDPAlerter;
+        } 
+        else
+        {
+            CAlarmConfirm* pUDPAlerter = new CAlarmConfirm ;
+            pUDPAlerter->init(uiAlarmID, g_commParam.szUDPServerIP, 20107); //fuck °Ñ¶Ë¿ÚÐ´ËÀ
+            m_pUDPAlerter = pUDPAlerter;
+        }
     }
     if (m_pAnalyzer)
     {
