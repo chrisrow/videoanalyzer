@@ -277,7 +277,8 @@ CPersonDetect::init_pudong (uint16_t const  nYWidth_in, uint16_t const  nYHeight
       alarm_pt2_x = 0;
       alarm_pt2_y = 0;
   }
-  
+
+  #if 0
   int16_t refer1_pt1_x,refer1_pt1_y,refer1_pt2_x,refer1_pt2_y;
   int16_t refer2_pt1_x,refer2_pt1_y,refer2_pt2_x,refer2_pt2_y;
   if(g_personParam.referLine.size() >= 4)
@@ -301,6 +302,7 @@ CPersonDetect::init_pudong (uint16_t const  nYWidth_in, uint16_t const  nYHeight
       Refer_Line[0].m_slope = 0;
       Refer_Line[1].m_slope = 0;
   }
+  #endif
 
   Warning_Line[2].m_distancetotop     = 0;
   Warning_Line[2].m_distancetobottom  = nYHeight_in;
