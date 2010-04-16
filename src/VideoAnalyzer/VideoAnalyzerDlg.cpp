@@ -337,6 +337,9 @@ void CVideoAnalyzerDlg::updateFrame(const IplImage *pFrame)
 void CVideoAnalyzerDlg::alert(const IplImage *pFrame)
 {
     m_uAlert++;
+    CString str;
+    str.Format("%d", m_uAlert);
+    m_txtAlert.SetWindowText(str);
 
     SYSTEMTIME Systemtime ;
     GetLocalTime(&Systemtime);
@@ -370,12 +373,18 @@ void CVideoAnalyzerDlg::alert(const IplImage *pFrame)
         iChannel,
         Systemtime.wHour, Systemtime.wMinute, Systemtime.wSecond );
 //     cvFlip(pFrame, NULL, 0);//垂直镜像
-    int iResult = cvSaveImage((LPCTSTR)strFile, pFrame);
+
+    try
+    {
+        (void)cvSaveImage((LPCTSTR)strFile, pFrame);
+    }
+    catch (cv::Exception)
+    {
+        this->AddRunStatus("保存图片出错");
+        return;
+    }
 
     //列表框提示
-    CString str;
-    str.Format("%d", m_uAlert);
-    m_txtAlert.SetWindowText(str);
     this->AddRunStatus("第%d帧触发警报(%s_%d_%d_%d.jpg)", 
         m_uCurrentFrame,(LPCTSTR)strChannel,
         Systemtime.wHour, Systemtime.wMinute, Systemtime.wSecond);
