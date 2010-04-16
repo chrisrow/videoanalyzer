@@ -1234,7 +1234,7 @@ CPersonDetect::PersenDetect_Process(CFrameContainer* pFrame_matlabFunced,
         ForecastObjectDetect(ObjectLabeledDList, 
                              pFrame_curr_in, 
                              pFrame_matlabFunced,
-                             &Warning_Line[2], &Alarm_Line[2] , alarm_type);
+                             &Warning_Line[2], &Alarm_Line[2] , (ALARMTYPE)g_personParam.iDirection);
 
         ObjectLabeledDList->DestroyAll();
 
