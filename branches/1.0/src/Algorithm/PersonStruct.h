@@ -13,6 +13,7 @@ struct TPersonDetect
 {
     Line warnLine;
     //Line referLine;
+    int iDirection;
     PolyLineArray maskLine;
     IplImage* mask;
 

@@ -891,6 +891,8 @@ int CCfgParse::LoadChannel(int iCh, TPersonDetect& pd)
         LOG_DEBUG(DEBUG_ERR, "No '%s' info in channel %d", NODE_PARAMSTRUCT, iCh);
         return 0;
     }
+    GET_VALUE(xPSElement, "iDirection", pd.iDirection);
+			
 
     GET_VALUE(xPSElement, "WarningLine", pd.warnLine);
     //GET_VALUE(xPSElement, "ReferLine", pd.referLine);
@@ -925,6 +927,8 @@ int CCfgParse::SaveChannel(int iCh, TPersonDetect& pd)
     }
 
     SET_VALUE(xPSElement, "WarningLine", pd.warnLine);
+
+    SET_VALUE(xPSElement, "iDirection", pd.iDirection);
     //SET_VALUE(xPSElement, "ReferLine", pd.referLine);
 		
     SET_VALUE(xPSElement, "Mask", pd.maskLine);

@@ -13,6 +13,7 @@
                 <Point x="235" y="101" />
                 <Point x="103" y="209" />
             </WarningLine>
+            <iDirection value="2" />
             <Mask>
                 <Poly>
                     <Point x="0" y="0" />
