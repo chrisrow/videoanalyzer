@@ -41,7 +41,7 @@ struct TOption
     {'l', false, "VA_LOGON",   NULL,        NULL, "Write log file."},
     {'p', false, "VA_PREVIEW", NULL,        NULL, "Display video image."},
     {'z', false, "VA_ZZZ",     NULL,        NULL, "Auto delete file and exit."},
-    {'y', false, "VA_YYY",     NULL,        NULL, "Alarm ID."}
+    {'y', false, "VA_YYY",     "Alarm ID",        NULL, "Alarm ID."}
 };
 
 //! Î´Öª²ÎÊý
