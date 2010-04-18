@@ -892,7 +892,9 @@ int CCfgParse::LoadChannel(int iCh, TPersonDetect& pd)
         return 0;
     }
     GET_VALUE(xPSElement, "iDirection", pd.iDirection);
-			
+    GET_VALUE(xPSElement, "iNearPeopleRefLen", pd.iNearPeopleRefLen);
+    GET_VALUE(xPSElement, "iMidPeopleRefLen", pd.iMidPeopleRefLen);
+    GET_VALUE(xPSElement, "iFarPeopleRefLen", pd.iFarPeopleRefLen);
 
     GET_VALUE(xPSElement, "WarningLine", pd.warnLine);
     //GET_VALUE(xPSElement, "ReferLine", pd.referLine);
@@ -929,6 +931,9 @@ int CCfgParse::SaveChannel(int iCh, TPersonDetect& pd)
     SET_VALUE(xPSElement, "WarningLine", pd.warnLine);
 
     SET_VALUE(xPSElement, "iDirection", pd.iDirection);
+    SET_VALUE(xPSElement, "iNearPeopleRefLen", pd.iNearPeopleRefLen);
+    SET_VALUE(xPSElement, "iMidPeopleRefLen", pd.iMidPeopleRefLen);
+    SET_VALUE(xPSElement, "iFarPeopleRefLen", pd.iFarPeopleRefLen);
     //SET_VALUE(xPSElement, "ReferLine", pd.referLine);
 		
     SET_VALUE(xPSElement, "Mask", pd.maskLine);
