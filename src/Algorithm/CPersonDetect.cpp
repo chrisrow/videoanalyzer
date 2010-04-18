@@ -1897,37 +1897,39 @@ bool CPersonDetect::Judge_Slop_Over_Line(LabelObjStatus* pTrackObjInfo, Cordon_P
       return false;
   }
 
-   //根据距离远近对人高度进行判断
-  int tempy =  pTrackObjInfo->m_nTrack_pt[1][pTrackObjInfo->track_pot_count];
-  if (tempy>0&&tempy<=20)
- {
-     return false;
- }
- else if (tempy>20&&tempy<=80)
- {
-    if (pTrackObjInfo->m_nObjRect[3]>g_personParam.iFarPeopleRefLen + 15||pTrackObjInfo->m_nObjRect[3] <= g_personParam.iFarPeopleRefLen -20)
+   //对于cif图片根据距离远近对人高度进行判断
+  if(pFrame_RgbSmoothed !=NULL && pFrame_RgbSmoothed->getHeight() == 288)
+  {
+    int tempy =  pTrackObjInfo->m_nTrack_pt[1][pTrackObjInfo->track_pot_count];
+    if (tempy>0&&tempy<=20)
     {
-      return false;
+       return false;
     }
- }
- else if (tempy>80&&tempy<=160)
-{
-   if (pTrackObjInfo->m_nObjRect[3]>g_personParam.iMidPeopleRefLen+30||pTrackObjInfo->m_nObjRect[3]<= g_personParam.iMidPeopleRefLen -30)
-   {
-     return false;
-   }
- }
- else if (tempy>160&&tempy<=288)
- { 
-   if (pTrackObjInfo->m_nObjRect[3]>g_personParam.iNearPeopleRefLen + 45||pTrackObjInfo->m_nObjRect[3]<= g_personParam.iNearPeopleRefLen - 45)
-   {
-     return false;
-   }
- }
- else
- {
- }
-
+    else if (tempy>20&&tempy<=80)
+    {
+      if (pTrackObjInfo->m_nObjRect[3]>g_personParam.iFarPeopleRefLen + 20 || pTrackObjInfo->m_nObjRect[3] <= g_personParam.iFarPeopleRefLen -20)
+      {
+        return false;
+      }
+    }
+    else if (tempy>80&&tempy<=160)
+    {
+      if (pTrackObjInfo->m_nObjRect[3]>g_personParam.iMidPeopleRefLen+30 || pTrackObjInfo->m_nObjRect[3]<= g_personParam.iMidPeopleRefLen -30)
+      {
+        return false;
+      }
+    }
+    else if (tempy>160&&tempy<=288)
+    {  
+       if (pTrackObjInfo->m_nObjRect[3]>g_personParam.iNearPeopleRefLen + 45||pTrackObjInfo->m_nObjRect[3]<= g_personParam.iNearPeopleRefLen - 45)
+       {
+        return false;
+       }
+     }
+     else
+     {
+     }
+  }
  #if 0
   float referLength = 3.0;  //围栏长度
   float factLength = 1.8f;   //人的高度    f:消除编译警告
