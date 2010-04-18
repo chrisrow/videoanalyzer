@@ -1207,12 +1207,15 @@ CPersonDetect::PersenDetect_Process(CFrameContainer* pFrame_matlabFunced,
                                         m_pFrame_matlabFunced_low, 
                                         m_pFrame_RgbSmoothed_low), "labelObject fail!" );
 
+#if 0
+        //暂时删除掉
         if (judge_car_light(ObjectLabeledDList))
         {
            ObjectLabeledDList->DestroyAll();
            return 0; // 判断有车灯，返回0
         }
-        
+#endif
+
         //根据标定信息对原图进行二值
         memset(pFrame_matlabFunced->m_YuvPlane[0], 0, pFrame_matlabFunced->getWidth()*pFrame_matlabFunced->getHeight());
         binRgbtoY_LowtoHigh( pFrame_matlabFunced, 
@@ -1221,7 +1224,7 @@ CPersonDetect::PersenDetect_Process(CFrameContainer* pFrame_matlabFunced,
 
         ObjectLabeledDList->DestroyAll();
         erodeY( pFrame_matlabFunced, 3,3,5,1);  //腐蚀
-        
+        erodeY( pFrame_matlabFunced, 3,3,7,1);  //腐蚀
         dilateY( pFrame_matlabFunced, 1 );      //膨胀
         
         EXM_NOK( pMatlabFunc->labelObj( ObjectLabeledDList, 
@@ -1889,12 +1892,43 @@ bool CPersonDetect::Judge_Slop_Over_Line(LabelObjStatus* pTrackObjInfo, Cordon_P
      return false;
   }
   
-  if((pTrackObjInfo->m_nObjRect[2] > 100 && pTrackObjInfo->m_nObjRect[3] > 100) ||(pTrackObjInfo->WhiteSpotNum > 8000))
+  if((pTrackObjInfo->m_nObjRect[2] > 100 && pTrackObjInfo->m_nObjRect[3] > 100) || (pTrackObjInfo->WhiteSpotNum > 8000))
   {
       return false;
   }
-  
-#if 0
+
+   //根据距离远近对人高度进行判断
+  int tempy =  pTrackObjInfo->m_nTrack_pt[1][pTrackObjInfo->track_pot_count];
+  if (tempy>0&&tempy<=20)
+ {
+     return false;
+ }
+ else if (tempy>20&&tempy<=80)
+ {
+    if (pTrackObjInfo->m_nObjRect[3]>g_personParam.iFarPeopleRefLen + 15||pTrackObjInfo->m_nObjRect[3] <= g_personParam.iFarPeopleRefLen -20)
+    {
+      return false;
+    }
+ }
+ else if (tempy>80&&tempy<=160)
+{
+   if (pTrackObjInfo->m_nObjRect[3]>g_personParam.iMidPeopleRefLen+30||pTrackObjInfo->m_nObjRect[3]<= g_personParam.iMidPeopleRefLen -30)
+   {
+     return false;
+   }
+ }
+ else if (tempy>160&&tempy<=288)
+ { 
+   if (pTrackObjInfo->m_nObjRect[3]>g_personParam.iNearPeopleRefLen + 45||pTrackObjInfo->m_nObjRect[3]<= g_personParam.iNearPeopleRefLen - 45)
+   {
+     return false;
+   }
+ }
+ else
+ {
+ }
+
+ #if 0
   float referLength = 3.0;  //围栏长度
   float factLength = 1.8f;   //人的高度    f:消除编译警告
   float personHeigh = 0.0;
