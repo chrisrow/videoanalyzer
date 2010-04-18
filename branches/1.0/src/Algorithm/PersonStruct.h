@@ -14,6 +14,10 @@ struct TPersonDetect
     Line warnLine;
     //Line referLine;
     int iDirection;
+    int iNearPeopleRefLen;	//近景人的参考长度
+    int iMidPeopleRefLen;     //中景人的参考高度
+    int iFarPeopleRefLen;      //远景人的参考高度
+
     PolyLineArray maskLine;
     IplImage* mask;
 
