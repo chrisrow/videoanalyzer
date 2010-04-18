@@ -13,7 +13,14 @@
                 <Point x="235" y="101" />
                 <Point x="103" y="209" />
             </WarningLine>
+            <!--越线方向0  从左到右1  从右到左  2 双向越线-->
             <iDirection value="2" />
+            <!--近景人员参考高度不小于45 -->
+            <iNearPeopleRefLen value="90" />
+            <!--中景人员参考高度不小于30 -->
+            <iMidPeopleRefLen value="60" />
+            <!--远景人员参考高度不小于20 -->
+            <iFarPeopleRefLen value="25" />
             <Mask>
                 <Poly>
                     <Point x="0" y="0" />
