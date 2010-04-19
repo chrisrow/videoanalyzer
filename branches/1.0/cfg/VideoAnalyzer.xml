@@ -3,9 +3,10 @@
     <golbal>
         <LocalAddr>0.0.0.0</LocalAddr>
         <UDPServer>10.2.1.13:10116</UDPServer>
+        <UDPServer_2>10.2.1.13:10116</UDPServer_2>   <!-- 备机 -->
         <HeartBeat>180</HeartBeat>
         <!-- 发送心跳消息的间隔时间(秒) -->
-        <ImagePath>d:</ImagePath>
+        <ImagePath>d:\AlarmImage</ImagePath>
     </golbal>
     <camera channel="0">
         <PersonDetect>
