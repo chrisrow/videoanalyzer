@@ -63,7 +63,7 @@ public:
 
     //浦东机场垃圾需求
     bool isZZZ();
-    unsigned int getAlarmID();
+    int getAlarmID();
 
 protected:
     COption();

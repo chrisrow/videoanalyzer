@@ -174,7 +174,7 @@ bool COption::isZZZ()
     return false;
 }
 
-unsigned int COption::getAlarmID()
+int COption::getAlarmID()
 {
     const char* p = getOption('y');
     if (NULL == p)
