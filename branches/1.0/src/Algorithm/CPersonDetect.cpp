@@ -1816,7 +1816,7 @@ CPersonDetect::FindDetectedObject( ObjLabelInfoStruct* pCurrObjInfo,
 
     if (!TrackObject[m_TrackNum].b_Warning)
     {
-      TrackObject[m_TrackNum].b_Warning = Judge_Slop_Over_Line(&TrackObject[m_TrackNum],Warning_Line_Pra,LEFTTORIGNT);
+      TrackObject[m_TrackNum].b_Warning = Judge_Slop_Over_Line(&TrackObject[m_TrackNum],Warning_Line_Pra,g_personParam.iDirection);
     }
     if (TrackObject[m_TrackNum].b_Warning)
     {
