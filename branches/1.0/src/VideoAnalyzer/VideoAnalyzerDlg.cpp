@@ -365,7 +365,14 @@ bool CVideoAnalyzerDlg::CreateMultipleDirectory(const CString& szPath)
     for (vIter = vPath.begin(); vIter != vPath.end(); vIter++) 
     {
         //如果CreateDirectory执行成功,返回true,否则返回false
-        bSuccess = CreateDirectory(*vIter, NULL) ? true : false;    
+        bSuccess = CreateDirectory(*vIter, NULL) ? true : false;   
+        if (!bSuccess)
+        {
+            if (GetLastError() == ERROR_ALREADY_EXISTS)
+            {
+                bSuccess = true;
+            }
+        }
     }
 
     return bSuccess;
