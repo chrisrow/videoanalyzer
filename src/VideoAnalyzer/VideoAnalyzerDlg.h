@@ -94,6 +94,8 @@ protected:
 
     void ResetAnalyzer();
 
+    bool CreateMultipleDirectory(const CString& szPath);
+
 // й╣ож
 protected:
 	HICON m_hIcon;
@@ -102,6 +104,7 @@ protected:
     CAnalyzer* m_pAnalyzer;
     CDialog* m_pDlgCfg;
     IAlerter* m_pUDPAlerter;
+    IAlerter* m_pUDPAlerter_2;
     CVideoRecorder* m_pVideoRecoder;
     CHeartBeat* m_pHeartBeat;
 

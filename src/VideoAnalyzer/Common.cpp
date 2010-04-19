@@ -23,6 +23,7 @@ void TCommonParam::reset()
 
 const char* NODE_LOCALADDR = "LocalAddr";
 const char* NODE_UPDSERVER = "UDPServer";
+const char* NODE_UPDSERVER_2 = "UDPServer_2";
 const char* NODE_HEARTBEAT = "HeartBeat";
 const char* NODE_IMAGEPATH = "ImagePath";
 
@@ -63,6 +64,24 @@ const char* loadCommonParam(const char* szFileName)
             g_commParam.szUDPServerIP[1] = (unsigned char)tmp[1];
             g_commParam.szUDPServerIP[2] = (unsigned char)tmp[2];
             g_commParam.szUDPServerIP[3] = (unsigned char)tmp[3];    
+        }
+        else
+        {
+            return _T("获取报警主机IP和端口号失败");
+        }
+    }
+
+    //报警中心IP和端口号，备机
+    {
+        int tmp[4] = {0};
+        const char* ip = NULL;
+        if ( NULL != (ip = parse.GetGolbalParam(NODE_UPDSERVER_2)) )
+        {
+            sscanf(ip, "%d.%d.%d.%d:%d", &tmp[0], &tmp[1], &tmp[2], &tmp[3], &g_commParam.iUDPServerPort);
+            g_commParam.szUDPServerIP_2[0] = (unsigned char)tmp[0];
+            g_commParam.szUDPServerIP_2[1] = (unsigned char)tmp[1];
+            g_commParam.szUDPServerIP_2[2] = (unsigned char)tmp[2];
+            g_commParam.szUDPServerIP_2[3] = (unsigned char)tmp[3];    
         }
         else
         {

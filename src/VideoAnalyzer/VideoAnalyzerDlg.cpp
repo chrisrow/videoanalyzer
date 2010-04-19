@@ -73,6 +73,7 @@ CVideoAnalyzerDlg::CVideoAnalyzerDlg(CWnd* pParent /*=NULL*/)
     m_pAnalyzer = NULL;
     m_pDlgCfg = NULL;
     m_pUDPAlerter = NULL;
+    m_pUDPAlerter_2 = NULL;
     m_eVideoCtrl   = VC_NO;
     m_bPause = false;
     m_uCurrentFrame = 0;
@@ -334,6 +335,42 @@ void CVideoAnalyzerDlg::updateFrame(const IplImage *pFrame)
     m_ctlVideo.showImage(pFrame);
 }
 
+bool CVideoAnalyzerDlg::CreateMultipleDirectory(const CString& szPath)
+{
+    CString strDir(szPath);//存放要创建的目录字符串
+    //确保以'\'结尾以创建最后一个目录
+    if (strDir.GetAt(strDir.GetLength()-1)!=_T('\\'))
+    {
+        strDir.AppendChar(_T('\\'));
+    }
+    std::vector<CString> vPath;//存放每一层目录字符串
+    CString strTemp;//一个临时变量,存放目录字符串
+    bool bSuccess = false;//成功标志
+    //遍历要创建的字符串
+    for (int i=0;i<strDir.GetLength();++i)
+    {
+        if (strDir.GetAt(i) != _T('\\')) 
+        {//如果当前字符不是'\\'
+            strTemp.AppendChar(strDir.GetAt(i));
+        }
+        else 
+        {//如果当前字符是'\\'
+            vPath.push_back(strTemp);//将当前层的字符串添加到数组中
+            strTemp.AppendChar(_T('\\'));
+        }
+    }
+
+    //遍历存放目录的数组,创建每层目录
+    std::vector<CString>::const_iterator vIter;
+    for (vIter = vPath.begin(); vIter != vPath.end(); vIter++) 
+    {
+        //如果CreateDirectory执行成功,返回true,否则返回false
+        bSuccess = CreateDirectory(*vIter, NULL) ? true : false;    
+    }
+
+    return bSuccess;
+}
+
 void CVideoAnalyzerDlg::alert(const IplImage *pFrame)
 {
     m_uAlert++;
@@ -346,8 +383,20 @@ void CVideoAnalyzerDlg::alert(const IplImage *pFrame)
     
     //创建目录
     CString strPath;
-    strPath.Format(_T("%s/%d月%d日"),g_commParam.szImagePath,Systemtime.wMonth,Systemtime.wDay);
-    CreateDirectory(strPath, NULL);
+    strPath.Format(_T("%s\\%d月%d日"),g_commParam.szImagePath,Systemtime.wMonth,Systemtime.wDay);
+//     if (!CreateDirectory(strPath, NULL))
+    if (CreateMultipleDirectory(strPath))
+    {
+        int result = GetLastError();
+        if (ERROR_ALREADY_EXISTS == result)
+        {
+            AfxMessageBox("ERROR_ALREADY_EXISTS");
+        }
+        else if (ERROR_PATH_NOT_FOUND == result)
+        {
+            AfxMessageBox("ERROR_PATH_NOT_FOUND");
+        }
+    }
     
     int iChannel = 0;
     if (TYPE_CAMERA == m_tSource.eType)
@@ -724,7 +773,7 @@ bool CVideoAnalyzerDlg::openSource(TVideoSource& tSource)
     m_pHeartBeat->run();
 
     //设置报警器
-    if (m_pAnalyzer && NULL == m_pUDPAlerter)
+    if (m_pAnalyzer && (NULL == m_pUDPAlerter || NULL == m_pUDPAlerter_2))
     {
         this->AddRunStatus("报警中心：%d.%d.%d.%d:%d", 
             g_commParam.szUDPServerIP[0], g_commParam.szUDPServerIP[1], 
@@ -746,14 +795,20 @@ bool CVideoAnalyzerDlg::openSource(TVideoSource& tSource)
         } 
         else
         {
+            //史上最土的双机热备
             CAlarmConfirm* pUDPAlerter = new CAlarmConfirm ;
             pUDPAlerter->init(uiAlarmID, g_commParam.szUDPServerIP, 20107); //fuck 把端口写死
             m_pUDPAlerter = pUDPAlerter;
+
+            CAlarmConfirm* pUDPAlerter_2 = new CAlarmConfirm ;
+            pUDPAlerter_2->init(uiAlarmID, g_commParam.szUDPServerIP_2, 20107); //fuck 把端口写死
+            m_pUDPAlerter_2 = pUDPAlerter_2;
         }
     }
     if (m_pAnalyzer)
     {
         m_pAnalyzer->addListener(m_pUDPAlerter);
+        m_pAnalyzer->addListener(m_pUDPAlerter_2);
     }
 
     INIT_IMAGE();
@@ -924,6 +979,9 @@ void CVideoAnalyzerDlg::OnClose()
 
         delete m_pUDPAlerter;
         m_pUDPAlerter = NULL;
+
+        delete m_pUDPAlerter_2;
+        m_pUDPAlerter_2 = NULL;
 
         CSubject<IAlerter*>* pSubject = dynamic_cast<CSubject<IAlerter*>*>(m_pAnalyzer);
         if (pSubject)
