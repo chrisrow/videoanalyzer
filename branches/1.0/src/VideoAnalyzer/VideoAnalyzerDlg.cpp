@@ -385,17 +385,10 @@ void CVideoAnalyzerDlg::alert(const IplImage *pFrame)
     CString strPath;
     strPath.Format(_T("%s\\%d月%d日"),g_commParam.szImagePath,Systemtime.wMonth,Systemtime.wDay);
 //     if (!CreateDirectory(strPath, NULL))
-    if (CreateMultipleDirectory(strPath))
+    if(!CreateMultipleDirectory(strPath))
     {
-        int result = GetLastError();
-        if (ERROR_ALREADY_EXISTS == result)
-        {
-            AfxMessageBox("ERROR_ALREADY_EXISTS");
-        }
-        else if (ERROR_PATH_NOT_FOUND == result)
-        {
-            AfxMessageBox("ERROR_PATH_NOT_FOUND");
-        }
+        this->AddRunStatus("创建目录失败：%s", LPCTSTR(strPath));
+        return;
     }
     
     int iChannel = 0;
