@@ -430,13 +430,13 @@ void CVideoAnalyzerDlg::alert(const IplImage *pFrame)
     catch (cv::Exception)
     {
         this->AddRunStatus("保存图片出错");
-        return;
     }
 
     //列表框提示
     this->AddRunStatus("第%d帧触发警报(%s_%d_%d_%d.jpg)", 
         m_uCurrentFrame,(LPCTSTR)strChannel,
         Systemtime.wHour, Systemtime.wMinute, Systemtime.wSecond);
+
 }
 
 void CVideoAnalyzerDlg::OnBnClickedCheckPreview()
@@ -780,7 +780,7 @@ bool CVideoAnalyzerDlg::openSource(TVideoSource& tSource)
             g_commParam.szUDPServerIP[2], g_commParam.szUDPServerIP[3], g_commParam.iUDPServerPort);
 
         COption& option = COption::Instance();
-        unsigned int uiAlarmID = option.getAlarmID();
+        int uiAlarmID = option.getAlarmID();
         if (uiAlarmID < 0)
         {
             CUDPAlerter* pUDPAlerter = new CUDPAlerter ;
