@@ -792,6 +792,15 @@ bool CVideoAnalyzerDlg::openSource(TVideoSource& tSource)
                 g_commParam.szUDPServerIP, 
                 g_commParam.iUDPServerPort);
             m_pUDPAlerter = pUDPAlerter;
+
+
+            CUDPAlerter* pUDPAlerter_2 = new CUDPAlerter ;
+            (void)pUDPAlerter_2->init(iAlarmType, 
+                iChannel, 
+                g_commParam.szLocalAddr, 
+                g_commParam.szUDPServerIP_2, 
+                g_commParam.iUDPServerPort);
+            m_pUDPAlerter_2 = pUDPAlerter_2;
         } 
         else
         {
