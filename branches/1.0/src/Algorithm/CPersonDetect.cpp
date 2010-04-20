@@ -1999,40 +1999,72 @@ bool CPersonDetect::Judge_Slop_Over_Line(LabelObjStatus* pTrackObjInfo, Cordon_P
   }
   return false;
 }
-
-
-
+/*************************************
+*判断画面里面有没有人
+*
+***************************************/
 bool CPersonDetect::Judge_Alarm_InFrame(LabelObjStatus* pTrackObjInfo, ALARMTYPE alarm_type)
 {
-  if (pTrackObjInfo->track_pot_count < 1) 
-  {
-    return false;
-  }
+	if (pTrackObjInfo->track_pot_count < 3) 
+	{
+	   return  false;
+	}
+
+	// 判断跟踪目标是不是人
+	if(pTrackObjInfo->m_nObjRect[2] / pTrackObjInfo->m_nObjRect[3] >= 1)
+	{
+	    return  false;
+	}
 
 
-  // 判断跟踪目标是不是人
-  if(pTrackObjInfo->m_nObjRect[2] / pTrackObjInfo->m_nObjRect[3] >= 1)
-  {
-      return false;
-  }
+	if(pTrackObjInfo->WhiteSpotNum < 20  || pTrackObjInfo->WhiteSpotNum > 8000)
+	{
+	   return  false;
+	}
 
-  
-  if(pTrackObjInfo->WhiteSpotNum < 20  || pTrackObjInfo->WhiteSpotNum > 8000)
-  {
-      return false;
-  }
-  
-  if(pTrackObjInfo->m_nObjRect[3] / pTrackObjInfo->m_nObjRect[2] >= 4)
-  {
-      return false;
-  }
-  if((pTrackObjInfo->m_nObjRect[2] > 100 || pTrackObjInfo->m_nObjRect[3] > 100))
-  {
-      return false;
-  }
-
-  return true;
-  
+	if(pTrackObjInfo->m_nObjRect[3] / pTrackObjInfo->m_nObjRect[2] >= 4)
+	{
+	   return  false;
+	}
+	if((pTrackObjInfo->m_nObjRect[2] > 100 || pTrackObjInfo->m_nObjRect[3] > 100))
+	{
+	   return  false;
+	}
+	//对于cif图片根据距离远近对人高度进行判断
+	if(pFrame_RgbSmoothed !=NULL && pFrame_RgbSmoothed->getHeight() == 288)
+	{
+	  int tempy =  pTrackObjInfo->m_nTrack_pt[1][pTrackObjInfo->track_pot_count];
+	  if (tempy>0&&tempy<=20)
+	  {
+		 return  false;
+	  }
+	  else if (tempy>20&&tempy<=80)
+	  {
+		if (pTrackObjInfo->m_nObjRect[3]>g_personParam.iFarPeopleRefLen + 20 || pTrackObjInfo->m_nObjRect[3] <= g_personParam.iFarPeopleRefLen -20)
+		{
+		  return  false;
+		}
+	  }
+	  else if (tempy>80&&tempy<=160)
+	  {
+		if (pTrackObjInfo->m_nObjRect[3]>g_personParam.iMidPeopleRefLen+30 || pTrackObjInfo->m_nObjRect[3]<= g_personParam.iMidPeopleRefLen -30)
+		{
+		  return false;
+		}
+	  }
+	  else if (tempy>160&&tempy<=288)
+	  {  
+		 if (pTrackObjInfo->m_nObjRect[3]>g_personParam.iNearPeopleRefLen + 45||pTrackObjInfo->m_nObjRect[3]<= g_personParam.iNearPeopleRefLen - 45)
+		 {
+		  return false;
+		 }
+	   }
+	   else
+	   {
+		  return true;
+	   }
+	}
+	return true;
 }
 
 
