@@ -29,7 +29,7 @@ private:
 
     PolyLineArray m_mask; //екеж
     LineArray m_warningLine;   //дЄОЏЯп
-    LineArray m_referLine;//
+//    LineArray m_referLine;//
     RectArray m_rect;
 
     CButton m_btnWarnLine;

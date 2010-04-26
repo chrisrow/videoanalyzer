@@ -94,6 +94,8 @@ protected:
 
     void ResetAnalyzer();
 
+    bool CreateMultipleDirectory(const CString& szPath);
+
 // й╣ож
 protected:
 	HICON m_hIcon;

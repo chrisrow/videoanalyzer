@@ -326,17 +326,68 @@ void CVideoAnalyzerDlg::updateFrame(const IplImage *pFrame)
     m_ctlVideo.showImage(pFrame);
 }
 
+bool CVideoAnalyzerDlg::CreateMultipleDirectory(const CString& szPath)
+{
+    CString strDir(szPath);//存放要创建的目录字符串
+    //确保以'\'结尾以创建最后一个目录
+    if (strDir.GetAt(strDir.GetLength()-1)!=_T('\\'))
+    {
+        strDir.AppendChar(_T('\\'));
+    }
+    std::vector<CString> vPath;//存放每一层目录字符串
+    CString strTemp;//一个临时变量,存放目录字符串
+    bool bSuccess = false;//成功标志
+    //遍历要创建的字符串
+    for (int i=0;i<strDir.GetLength();++i)
+    {
+        if (strDir.GetAt(i) != _T('\\')) 
+        {//如果当前字符不是'\\'
+            strTemp.AppendChar(strDir.GetAt(i));
+        }
+        else 
+        {//如果当前字符是'\\'
+            vPath.push_back(strTemp);//将当前层的字符串添加到数组中
+            strTemp.AppendChar(_T('\\'));
+        }
+    }
+
+    //遍历存放目录的数组,创建每层目录
+    std::vector<CString>::const_iterator vIter;
+    for (vIter = vPath.begin(); vIter != vPath.end(); vIter++) 
+    {
+        //如果CreateDirectory执行成功,返回true,否则返回false
+        bSuccess = CreateDirectory(*vIter, NULL) ? true : false;   
+        if (!bSuccess)
+        {
+            if (GetLastError() == ERROR_ALREADY_EXISTS)
+            {
+                bSuccess = true;
+            }
+        }
+    }
+
+    return bSuccess;
+}
+
 void CVideoAnalyzerDlg::alert(const IplImage *pFrame)
 {
     m_uAlert++;
+    CString str;
+    str.Format("%d", m_uAlert);
+    m_txtAlert.SetWindowText(str);
 
     SYSTEMTIME Systemtime ;
     GetLocalTime(&Systemtime);
     
     //创建目录
     CString strPath;
-    strPath.Format(_T("%s/%d月%d日"),g_commParam.szImagePath,Systemtime.wMonth,Systemtime.wDay);
-    CreateDirectory(strPath, NULL);
+    strPath.Format(_T("%s\\%d月%d日"),g_commParam.szImagePath,Systemtime.wMonth,Systemtime.wDay);
+//     if (!CreateDirectory(strPath, NULL))
+    if(!CreateMultipleDirectory(strPath))
+    {
+        this->AddRunStatus("创建目录失败：%s", LPCTSTR(strPath));
+        return;
+    }
     
     int iChannel = 0;
     if (TYPE_CAMERA == m_tSource.eType)
@@ -362,15 +413,21 @@ void CVideoAnalyzerDlg::alert(const IplImage *pFrame)
         iChannel,
         Systemtime.wHour, Systemtime.wMinute, Systemtime.wSecond );
 //     cvFlip(pFrame, NULL, 0);//垂直镜像
-    int iResult = cvSaveImage((LPCTSTR)strFile, pFrame);
+
+    try
+    {
+        (void)cvSaveImage((LPCTSTR)strFile, pFrame);
+    }
+    catch (cv::Exception)
+    {
+        this->AddRunStatus("保存图片出错");
+    }
 
     //列表框提示
-    CString str;
-    str.Format("%d", m_uAlert);
-    m_txtAlert.SetWindowText(str);
     this->AddRunStatus("第%d帧触发警报(%s_%d_%d_%d.jpg)", 
         m_uCurrentFrame,(LPCTSTR)strChannel,
         Systemtime.wHour, Systemtime.wMinute, Systemtime.wSecond);
+
 }
 
 void CVideoAnalyzerDlg::OnBnClickedCheckPreview()
@@ -1078,27 +1135,7 @@ void CVideoAnalyzerDlg::OnBnClickedButtonSetup()
         return;
     }
 
-
-    //     CDlgSetting dlgSetting;
-//     dlgSetting.setImage(m_ctlVideo.getImage());
-//     if (dlgSetting.DoModal() != IDOK)
-//     {
-// 		
-//         return;
-//     }
-// 
-
-//     CDlgPersonCfg dlg;
-//     dlg.setImage(m_ctlVideo.getImage());
-//     if (dlg.DoModal() != IDOK)
-//     {
-//         return;
-//     }
-
     this->saveConfig();
-
-//     m_pVideoGraber->addListener(m_pAnalyzer);
-//     m_pVideoGraber->addListener(this);
 }
 
 bool CVideoAnalyzerDlg::loadConfig()

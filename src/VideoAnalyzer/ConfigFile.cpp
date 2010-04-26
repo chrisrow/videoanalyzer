@@ -893,7 +893,7 @@ int CCfgParse::LoadChannel(int iCh, TPersonDetect& pd)
     }
 
     GET_VALUE(xPSElement, "WarningLine", pd.warnLine);
-    GET_VALUE(xPSElement, "ReferLine", pd.referLine);
+    //GET_VALUE(xPSElement, "ReferLine", pd.referLine);
 		
     GET_VALUE(xPSElement, "Mask", pd.maskLine);
 
