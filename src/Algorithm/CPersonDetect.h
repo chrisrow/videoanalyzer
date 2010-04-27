@@ -195,14 +195,21 @@ public:
 
 public:/*处理主函数*/
 
-    ErrVal  PersenDetect_Process(CFrameContainer* pFrame_matlabFunced,  
+    ErrVal  PersenDetect_Process_v2(CFrameContainer* pFrame_matlabFunced,  
+                                    CFrameContainer* pFrame_in,
+                                    CFrameContainer* pFrame_out,  
+                                    const uint8_t* const pRGB_template,  
+                                    const ALARMTYPE alarm_type,
+                                    uint16_t demarcation_line,
+                                    const uint32_t framenum = 0); 
+
+    ErrVal  PersenDetect_Process(CFrameContainer* pFrame_matlabFunced,       
                                  CFrameContainer* pRgbhumaninfo,
-                                 CFrameContainer*    pFrame_input,  
+                                 CFrameContainer* pFrame_curr_in,
                                  const uint8_t* const pRGB_template,  
                                  const ALARMTYPE alarm_type,
                                  uint16_t demarcation_line,
                                  const uint32_t framenum = 0); 
-
 
   /*************************************
   *        目标匹配、跟踪与预测
@@ -360,7 +367,6 @@ public:
   /*用pRGB_template做模板，将pFrame_in_out遮罩*/
   ErrVal  Shadow_Mask (CFrameContainer* pFrame_in_out,
                        const uint8_t* const pRGB_template);
-  ErrVal  Shadow_Mask (CFrameContainer* pFrame_in,CFrameContainer* pFrame_out);
 
   void DeleteAdditionalLine();
   int ReadIni(char *FilePath,char* pSectionName,char *pKeyName) ;

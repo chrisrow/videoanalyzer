@@ -1157,6 +1157,125 @@ void CPersonDetect::initTempImage(int iWidth, int iHeight, YUVTYPE YuvType_in)
     }
 }
 
+ErrVal  
+CPersonDetect::PersenDetect_Process_v2(CFrameContainer* pFrame_matlabFunced,       
+                                    CFrameContainer* pFrame_in,
+                                    CFrameContainer* pFrame_out,
+                                    const uint8_t* const pRGB_template,
+                                    const ALARMTYPE alarm_type,
+                                    uint16_t demarcation_line,
+                                    const uint32_t framenum)
+{
+    *pFrame_out = *pFrame_in;
+    CFrameContainer frame = *pFrame_out;
+
+    //需要更新背景 或者 检测人员
+    if (0 == CurFrameNum % BKUPDATE_INTERVAL || 0 == CurFrameNum % SAMPLING_INTERVAL)
+    {
+        Shadow_Mask(&frame, NULL);
+    }
+
+    //更新背景
+    if(0 == CurFrameNum % BKUPDATE_INTERVAL)
+    {
+        EXM_NOK( averagesmoothRgb( pFrame_RgbSmoothed, &frame/*, SMOOTHSTARTLINE */), "smoothRgb fail!" );
+        if (0 == CurFrameNum)
+        {
+            clearUpdateBk();
+            initUpdateBk(frame.getWidth(), frame.getHeight(), frame.getYuvType());
+            *pFrame_bkgndDetected = *pFrame_RgbSmoothed/*pFrame_curr_in*/;
+        }
+        else
+        {
+            UpdateBk(pFrame_bkgndDetected,pFrame_RgbSmoothed,70,2,2,framenum);  /*2,3*/
+        }
+    }
+
+    //检测算法
+    if ( 0 == CurFrameNum % SAMPLING_INTERVAL) 
+    {
+        EXM_NOK( averagesmoothRgb( pFrame_RgbSmoothed, &frame/*, SMOOTHSTARTLINE */), "smoothRgb fail!" );
+
+        this->initTempImage(frame.getWidth(), frame.getHeight(), YUVTYPE_444);
+
+        //隔行采样
+        Interlaced_Scanning(m_pFrame_RgbSmoothed_low,pFrame_RgbSmoothed);
+        Interlaced_Scanning(m_pFrame_bkgndDetected_low,pFrame_bkgndDetected);
+
+        //二值
+        EXM_NOK( binarizeY_fromRgbBkgnd(m_pFrame_matlabFunced_low ,
+            m_pFrame_RgbSmoothed_low,
+            m_pFrame_bkgndDetected_low ,MAXTHRESHOLD), "pMatlabFunc fail!" );
+
+        //标定，顺便得到他们的RGB信息（暂时没用）
+        EXM_NOK( pMatlabFunc->labelObj( ObjectLabeledDList, 
+            m_pFrame_matlabFunced_low, 
+            m_pFrame_RgbSmoothed_low), "labelObject fail!" );
+
+        if (judge_car_light(ObjectLabeledDList))
+        {
+            ObjectLabeledDList->DestroyAll();
+            return 0; // 判断有车灯，返回0
+        }
+
+        //根据标定信息对原图进行二值
+        memset(pFrame_matlabFunced->m_YuvPlane[0], 0, pFrame_matlabFunced->getWidth()*pFrame_matlabFunced->getHeight());
+        binRgbtoY_LowtoHigh( pFrame_matlabFunced, 
+            pFrame_RgbSmoothed,pFrame_bkgndDetected, 
+            ObjectLabeledDList, 70, 40, demarcation_line);
+
+        ObjectLabeledDList->DestroyAll();
+        erodeY( pFrame_matlabFunced, 3,3,5,1);  //腐蚀
+
+        dilateY( pFrame_matlabFunced, 1 );      //膨胀
+
+        EXM_NOK( pMatlabFunc->labelObj( ObjectLabeledDList, 
+            pFrame_matlabFunced ,
+            pFrame_RgbSmoothed), "labelObject fail!" );
+
+        //宽或高过小，则过滤掉
+        deletminobj(ObjectLabeledDList, demarcation_line);
+
+        ForecastObjectDetect(ObjectLabeledDList, 
+            &frame, 
+            pFrame_matlabFunced,
+            &Warning_Line[2], &Alarm_Line[2] , alarm_type);
+
+        ObjectLabeledDList->DestroyAll();
+
+        if (g_debug)
+        {
+            Draw_Warning_Line(&Warning_Line[2],pFrame_RgbSmoothed);   
+            Drawtrack(pFrame_RgbSmoothed);
+            SHOW_IMAGE("smooth", pFrame_RgbSmoothed->getImage());
+
+            SHOW_BIN_IMAGE("pFrame_matlabFunced", 
+                pFrame_matlabFunced->getWidth(), 
+                pFrame_matlabFunced->getHeight(), 
+                (char*)pFrame_matlabFunced->m_YuvPlane[0]);			
+
+        }
+
+    }
+
+    //图像输出。临时
+    if (g_personParam.mask != NULL)
+    {
+        for(int i = 0; i < pFrame_out->m_pIplImage->imageSize; i++)
+        { 
+            if (g_personParam.mask->imageData[i] == 0)
+            {
+                pFrame_out->m_pIplImage->imageData[i] = 0.5 * (unsigned char )pFrame_out->m_pIplImage->imageData[i];
+            }
+        }
+    }
+    Draw_Warning_Line(&Warning_Line[2],pFrame_out);   
+    Drawtrack(pFrame_out);
+
+    CurFrameNum = ( CurFrameNum >= MAXFRAMENUM ) ? 1 : ++CurFrameNum;
+    ROK();
+}
+
 ErrVal
 CPersonDetect::PersenDetect_Process(CFrameContainer* pFrame_matlabFunced,       
                                     CFrameContainer* pRgbhumaninfo,
@@ -2162,17 +2281,6 @@ CPersonDetect::Interlaced_Scanning (CFrameContainer* pFrame_low,const CFrameCont
     }
   }
   ROK();
-}
-
-ErrVal
-CPersonDetect::Shadow_Mask (CFrameContainer* pFrame_in,CFrameContainer* pFrame_out)
-{
-    if (g_personParam.mask != NULL)
-    {
-        cvMul(pFrame_in->getImage(), g_personParam.mask, 
-            const_cast<IplImage*>(pFrame_out->getImage()));
-    }
-    ROK();
 }
 
 ErrVal

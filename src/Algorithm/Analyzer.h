@@ -12,7 +12,7 @@ enum ALERTTYPE//alert type
 };
 
 //图像分析器。对接收到的每一帧进行分析，并在需要的时候将报警图像发送给每个Listener
-class CAnalyzer : public IFrameReceiver, public CSubject<IAlerter*>
+class CAnalyzer : public IFrameReceiver, public CSubject<IAlerter*>, public CSubject<IFrameReceiver*>
 {
 public:
     virtual ~CAnalyzer() {}
