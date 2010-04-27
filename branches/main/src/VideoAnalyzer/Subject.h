@@ -78,7 +78,7 @@ void CSubject<T>::retrieveListener()
 {
     CGuard guard(m_CSect);
 
-    std::vector<TTodo>::iterator itTodo = m_todoList.begin();
+    std::vector<TTodo>::iterator itTodo = this->m_todoList.begin();
     for (; itTodo != m_todoList.end(); itTodo++)
     {
         std::vector<T>::iterator it = m_elem.begin();
@@ -136,11 +136,21 @@ void CSubject<T>::destroyListener()
     m_elem.clear();
 }
 
+#define ADD_LISTENER(type, subject, listener) \
+{\
+    CSubject<##type>* ptr = dynamic_cast<CSubject<##type>*>(subject);\
+    if (ptr)\
+    {\
+        ptr->addListener(listener);\
+    }\
+}
+
+
 #define FOR_EACH(type, func, ...) \
 {\
-    retrieveListener();\
-    std::vector<##type>::iterator it = m_elem.begin();\
-    for (; it != m_elem.end(); it++)\
+    CSubject<##type>::retrieveListener();\
+    std::vector<##type>::iterator it = CSubject<##type>::m_elem.begin();\
+    for (; it != CSubject<##type>::m_elem.end(); it++)\
     {\
         if (*it)\
         {\

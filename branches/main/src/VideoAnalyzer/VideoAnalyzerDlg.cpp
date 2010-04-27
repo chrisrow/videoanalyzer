@@ -661,7 +661,7 @@ bool CVideoAnalyzerDlg::openSource(TVideoSource& tSource)
     }
 
     //设置视频显示
-    m_pVideoGraber->addListener(this);
+//     m_pVideoGraber->addListener(this);
 
     //设置视频属性
     double dWidth, dHeight, dFrameRate, dStartFrame, dStartTime;
@@ -783,7 +783,14 @@ bool CVideoAnalyzerDlg::openSource(TVideoSource& tSource)
     }
     if (m_pAnalyzer)
     {
-        m_pAnalyzer->addListener(m_pUDPAlerter);
+//         m_pAnalyzer->addListener(m_pUDPAlerter);
+        ADD_LISTENER(IAlerter*, m_pAnalyzer, m_pUDPAlerter);
+//         CSubject<IAlerter*>* ptr = dynamic_cast<CSubject<IAlerter*>*>(m_pAnalyzer);
+//         if (ptr)
+//         {
+//             ptr->addListener(m_pUDPAlerter);
+//         }
+
     }
 
     INIT_IMAGE();
@@ -1060,7 +1067,9 @@ void CVideoAnalyzerDlg::OnCbnSelchangeComboAyalyzer()
 
     if (m_pAnalyzer)
     {
-        m_pAnalyzer->addListener(this);
+        ADD_LISTENER(IFrameReceiver*, m_pAnalyzer, this);
+        ADD_LISTENER(IAlerter*, m_pAnalyzer, this);
+//        m_pAnalyzer->addListener(this);
         if (m_pVideoGraber)
         {
             m_pVideoGraber->addListener(m_pAnalyzer);

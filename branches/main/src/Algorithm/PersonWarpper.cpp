@@ -49,10 +49,13 @@ const IplImage* CPersonWarpper::analysis(const IplImage *pFrame)
 
 	memcpy(m_pFrameContainer->m_BmpBuffer, pFrame->imageData, pFrame->imageSize);
 
-    m_pDetector->PersenDetect_Process(m_pFrame_matlabFunced, m_pOutFrameContainer,
-      m_pFrameContainer, NULL, m_pDetector->DOUBLE_DIRECTION, 60/*m_nInputFrameNum*/); 
+//     m_pDetector->PersenDetect_Process(m_pFrame_matlabFunced, m_pOutFrameContainer,
+//       m_pFrameContainer, NULL, m_pDetector->DOUBLE_DIRECTION, 60/*m_nInputFrameNum*/); 
 
-	return m_pOutFrameContainer->getImage();
+    m_pDetector->PersenDetect_Process_v2(m_pFrame_matlabFunced, m_pFrameContainer,
+        m_pOutFrameContainer, NULL, m_pDetector->DOUBLE_DIRECTION, 60/*m_nInputFrameNum*/); 
+
+    return m_pOutFrameContainer->getImage();
 }
 
 ALERTTYPE CPersonWarpper::haveAlert()
@@ -65,6 +68,9 @@ ALERTTYPE CPersonWarpper::haveAlert()
 void CPersonWarpper::updateFrame(const IplImage *pFrame)
 {
     const IplImage* p = analysis(pFrame) ;
+
+    //显示分析后的视频
+    FOR_EACH(IFrameReceiver*, updateFrame, p);
 
     if ( this->haveAlert() != AT_NONE)
     {
