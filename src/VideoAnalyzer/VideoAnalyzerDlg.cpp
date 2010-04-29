@@ -416,7 +416,8 @@ void CVideoAnalyzerDlg::alert(const IplImage *pFrame)
 
     try
     {
-        (void)cvSaveImage((LPCTSTR)strFile, pFrame);
+        int param[3] = {CV_IMWRITE_JPEG_QUALITY, 20, 0};
+        (void)cvSaveImage((LPCTSTR)strFile, pFrame, param);
     }
     catch (cv::Exception)
     {
