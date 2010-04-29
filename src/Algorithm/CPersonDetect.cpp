@@ -1271,6 +1271,17 @@ CPersonDetect::PersenDetect_Process_v2(CFrameContainer* pFrame_matlabFunced,
     }
     Draw_Warning_Line(&Warning_Line[2],pFrame_out);   
     Drawtrack(pFrame_out);
+    int thickness = 1;
+    int line_type = 8;
+    int shift     = 0;
+    for (int i = 0; i < m_TrackNum; i++ )
+    {
+        cvRectangle(const_cast<IplImage*>(pFrame_out->getImage()), 
+            cvPoint(TrackObject[i].m_nObjRect[0], TrackObject[i].m_nObjRect[1]), 
+            cvPoint(TrackObject[i].m_nObjRect[0] + TrackObject[i].m_nObjRect[2], 
+            TrackObject[i].m_nObjRect[1] + TrackObject[i].m_nObjRect[3]), 
+            cvScalar(0, 0, 255, 0), thickness, line_type, shift);
+    }
 
     CurFrameNum = ( CurFrameNum >= MAXFRAMENUM ) ? 1 : ++CurFrameNum;
     ROK();
