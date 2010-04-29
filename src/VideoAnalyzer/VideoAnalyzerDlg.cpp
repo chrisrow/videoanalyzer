@@ -235,6 +235,9 @@ BOOL CVideoAnalyzerDlg::OnInitDialog()
 
     this->autoStart();
 
+    SkinH_Attach();
+    SkinH_SetAero(true);
+    SkinH_AdjustAero(220,0,0,5,0,0,-1,-1,-1);
     return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
 
