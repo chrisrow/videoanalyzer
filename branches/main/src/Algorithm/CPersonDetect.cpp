@@ -1258,18 +1258,18 @@ CPersonDetect::PersenDetect_Process_v2(CFrameContainer* pFrame_matlabFunced,
 
     }
 
-    //图像输出。临时
-    if (g_personParam.mask != NULL)
-    {
-        for(int i = 0; i < pFrame_out->m_pIplImage->imageSize; i++)
-        { 
-            if (g_personParam.mask->imageData[i] == 0)
-            {
-                pFrame_out->m_pIplImage->imageData[i] = 0.5 * (unsigned char )pFrame_out->m_pIplImage->imageData[i];
-            }
-        }
-    }
-    Draw_Warning_Line(&Warning_Line[2],pFrame_out);   
+    //图像输出。仅标注跟踪对象
+//     if (g_personParam.mask != NULL)
+//     {
+//         for(int i = 0; i < pFrame_out->m_pIplImage->imageSize; i++)
+//         { 
+//             if (g_personParam.mask->imageData[i] == 0)
+//             {
+//                 pFrame_out->m_pIplImage->imageData[i] = 0.5 * (unsigned char )pFrame_out->m_pIplImage->imageData[i];
+//             }
+//         }
+//     }
+//     Draw_Warning_Line(&Warning_Line[2],pFrame_out);   
     Drawtrack(pFrame_out);
     int thickness = 1;
     int line_type = 8;
