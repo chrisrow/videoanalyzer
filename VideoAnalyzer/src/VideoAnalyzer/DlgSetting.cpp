@@ -87,6 +87,8 @@ BEGIN_MESSAGE_MAP(CDlgSetting, CDialog)
 	ON_EN_CHANGE(IDC_EDIT_ALARM_DELAY, &CDlgSetting::OnEnChangeEditAlarmDelay)
     ON_BN_CLICKED(IDC_BUTTON_NEXT, &CDlgSetting::OnBnClickedButtonNext)
 	ON_BN_CLICKED(IDC_CHECK_NIGHT, &CDlgSetting::OnBnClickedCheckNight)
+	ON_BN_CLICKED(IDC_RADIO_SENSITIVE4, &CDlgSetting::OnBnClickedRadioSensitive4)
+	ON_BN_CLICKED(IDC_CHECK_LVBO, &CDlgSetting::OnBnClickedCheckLvbo)
 END_MESSAGE_MAP()
 
 
@@ -166,23 +168,33 @@ BOOL CDlgSetting::OnInitDialog()
 		((CButton *)GetDlgItem(IDC_CHECK_NIGHT))->SetCheck(TRUE);
 	}
 
+	if (ParamDsting.TopPointVal.ThirdValue == 1 )
+	{
+		((CButton *)GetDlgItem(IDC_CHECK_LVBO))->SetCheck(TRUE);
+	}
+
     if (ParamSet.bTransLensImage)
     {
         ((CButton *)GetDlgItem(IDC_CHECK_LENS))->SetCheck(TRUE);
     }
 
-    if (ParamSet.bSensitiveFlag == 0 )
+    if (ParamSet.bSensitiveFlag == 1 )
     {
         ((CButton *)GetDlgItem(IDC_RADIO_SENSITIVE1))->SetCheck(TRUE);
     }
-    else if(ParamSet.bSensitiveFlag == 1 )
+    else if(ParamSet.bSensitiveFlag == 2 )
     {
         ((CButton *)GetDlgItem(IDC_RADIO_SENSITIVE2))->SetCheck(TRUE);
     }
-	else
+	else if(ParamSet.bSensitiveFlag == 3 )
 	{
         ((CButton *)GetDlgItem(IDC_RADIO_SENSITIVE3))->SetCheck(TRUE);
 	}
+	else 
+	{
+		((CButton *)GetDlgItem(IDC_RADIO_SENSITIVE4))->SetCheck(TRUE);
+	}
+
 
     if (ParamSet.iSceneDepth == 0 )
     {
@@ -757,31 +769,37 @@ void CDlgSetting::OnBnClickedCheckLens()
 void CDlgSetting::OnBnClickedRadioNatural()
 {
     ParamSet.iStyleChange = 0 ;
+	ParamDsting.TopPointVal.SecondValue = 0 ;
 }
 
 void CDlgSetting::OnBnClickedRadioTree()
 {
     ParamSet.iStyleChange = 1 ;
+	ParamDsting.TopPointVal.SecondValue = 1 ;
 }
 
 void CDlgSetting::OnBnClickedRadioCurver()
 {
     ParamSet.iStyleChange = 5 ;
+	ParamDsting.TopPointVal.SecondValue = 5 ;
 }
 
 void CDlgSetting::OnBnClickedRadioNatuarlCurver()
 {
     ParamSet.iStyleChange = 2 ;
+	ParamDsting.TopPointVal.SecondValue = 2 ;
 }
 
 void CDlgSetting::OnBnClickedRadioNatuarlNatuarl()
 {
     ParamSet.iStyleChange = 3 ;
+	ParamDsting.TopPointVal.SecondValue = 3 ;
 }
 
 void CDlgSetting::OnBnClickedRadioTreeCurver()
 {
     ParamSet.iStyleChange = 6 ;
+	ParamDsting.TopPointVal.SecondValue = 6 ;
 }
 
 void CDlgSetting::OnBnClickedRadioDepth1()
@@ -810,17 +828,21 @@ void CDlgSetting::OnBnClickedRadioDepth3()
 
 void CDlgSetting::OnBnClickedRadioSensitive1()
 {
-    ParamSet.bSensitiveFlag = 0 ;
+    ParamSet.bSensitiveFlag = 1 ;
 }
 
 void CDlgSetting::OnBnClickedRadioSensitive2()
 {
-    ParamSet.bSensitiveFlag = 1 ;
+    ParamSet.bSensitiveFlag = 2 ;
 }
 
 void CDlgSetting::OnBnClickedRadioSensitive3()
 {
-    ParamSet.bSensitiveFlag = 2 ;
+    ParamSet.bSensitiveFlag = 3 ;
+}
+void CDlgSetting::OnBnClickedRadioSensitive4()
+{
+	ParamSet.bSensitiveFlag = 4 ;
 }
 
 void CDlgSetting::OnEnChangeEditTwoValue()
@@ -960,10 +982,12 @@ void CDlgSetting::OnBnClickedCheckPerson()
     if( ((CButton*)GetDlgItem(IDC_CHECK_PERSON))->GetCheck() == BST_UNCHECKED )
     {
         ParamSet.iPersonFlag = 0 ; 
+		ParamDsting.TopPointVal.FouthValue = 0 ;
     }
     else
     {
         ParamSet.iPersonFlag = 1 ;
+		ParamDsting.TopPointVal.FouthValue = 1 ;
     }
 }
 
@@ -1111,5 +1135,19 @@ void CDlgSetting::OnBnClickedCheckNight()
 	else
 	{
 		ParamDsting.FindObjValMax.FirstValue = 1 ;
+	}
+}
+
+
+
+void CDlgSetting::OnBnClickedCheckLvbo()
+{
+	if( ((CButton*)GetDlgItem(IDC_CHECK_LVBO))->GetCheck() == BST_UNCHECKED )
+	{
+		ParamDsting.TopPointVal.ThirdValue = 0 ; 
+	}
+	else
+	{
+		ParamDsting.TopPointVal.ThirdValue = 1 ;
 	}
 }

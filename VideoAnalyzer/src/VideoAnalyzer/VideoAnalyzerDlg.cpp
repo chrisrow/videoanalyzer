@@ -123,6 +123,7 @@ BEGIN_MESSAGE_MAP(CVideoAnalyzerDlg, CDialog)
     ON_WM_CLOSE()
     ON_EN_SETFOCUS(IDC_EDIT_START_FRAME, &CVideoAnalyzerDlg::OnEnSetfocusEditStartFrame)
     ON_EN_SETFOCUS(IDC_EDIT_START_TIME, &CVideoAnalyzerDlg::OnEnSetfocusEditStartTime)
+	ON_WM_TIMER()
 END_MESSAGE_MAP()
 
 
@@ -733,6 +734,8 @@ bool CVideoAnalyzerDlg::openSource(TVideoSource& tSource)
     this->AddRunStatus("ÕýÔÚ²¥·Å");
     m_pVideoGraber->loopGetFrame();
 
+	SetTimer(1,180000,NULL); 
+
     return true;
 }
 
@@ -1186,4 +1189,286 @@ void CVideoAnalyzerDlg::stopRecord()
     {
         m_pVideoGraber->removeListener(m_pVideoRecoder);
     }
+}
+
+void CVideoAnalyzerDlg::OnTimer(UINT_PTR nIDEvent)
+{
+	// TODO: Add your message handler code here and/or call default
+	CString strConfigFile;
+	CString strChannel;
+	int iChannel = 0;
+	m_cbConfigFile.GetWindowText(strConfigFile);
+	m_cbChannel.GetWindowText(strChannel);
+	strConfigFile = m_strAppPath + "\\" + strConfigFile;
+	iChannel = atoi((LPCTSTR)strChannel);
+
+	DWORD temp_settng;
+	CString address = _T("SOFTWARE\\HU_VIDEO");
+
+	switch (iChannel)
+	{
+	case 0 : 
+		temp_settng = OnRegRead( address , _T("VideoAnalyzer_0") ) ;
+        if (temp_settng != ParamSet.bSensitiveFlag && temp_settng != 0 )
+        {
+			if (temp_settng > 0 && temp_settng <= 4)
+			{
+				if (temp_settng == 1 || temp_settng == 2 )
+				{
+					ParamSet.iStyleChange = 0 ;
+					ParamDsting.FindObjValMax.FirstValue = 1 ;
+					if ( ParamDsting.TopPointVal.SecondValue == 3 )
+					{
+						ParamSet.iPersonFlag = ParamDsting.TopPointVal.FouthValue ;
+					}
+					else
+					{
+						ParamSet.iPersonFlag = 0 ;
+					}
+				}
+				else
+				{
+					ParamSet.iStyleChange = ParamDsting.TopPointVal.SecondValue;
+					ParamDsting.FindObjValMax.FirstValue = 0 ;
+					ParamSet.iPersonFlag = ParamDsting.TopPointVal.FouthValue ;
+				}
+				ParamSet.bSensitiveFlag = temp_settng ;
+				this->saveConfig();
+			}
+        }
+
+		break;
+	case 1 : 
+		temp_settng = OnRegRead( address , _T("VideoAnalyzer_1") ) ;
+		if (temp_settng != ParamSet.bSensitiveFlag && temp_settng != 0 )
+		{
+			if (temp_settng > 0 && temp_settng <= 4)
+			{
+				if (temp_settng == 1 || temp_settng == 2 )
+				{
+					ParamSet.iStyleChange = 0 ;
+					ParamDsting.FindObjValMax.FirstValue = 1 ;
+					if ( ParamDsting.TopPointVal.SecondValue == 3 )
+					{
+						ParamSet.iPersonFlag = ParamDsting.TopPointVal.FouthValue ;
+					}
+					else
+					{
+						ParamSet.iPersonFlag = 0 ;
+					}
+				}
+				else
+				{
+					ParamSet.iStyleChange = ParamDsting.TopPointVal.SecondValue;
+					ParamDsting.FindObjValMax.FirstValue = 0 ;
+					ParamSet.iPersonFlag = ParamDsting.TopPointVal.FouthValue ;
+				}
+				ParamSet.bSensitiveFlag = temp_settng ;
+				this->saveConfig();
+			}
+		}
+		break;
+	case 2 : 
+		temp_settng = OnRegRead( address , _T("VideoAnalyzer_2") ) ;
+		if (temp_settng != ParamSet.bSensitiveFlag && temp_settng != 0 )
+		{
+			if (temp_settng > 0 && temp_settng <= 4)
+			{
+				if (temp_settng == 1 || temp_settng == 2 )
+				{
+					ParamSet.iStyleChange = 0 ;
+					ParamDsting.FindObjValMax.FirstValue = 1 ;
+					if ( ParamDsting.TopPointVal.SecondValue == 3 )
+					{
+						ParamSet.iPersonFlag = ParamDsting.TopPointVal.FouthValue ;
+					}
+					else
+					{
+						ParamSet.iPersonFlag =0 ;
+					}
+				}
+				else
+				{
+					ParamSet.iStyleChange = ParamDsting.TopPointVal.SecondValue;
+					ParamDsting.FindObjValMax.FirstValue = 0 ;
+					ParamSet.iPersonFlag = ParamDsting.TopPointVal.FouthValue ;
+				}
+				ParamSet.bSensitiveFlag = temp_settng ;
+				this->saveConfig();
+			}
+		}
+		break;
+	case 3 : 
+		temp_settng = OnRegRead( address , _T("VideoAnalyzer_3") ) ;
+		if (temp_settng != ParamSet.bSensitiveFlag && temp_settng != 0 )
+		{
+			if (temp_settng > 0 && temp_settng <= 4)
+			{
+				if (temp_settng == 1 || temp_settng == 2 )
+				{
+					ParamSet.iStyleChange = 0 ;
+					ParamDsting.FindObjValMax.FirstValue = 1 ;
+					if ( ParamDsting.TopPointVal.SecondValue == 3 )
+					{
+						ParamSet.iPersonFlag = ParamDsting.TopPointVal.FouthValue ;
+					}
+					else
+					{
+						ParamSet.iPersonFlag = 0 ;
+					}
+				}
+				else
+				{
+					ParamSet.iStyleChange = ParamDsting.TopPointVal.SecondValue;
+					ParamDsting.FindObjValMax.FirstValue = 0 ;
+					ParamSet.iPersonFlag = ParamDsting.TopPointVal.FouthValue ;
+				}
+				ParamSet.bSensitiveFlag = temp_settng ;
+				this->saveConfig();
+			}
+		}
+		break;
+	case 4 : 
+		temp_settng = OnRegRead( address , _T("VideoAnalyzer_4") ) ;
+		if (temp_settng != ParamSet.bSensitiveFlag && temp_settng != 0 )
+		{
+			if (temp_settng > 0 && temp_settng <= 4)
+			{
+				if (temp_settng == 1 || temp_settng == 2 )
+				{
+					ParamSet.iStyleChange = 0 ;
+					ParamDsting.FindObjValMax.FirstValue = 1 ;
+					if ( ParamDsting.TopPointVal.SecondValue == 3 )
+					{
+						ParamSet.iPersonFlag = ParamDsting.TopPointVal.FouthValue ;
+					}
+					else
+					{
+						ParamSet.iPersonFlag = 0 ;
+					}
+				}
+				else
+				{
+					ParamSet.iStyleChange = ParamDsting.TopPointVal.SecondValue;
+					ParamDsting.FindObjValMax.FirstValue = 0 ;
+					ParamSet.iPersonFlag = ParamDsting.TopPointVal.FouthValue ;
+				}
+				ParamSet.bSensitiveFlag = temp_settng ;
+				this->saveConfig();
+			}
+		}
+		break;
+	case 5 : 
+		temp_settng = OnRegRead( address , _T("VideoAnalyzer_5") ) ;
+		if (temp_settng != ParamSet.bSensitiveFlag && temp_settng != 0 )
+		{
+			if (temp_settng > 0 && temp_settng <= 4)
+			{
+				if (temp_settng == 1 || temp_settng == 2 )
+				{
+					ParamSet.iStyleChange = 0 ;
+					ParamDsting.FindObjValMax.FirstValue = 1 ;
+					if ( ParamDsting.TopPointVal.SecondValue == 3 )
+					{
+						ParamSet.iPersonFlag = ParamDsting.TopPointVal.FouthValue ;
+					}
+					else
+					{
+						ParamSet.iPersonFlag = 0 ;
+					}
+				}
+				else
+				{
+					ParamSet.iStyleChange = ParamDsting.TopPointVal.SecondValue;
+					ParamDsting.FindObjValMax.FirstValue = 0 ;
+					ParamSet.iPersonFlag = ParamDsting.TopPointVal.FouthValue ;
+				}
+				ParamSet.bSensitiveFlag = temp_settng ;
+				this->saveConfig();
+			}
+		}
+		break;
+	case 6 : 
+		temp_settng = OnRegRead( address , _T("VideoAnalyzer_6") ) ;
+		if (temp_settng != ParamSet.bSensitiveFlag && temp_settng != 0 )
+		{
+			if (temp_settng > 0 && temp_settng <= 4)
+			{
+				if (temp_settng == 1 || temp_settng == 2 )
+				{
+					ParamSet.iStyleChange = 0 ;
+					ParamDsting.FindObjValMax.FirstValue = 1 ;
+					if ( ParamDsting.TopPointVal.SecondValue == 3 )
+					{
+						ParamSet.iPersonFlag = ParamDsting.TopPointVal.FouthValue ;
+					}
+					else
+					{
+						ParamSet.iPersonFlag = 0 ;
+					}
+				}
+				else
+				{
+					ParamSet.iStyleChange = ParamDsting.TopPointVal.SecondValue;
+					ParamDsting.FindObjValMax.FirstValue = 0 ;
+					ParamSet.iPersonFlag = ParamDsting.TopPointVal.FouthValue ;
+				}
+				ParamSet.bSensitiveFlag = temp_settng ;
+				this->saveConfig();
+			}
+		}
+		break;
+	case 7 : 
+		temp_settng = OnRegRead( address , _T("VideoAnalyzer_7") ) ;
+		if (temp_settng != ParamSet.bSensitiveFlag && temp_settng != 0 )
+		{
+			if (temp_settng > 0 && temp_settng <= 4)
+			{
+				if (temp_settng == 1 || temp_settng == 2 )
+				{
+					ParamSet.iStyleChange = 0 ;
+					ParamDsting.FindObjValMax.FirstValue = 1 ;
+					if ( ParamDsting.TopPointVal.SecondValue == 3 )
+					{
+						ParamSet.iPersonFlag = ParamDsting.TopPointVal.FouthValue ;
+					}
+					else
+					{
+						ParamSet.iPersonFlag = 0 ;
+					}
+
+				}
+				else
+				{
+					ParamSet.iStyleChange = ParamDsting.TopPointVal.SecondValue;
+					ParamDsting.FindObjValMax.FirstValue = 0 ;
+					ParamSet.iPersonFlag = ParamDsting.TopPointVal.FouthValue ;
+				}
+				ParamSet.bSensitiveFlag = temp_settng ;
+				this->saveConfig();
+			}
+		}
+		break;
+
+	default :
+		break;
+	}
+	__super::OnTimer(nIDEvent);
+}
+DWORD CVideoAnalyzerDlg::OnRegRead(CString  address , CString  str)
+{
+	HKEY hKey;
+	long lRet ;
+
+	lRet = RegOpenKey(HKEY_LOCAL_MACHINE, address, &hKey); /*_T("Software\\HybribioDMC5KC\\temperature")*/
+
+	if(lRet != ERROR_SUCCESS)
+		return 0;
+	DWORD dwType;
+	DWORD dwValue;
+	DWORD dwAge  = 0 ;
+	RegQueryValueEx(hKey,str,0,&dwType,(LPBYTE)&dwAge,&dwValue);
+	if(lRet != ERROR_SUCCESS)
+		return 0;
+	return dwAge;
 }

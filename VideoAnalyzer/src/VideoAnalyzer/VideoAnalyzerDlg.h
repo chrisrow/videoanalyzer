@@ -127,6 +127,7 @@ protected:
 public:
     void setVideoControl(VIDEO_CONTROL c);
     bool autoStart();
+	DWORD OnRegRead(CString  address , CString  str);
 
     afx_msg void OnBnClickedCheckPreview();
     afx_msg void OnCbnDropdownComboCamera();
@@ -148,4 +149,5 @@ public:
     afx_msg void OnEnSetfocusEditStartTime();
     afx_msg void OnBnClickedButtonRecOpen();
     afx_msg void OnBnClickedButtonRecStart();
+	afx_msg void OnTimer(UINT_PTR nIDEvent);
 };

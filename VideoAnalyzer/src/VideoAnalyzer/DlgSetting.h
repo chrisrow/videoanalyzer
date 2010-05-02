@@ -99,4 +99,6 @@ public:
 	afx_msg void OnEnChangeEditAlarmDelay();
     afx_msg void OnBnClickedButtonNext();
 	afx_msg void OnBnClickedCheckNight();
+	afx_msg void OnBnClickedRadioSensitive4();
+	afx_msg void OnBnClickedCheckLvbo();
 };

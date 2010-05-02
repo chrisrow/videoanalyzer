@@ -819,7 +819,7 @@ ErrVal CParabolaDetect::ChangeObjectValue(const CFrameContainer* const pFrame_in
 			TrackObject[m_iTrackNum].bObjDistanceFlg = true ;
 		}
 
-		if( ParamSet.bSensitiveFlag == 0 )
+		if( ParamSet.bSensitiveFlag == 1 )
 		{
 			if (1 == pTrackObjInfo->iTrackDirection[0] )
 			{
@@ -2158,12 +2158,17 @@ CParabolaDetect::ParaDetectTwo( const CFrameContainer* const pFrame_in,CFrameCon
 
 	m_AlarmFlg = FALSE ;
 
+	if (ParamSet.bSensitiveFlag == 4 )
+	{
+        ROK();
+	}
+
 	if (ParamSet.bTransLensImage)
 	{
 		InverseImage(pFrame_in, pFrame_out );
 	}
 
-	if(ParamSet.iSceneDepth != 0) 
+	if(ParamDsting.TopPointVal.ThirdValue == 1 ) //ÂË²¨
 	{
 		averageSmoothRgb(pFrame_in, 2 );
 	}
@@ -2217,7 +2222,7 @@ CParabolaDetect::ParaDetectTwo( const CFrameContainer* const pFrame_in,CFrameCon
 			memcpy (m_pContinueImage[4], pFrame_in->m_BmpBuffer, pFrame_in->getRgbSize() );
 		}
 
-		if (++m_iCircleFrmNum == 25)
+		if (++m_iCircleFrmNum == 250)
 		{
 			m_iCircleFrmNum++ ;
 			for ( int j = 0 ; j < m_iFrameHeight*m_iFrameWidth*3 ; j++ )
@@ -3318,7 +3323,7 @@ bool CParabolaLineOneSide::TrackAlarmObject(uint16_t i)
 	{
 		long v_line_y = (long)( m_fCurveLineLocation[0]*TrackObject[i].iTrackTopPoint[0] + m_fCurveLineLocation[1] );
 
-		if (ParamSet.bSensitiveFlag == 1 || ParamSet.bSensitiveFlag == 0 )
+		if (ParamSet.bSensitiveFlag == 2 || ParamSet.bSensitiveFlag == 1 )
 		{
 			if ( TrackObject[i].iFindObjNumber >= ParamDsting.FindObjValue.FouthValue  && TrackObject[i].iFindObjNumber <= 14 && TrackObject[i].iTrackFrameNum <= ParamDsting.TrackNumMax.FouthValue
 				&& TrackObject[i].iLittleRegionNum >= (TrackObject[i].iFindObjNumber-1) 
@@ -3425,7 +3430,7 @@ bool CParabolaLineOneSide::TrackAlarmObject(uint16_t i)
 	}
 
 
-	if (ParamSet.bSensitiveFlag == 0)
+	if (ParamSet.bSensitiveFlag == 1)
 	{
 		if ( TrackObject[i].iTrackFrameNum >= 3 
 			&& TrackObject[i].bLineRangeFlag[0]
@@ -3446,7 +3451,7 @@ bool CParabolaLineOneSide::TrackAlarmObject(uint16_t i)
 		} 
 	}
 
-	if (ParamSet.bSensitiveFlag == 1 || ParamSet.bSensitiveFlag == 0 )
+	if (ParamSet.bSensitiveFlag == 2 || ParamSet.bSensitiveFlag == 1 )
 	{
 		if ( TrackObject[i].bLineRangeFlag[0]
 		    && TrackObject[i].bLineRangeFlag[1]
@@ -3620,7 +3625,7 @@ bool CParabolaInnerCurve::TrackAlarmObject(uint16_t i)
 	{
 		long v_line_y = (long)( m_fCurveLineLocation[0]*TrackObject[i].iTrackTopPoint[0] + m_fCurveLineLocation[1] );
 
-		if (ParamSet.bSensitiveFlag == 1 || ParamSet.bSensitiveFlag == 0 )
+		if (ParamSet.bSensitiveFlag == 2 || ParamSet.bSensitiveFlag == 1 )
 		{
 			if ( TrackObject[i].iFindObjNumber >= ParamDsting.FindObjValue.FouthValue  && TrackObject[i].iFindObjNumber <= 14 && TrackObject[i].iTrackFrameNum <= ParamDsting.TrackNumMax.FouthValue
 				&& TrackObject[i].iLittleRegionNum >= (TrackObject[i].iFindObjNumber-1) 
@@ -3727,7 +3732,7 @@ bool CParabolaInnerCurve::TrackAlarmObject(uint16_t i)
 	}
 
 
-	if (ParamSet.bSensitiveFlag == 0)
+	if (ParamSet.bSensitiveFlag == 1)
 	{
 		if ( TrackObject[i].iTrackFrameNum >= 3 
 			&& TrackObject[i].bLineRangeFlag[0]
@@ -3748,7 +3753,7 @@ bool CParabolaInnerCurve::TrackAlarmObject(uint16_t i)
 		} 
 	}
 
-	if (ParamSet.bSensitiveFlag == 1 || ParamSet.bSensitiveFlag == 0 )
+	if (ParamSet.bSensitiveFlag == 2 || ParamSet.bSensitiveFlag == 1 )
 	{
 		if (TrackObject[i].iWhiteSpotNum <= 40  )
 		{
@@ -3939,7 +3944,7 @@ bool CParabolaOuterCurve::TrackAlarmObject(uint16_t i)
 	{
 		long v_line_y = (long)( m_fCurveLineLocation[0]*TrackObject[i].iTrackTopPoint[0] + m_fCurveLineLocation[1] );
 
-		if (ParamSet.bSensitiveFlag == 1 || ParamSet.bSensitiveFlag == 0 )
+		if (ParamSet.bSensitiveFlag == 2 || ParamSet.bSensitiveFlag == 1 )
 		{
 			if ( TrackObject[i].iFindObjNumber >= ParamDsting.FindObjValue.FouthValue  && TrackObject[i].iFindObjNumber <= 14 && TrackObject[i].iTrackFrameNum <= ParamDsting.TrackNumMax.FouthValue
 				&& TrackObject[i].iLittleRegionNum >= (TrackObject[i].iFindObjNumber-1) 
@@ -4046,7 +4051,7 @@ bool CParabolaOuterCurve::TrackAlarmObject(uint16_t i)
 	}
 
 
-	if (ParamSet.bSensitiveFlag == 0)
+	if (ParamSet.bSensitiveFlag == 1)
 	{
 		if ( TrackObject[i].iTrackFrameNum >= 3 
 			&& TrackObject[i].bLineRangeFlag[0]
@@ -4067,7 +4072,7 @@ bool CParabolaOuterCurve::TrackAlarmObject(uint16_t i)
 		} 
 	}
 
-	if (ParamSet.bSensitiveFlag == 1 || ParamSet.bSensitiveFlag == 0 )
+	if (ParamSet.bSensitiveFlag == 2 || ParamSet.bSensitiveFlag == 1 )
 	{
 		if ( TrackObject[i].bLineRangeFlag[0]
 		&& TrackObject[i].bLineRangeFlag[1]
@@ -4241,7 +4246,7 @@ bool CParabolaLineTwoSide::TrackAlarmObject(uint16_t i)
 	{
 		long v_line_y = (long)( m_fCurveLineLocation[0]*TrackObject[i].iTrackTopPoint[0] + m_fCurveLineLocation[1] );
 
-		if (ParamSet.bSensitiveFlag == 1 || ParamSet.bSensitiveFlag == 0 )
+		if (ParamSet.bSensitiveFlag == 2 || ParamSet.bSensitiveFlag == 1 )
 		{
 			if ( TrackObject[i].iFindObjNumber >= ParamDsting.FindObjValue.FouthValue  && TrackObject[i].iFindObjNumber <= 14 && TrackObject[i].iTrackFrameNum <= ParamDsting.TrackNumMax.FouthValue
 				&& TrackObject[i].iLittleRegionNum >= (TrackObject[i].iFindObjNumber-1) 
@@ -4348,7 +4353,7 @@ bool CParabolaLineTwoSide::TrackAlarmObject(uint16_t i)
 	}
 
 
-	if (ParamSet.bSensitiveFlag == 0)
+	if (ParamSet.bSensitiveFlag == 1)
 	{
 		if ( TrackObject[i].iTrackFrameNum >= 3 
 			&& TrackObject[i].bLineRangeFlag[0]
@@ -4369,7 +4374,7 @@ bool CParabolaLineTwoSide::TrackAlarmObject(uint16_t i)
 		} 
 	}
 
-	if (ParamSet.bSensitiveFlag == 1 || ParamSet.bSensitiveFlag == 0 )
+	if (ParamSet.bSensitiveFlag == 2 || ParamSet.bSensitiveFlag == 1 )
 	{
 		if (TrackObject[i].iWhiteSpotNum <= 40  )
 		{
@@ -4619,7 +4624,7 @@ bool CParabolaTree::TrackAlarmObject(uint16_t i)
 		}
 	}
 
-	if (ParamSet.bSensitiveFlag == 0   )//|| TrackObject[i].iWhiteSpotNum < 50
+	if (ParamSet.bSensitiveFlag == 1   )//|| TrackObject[i].iWhiteSpotNum < 50
 	{
 		if (  TrackObject[i].bLineRangeFlag[0]
 		&& TrackObject[i].bLineRangeFlag[1]
@@ -4637,7 +4642,7 @@ bool CParabolaTree::TrackAlarmObject(uint16_t i)
 			Temp_alarm = TRUE;
 		} 
 	}
-	if (ParamSet.bSensitiveFlag == 1 || ParamSet.bSensitiveFlag == 0 )
+	if (ParamSet.bSensitiveFlag == 2 || ParamSet.bSensitiveFlag == 1 )
 	{
 		if ( TrackObject[i].bLineRangeFlag[0]
 		&& TrackObject[i].bLineRangeFlag[1]
