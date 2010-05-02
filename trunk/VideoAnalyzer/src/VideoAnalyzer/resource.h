@@ -75,10 +75,12 @@
 #define IDC_RADIO_DEPTH3                1054
 #define IDC_CHECK_LENS2                 1055
 #define IDC_CHECK_PERSON                1055
-#define IDC_CHECK_PERSON2               1056
 #define IDC_CHECK_NIGHT                 1056
 #define IDC_BUTTON4                     1057
 #define IDC_BUTTON_REC_OPEN             1057
+#define IDC_RADIO_SENSITIVE4            1057
+#define IDC_CHECK_LVBO                  1058
+#define IDC_RADIO_SENSITIVE5            1059
 #define IDC_EDIT1                       1060
 #define IDC_EDIT_REC_PATH               1060
 #define ID_32771                        32771

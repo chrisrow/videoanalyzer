@@ -48,7 +48,7 @@ struct JudgeSetFlt
 struct ParamStruct
 {
 	int     iStyleChange              ;                  //0_natural 1_Curve 2_Above 3_Tree
-	int     bSensitiveFlag            ;                  //灵敏度标志，0: 3帧报警, 1: 7帧报警,2: 10帧报警
+	int     bSensitiveFlag            ;                  //灵敏度标志，1: 3帧报警, 2: 7帧报警,3: 10帧报警 4: 不报
 	int     bTransLensImage           ;                  //镜像图像标志
 	int     iBinarizeSubThreshold     ;                  //二值化阈值  
 	int     iNightSubThreshold        ;                  //夜间二值化阈值 
