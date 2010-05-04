@@ -70,7 +70,17 @@ void CPersonWarpper::updateFrame(const IplImage *pFrame)
     const IplImage* p = analysis(pFrame) ;
 
     //显示分析后的视频
-    FOR_EACH(IFrameReceiver*, updateFrame, p);
+//     FOR_EACH(IFrameReceiver*, updateFrame, p);
+    doReceiver(p);
+//     CSubject<IFrameReceiver*>::retrieveListener();
+//     std::vector<IFrameReceiver*>::iterator it = CSubject<IFrameReceiver*>::m_elem.begin();
+//     for (; it != CSubject<IFrameReceiver*>::m_elem.end(); it++)
+//     {
+//         if (*it)
+//         {
+//             (*it)->updateFrame(p);
+//         }
+//     }
 
     if ( this->haveAlert() != AT_NONE)
     {
@@ -79,6 +89,7 @@ void CPersonWarpper::updateFrame(const IplImage *pFrame)
         SHOW_IMAGE("alarm", m_pFrameContainer->getImage());
 
         //报警
-        FOR_EACH(IAlerter*, alert, m_pFrameContainer->getImage());
+//         FOR_EACH(IAlerter*, alert, m_pFrameContainer->getImage());
+        doAlerter(m_pFrameContainer->getImage());
     }
 }

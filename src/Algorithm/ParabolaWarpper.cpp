@@ -89,6 +89,7 @@ void CParabolaWarpper::updateFrame(const IplImage *pFrame)
         m_pDetector->ImgMoveObjectDetect(m_pFrameContainer, m_pFrame_matlabFunced );
 
         //±¨¾¯
-        FOR_EACH(IAlerter*, alert, m_pFrame_matlabFunced->getImage());
+        //FOR_EACH(IAlerter*, alert, m_pFrame_matlabFunced->getImage());
+        doAlerter(m_pFrameContainer->getImage());
     }
 }
