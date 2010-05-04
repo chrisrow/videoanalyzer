@@ -436,15 +436,17 @@ void CVideoAnalyzerDlg::alert(const IplImage *pFrame)
 
 void CVideoAnalyzerDlg::OnBnClickedCheckPreview()
 {
-    if (m_pVideoGraber)
+    if (m_pAnalyzer)
     {
         if (m_chkPreview.GetCheck())
         {
-            m_pVideoGraber->addListener(this);
+//             m_pVideoGraber->addListener(this);
+            m_pAnalyzer->addReceiver(this);
         } 
         else
         {
-            m_pVideoGraber->removeListener(this);
+//             m_pVideoGraber->removeListener(this);
+            m_pAnalyzer->removeReceiver(this);
         }
     }
     ExpandDialog (IDC_VIDEO, m_chkPreview.GetCheck());
@@ -1071,9 +1073,11 @@ void CVideoAnalyzerDlg::OnCbnSelchangeComboAyalyzer()
 
     if (m_pAnalyzer)
     {
-        ADD_LISTENER(IFrameReceiver*, m_pAnalyzer, this);
-        ADD_LISTENER(IAlerter*, m_pAnalyzer, this);
+//         ADD_LISTENER(IFrameReceiver*, m_pAnalyzer, this);
+//         ADD_LISTENER(IAlerter*, m_pAnalyzer, this);
 //        m_pAnalyzer->addListener(this);
+        m_pAnalyzer->addReceiver(this);
+        m_pAnalyzer->addAlerter(this);
         if (m_pVideoGraber)
         {
             m_pVideoGraber->addListener(m_pAnalyzer);
