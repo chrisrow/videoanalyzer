@@ -22,6 +22,7 @@ public:
 // ÷ÿ–¥
 	public:
 	virtual BOOL InitInstance();
+    virtual int ExitInstance();
 
 //  µœ÷
 

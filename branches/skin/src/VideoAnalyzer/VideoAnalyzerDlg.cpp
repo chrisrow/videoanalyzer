@@ -235,6 +235,16 @@ BOOL CVideoAnalyzerDlg::OnInitDialog()
 
     this->autoStart();
 
+    //skin
+    SET_NOSKIN(1, GetDlgItem(IDC_COMBO_CAMERA)->GetSafeHwnd());
+    SET_NOSKIN(2, GetDlgItem(IDC_COMBO_AYALYZER)->GetSafeHwnd());
+    SET_NOSKIN(3, GetDlgItem(IDC_COMBO_CONFIG_FILE)->GetSafeHwnd());
+    SET_NOSKIN(4, GetDlgItem(IDC_COMBO_CHANNEL)->GetSafeHwnd());
+
+    SET_NOSKIN(5, GetDlgItem(IDC_STATIC)->GetSafeHwnd());
+
+    BOOL bSucc = dsSkinWindow( GetSafeHwnd(), SKIN_TYPE_DIALOG, NULL, FALSE);
+
     return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
 

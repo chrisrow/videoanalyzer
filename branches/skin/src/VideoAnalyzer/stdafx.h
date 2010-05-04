@@ -34,7 +34,11 @@
 #include <afxcmn.h>                     // MFC 对 Windows 公共控件的支持
 #endif // _AFX_NO_AFXCMN_SUPPORT
 
-
+//DSkinLite
+#include "3rdParty/DSkinLite/include/dskinlite.h"
+#include "3rdParty/DSkinLite/include/dskindef.h"
+#pragma comment(lib, "3rdParty/DSkinLite/dskinlite.lib")
+//DSkinLite
 
 #pragma comment(linker,"/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='x86' publicKeyToken='6595b64144ccf1df' language='*'\"")
 

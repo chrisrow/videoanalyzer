@@ -62,6 +62,12 @@ BOOL CVideoAnalyzerApp::InitInstance()
     //命令行解析测试
     COption::Instance().init(__argc, __argv);
 
+    BOOL r = dsLoadSkin(_T("skin"), LOAD_FROM_FOLDER );
+    if (r == FALSE)
+    {
+        AfxMessageBox("error skin");
+    }
+
 	CVideoAnalyzerDlg dlg;
 	m_pMainWnd = &dlg;
 	INT_PTR nResponse = dlg.DoModal();
@@ -79,4 +85,11 @@ BOOL CVideoAnalyzerApp::InitInstance()
 	// 由于对话框已关闭，所以将返回 FALSE 以便退出应用程序，
 	//  而不是启动应用程序的消息泵。
 	return FALSE;
+}
+
+int CVideoAnalyzerApp::ExitInstance()
+{
+    dsExitSkin();
+
+    return CWinApp::ExitInstance();
 }
