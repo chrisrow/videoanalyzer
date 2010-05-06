@@ -71,9 +71,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalOptions="/NODEFAULTLIB:&quot;atlthunk&quot;&#x0D;&#x0A;"
+				AdditionalOptions="&#x0D;&#x0A;"
 				LinkIncremental="2"
-				IgnoreDefaultLibraryNames="libcmt.lib"
+				IgnoreDefaultLibraryNames="libcmt.lib;atlthunk.lib"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
@@ -476,6 +476,10 @@
 			</File>
 			<File
 				RelativePath="VideoAnalyzer\VideoGraber.h"
+				>
+			</File>
+			<File
+				RelativePath=".\VideoAnalyzer\VideoGraberInterface.h"
 				>
 			</File>
 			<File

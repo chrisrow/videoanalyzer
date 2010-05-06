@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VideoAnalyzer", "src\VideoAnalyzer.vcproj", "{32177122-2713-4C7A-87DC-C7652AEF70C8}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libVideoInput", "libVideoInput\libVideoInput.vcproj", "{1DFD3CB8-3F29-40B2-A7E0-D29FA95F1C6B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -13,6 +15,10 @@ Global
 		{32177122-2713-4C7A-87DC-C7652AEF70C8}.Debug|Win32.Build.0 = Debug|Win32
 		{32177122-2713-4C7A-87DC-C7652AEF70C8}.Release|Win32.ActiveCfg = Release|Win32
 		{32177122-2713-4C7A-87DC-C7652AEF70C8}.Release|Win32.Build.0 = Release|Win32
+		{1DFD3CB8-3F29-40B2-A7E0-D29FA95F1C6B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{1DFD3CB8-3F29-40B2-A7E0-D29FA95F1C6B}.Debug|Win32.Build.0 = Debug|Win32
+		{1DFD3CB8-3F29-40B2-A7E0-D29FA95F1C6B}.Release|Win32.ActiveCfg = Release|Win32
+		{1DFD3CB8-3F29-40B2-A7E0-D29FA95F1C6B}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

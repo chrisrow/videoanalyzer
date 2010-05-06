@@ -834,7 +834,12 @@ void CVideoAnalyzerDlg::setVideoControl(VIDEO_CONTROL c)
 
 void CVideoAnalyzerDlg::OnCbnDropdownComboCamera()
 {
-    CCameraMgr* pCameraMgr = new CVIMgr;
+    ICameraMgr* pCameraMgr = getCameraMgr();//new CVIMgr;
+    if(!pCameraMgr)
+    {
+        return;
+    }
+
     int iCount = pCameraMgr->getCount();
 
     std::vector<CString> vCameraName;
@@ -866,8 +871,8 @@ void CVideoAnalyzerDlg::OnCbnDropdownComboCamera()
         }
     }
 
-    delete pCameraMgr;
-    pCameraMgr = NULL;
+//     delete pCameraMgr;
+//     pCameraMgr = NULL;
 }
 
 void CVideoAnalyzerDlg::OnCbnSelchangeComboCamera()
