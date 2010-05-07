@@ -1,14 +1,21 @@
 #include "VIWarpper.h"
 
+static CVIMgr* g_VIMgr = NULL;
 
 ICameraMgr* getCameraMgr()
 {
-    return CVIMgr::getInstance();
+    if (!g_VIMgr)
+    {
+        g_VIMgr = new CVIMgr;
+    }
+
+    return g_VIMgr;
 }
 
 void destoryCameraMgr()
 {
-    CVIMgr::destroyInstance();
+    delete g_VIMgr;
+    g_VIMgr = NULL;
 }
 
 CVIWarpper::CVIWarpper()
@@ -108,28 +115,50 @@ int  CVIWarpper::getHeight()
 
 /////////////////////////////////////////////////
 
-ICameraMgr* CVIMgr::m_pInstance = NULL;
+// ICameraMgr* CVIMgr::m_pInstance = NULL;
+// 
+// ICameraMgr* CVIMgr::getInstance()
+// {
+//     if (!m_pInstance)
+//     {
+//         m_pInstance = new CVIMgr;
+//     }
+// 
+//     return m_pInstance;
+// }
+// 
+// void CVIMgr::destroyInstance()
+// {
+//     delete m_pInstance;
+//     m_pInstance = NULL;
+// }
 
-ICameraMgr* CVIMgr::getInstance()
+CVIMgr::CVIMgr()
+: m_pCamera(NULL)
 {
-    if (!m_pInstance)
-    {
-        m_pInstance = new CVIMgr;
-    }
-
-    return m_pInstance;
+    memset(m_szName, 0, CAM_NAME_LEN);
 }
 
-void CVIMgr::destroyInstance()
+CVIMgr::~CVIMgr()
 {
-    delete m_pInstance;
-    m_pInstance = NULL;
+    delete m_pCamera;
+    m_pCamera = NULL;
 }
 
 ICamera* CVIMgr::getCamera()
 {
-    static ICamera* pCamera = new CVIWarpper;
-    return pCamera;
+    if (!m_pCamera)
+    {
+        m_pCamera = new CVIWarpper;
+    }
+
+    return m_pCamera;
+}
+
+void CVIMgr::destroyCamera()
+{
+    delete m_pCamera;
+    m_pCamera = NULL;
 }
 
 int CVIMgr::getCount()

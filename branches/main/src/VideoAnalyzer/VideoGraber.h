@@ -221,6 +221,21 @@ private:
 //     static ICameraMgr* m_pInstance;
 // };
 
-ICameraMgr* getCameraMgr();
-void destoryCameraMgr();
+typedef ICameraMgr* (*PGETCAMERAMGR)();//getCameraMgr
+typedef void (*PDESTROYCAMERAMGR)();//destoryCameraMgr
+
+class CCameraDllMgr
+{
+
+public:
+    static bool loadDll();
+    static void freeDll();
+    static ICameraMgr* getCameraMgr();
+    static void destoryCameraMgr();
+
+private:
+    static PGETCAMERAMGR m_pGetCameraMgr;
+    static PDESTROYCAMERAMGR m_pDestroyCameraMgr;
+    static HINSTANCE m_hIns;
+};
 

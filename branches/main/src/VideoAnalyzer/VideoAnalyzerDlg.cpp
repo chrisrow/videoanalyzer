@@ -165,6 +165,13 @@ BOOL CVideoAnalyzerDlg::OnInitDialog()
 	SetIcon(m_hIcon, TRUE);			// 设置大图标
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 
+    //载入摄像机dll
+    if (!CCameraDllMgr::loadDll())
+    {
+        this->AddRunStatus(_T("载入摄像机驱动失败"));
+        return FALSE;
+    }
+
     //列表框
     CRect rectListStatus;
     m_lstStatus.GetClientRect(&rectListStatus);
@@ -834,7 +841,7 @@ void CVideoAnalyzerDlg::setVideoControl(VIDEO_CONTROL c)
 
 void CVideoAnalyzerDlg::OnCbnDropdownComboCamera()
 {
-    ICameraMgr* pCameraMgr = getCameraMgr();//new CVIMgr;
+    ICameraMgr* pCameraMgr = CCameraDllMgr::getCameraMgr();//new CVIMgr;
     if(!pCameraMgr)
     {
         return;
@@ -991,6 +998,8 @@ void CVideoAnalyzerDlg::OnClose()
 
         delete m_pHeartBeat;
         m_pHeartBeat = NULL;
+
+        CCameraDllMgr::freeDll();
 
         __super::OnClose();
     }

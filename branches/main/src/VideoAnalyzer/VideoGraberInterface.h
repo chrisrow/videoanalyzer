@@ -1,5 +1,23 @@
 #pragma once
 
+#ifdef _DEBUG
+#pragma comment(lib,"cv200d.lib")
+#pragma comment(lib,"cvaux200d.lib")
+#pragma comment(lib,"cxcore200d.lib")
+#pragma comment(lib,"cxts200d.lib")
+#pragma comment(lib,"highgui200d.lib")
+#pragma comment(lib,"ml200d.lib")
+#else
+#pragma comment(lib,"cv200.lib")
+#pragma comment(lib,"cvaux200.lib")
+#pragma comment(lib,"cxcore200.lib")
+#pragma comment(lib,"cxts200.lib")
+#pragma comment(lib,"highgui200.lib")
+#pragma comment(lib,"ml200.lib")
+#endif
+
+#include "cv.h"
+
 const int CAM_NAME_LEN = 256;
 const int CIF_WIDTH  = 352;
 const int CIF_HEIGHT = 288;
@@ -27,6 +45,7 @@ public:
     virtual ~ICameraMgr() {}
 
     virtual ICamera* getCamera() = 0;
+    virtual void destroyCamera() = 0;
     virtual int getCount() = 0;
     virtual const char* getName(int iIndex) = 0;
 };

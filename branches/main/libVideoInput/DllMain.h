@@ -9,5 +9,16 @@
   #define DLL_IMPORT 
 #endif
 
+
+//
+
+#include "../src/VideoAnalyzer/VideoGraberInterface.h"
+
+extern "C" 
+{
+    DLL_EXPORT ICameraMgr* getCameraMgr();
+    DLL_EXPORT void destoryCameraMgr();
+}
+
 #endif
 
