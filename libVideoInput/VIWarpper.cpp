@@ -115,24 +115,6 @@ int  CVIWarpper::getHeight()
 
 /////////////////////////////////////////////////
 
-// ICameraMgr* CVIMgr::m_pInstance = NULL;
-// 
-// ICameraMgr* CVIMgr::getInstance()
-// {
-//     if (!m_pInstance)
-//     {
-//         m_pInstance = new CVIMgr;
-//     }
-// 
-//     return m_pInstance;
-// }
-// 
-// void CVIMgr::destroyInstance()
-// {
-//     delete m_pInstance;
-//     m_pInstance = NULL;
-// }
-
 CVIMgr::CVIMgr()
 : m_pCamera(NULL)
 {

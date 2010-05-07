@@ -35,9 +35,6 @@ enum VIDEO_STATUS
     STAT_STOPPED
 };
 
-// const int CIF_WIDTH  = 352;
-// const int CIF_HEIGHT = 288;
-
 //帧获取器基类
 class CVideoGraber: public CTaskBase, public CSubject<IFrameReceiver*>
 {
@@ -94,24 +91,7 @@ protected:
 };
 
 ////////////////////////////////////////////////////
-// class ICamera
-// {
-// public:
-//     virtual ~ICamera() {}
-// 
-//     virtual bool open(int iIndex) = 0;
-//     virtual void close() = 0;
-// 
-//     virtual bool setWidth(int iWidth) = 0;
-//     virtual bool setHeight(int iHeight) = 0;
-// 
-//     virtual int  getWidth() = 0;
-//     virtual int  getHeight() = 0;
-// 
-//     virtual IplImage* retrieveFrame() = 0;
-// };
 
-//--------------------------------------------------------------------
 class COpenCVWarpper: public ICamera
 {
 public:
@@ -132,36 +112,6 @@ public:
 protected:
     CvCapture* m_pCapture;
 };
-
-//--------------------------------------------------------------------
-//使用DirectShow技术的摄像机操作类videoInput。OpenCV使用的也是这个库
-// #pragma comment(lib, "3rdParty/videoInput/videoInput.lib")
-// 
-// class CVIWarpper: public ICamera
-// {
-// public:
-//     CVIWarpper();
-//     virtual ~CVIWarpper();
-// 
-//     virtual bool open(int iIndex);
-//     virtual void close();
-// 
-//     virtual bool setWidth(int iWidth);
-//     virtual bool setHeight(int iHeight);
-// 
-//     virtual int  getWidth();
-//     virtual int  getHeight();
-// 
-//     virtual IplImage* retrieveFrame();
-// 
-// protected:
-//     videoInput m_camera;
-// 
-//     int m_iIndex;
-//     IplImage* m_pFrame;
-//     int m_iWidth;
-//     int m_iHeight;
-// };
 
 //==================================================================
 ////////////////////////////////////////////////////
@@ -192,35 +142,6 @@ private:
 
 
 ////////////////////////////////////////////////////
-//摄像机管理类
-// const int CAM_NAME_LEN = 256;
-// 
-// 
-// class ICameraMgr
-// {
-// public:
-//     virtual ~ICameraMgr() {}
-// 
-//     virtual ICamera* getCamera() = 0;
-//     virtual int getCount() = 0;
-//     virtual const char* getName(int iIndex) = 0;
-// };
-
-// class CVIMgr: public ICameraMgr
-// {
-// public:
-//     static ICameraMgr* getInstance();
-//     static void destroyInstance();
-// 
-//     virtual ICamera* getCamera();
-//     virtual int getCount();
-//     virtual const char* getName(int iIndex);
-// 
-// private:
-//     char m_szName[CAM_NAME_LEN];
-//     static ICameraMgr* m_pInstance;
-// };
-
 typedef ICameraMgr* (*PGETCAMERAMGR)();//getCameraMgr
 typedef void (*PDESTROYCAMERAMGR)();//destoryCameraMgr
 
