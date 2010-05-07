@@ -23,6 +23,7 @@ private:
 };
 
 class CAnalyzer;
+class ICamera;
 
 // Obersver模式中的Subject基类
 // 注意： 类型T必须是一个指针
@@ -30,6 +31,8 @@ template<typename T>
 class CSubject
 {
     friend CAnalyzer;
+    friend ICamera;
+
 public:
     virtual ~CSubject() {}
 

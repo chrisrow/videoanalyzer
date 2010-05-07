@@ -84,11 +84,6 @@ void CVideoGraber::resume()
 
 void CVideoGraber::afterStop()
 {
-//     CVideoAnalyzerDlg *pDlg = dynamic_cast<CVideoAnalyzerDlg*>(m_pWnd);
-//     if (pDlg)
-//     {
-//         pDlg->setVideoControl(VC_CLOSE);
-//     }
 	doAfterStop();
 
     Sleep(200);
@@ -184,7 +179,33 @@ void CCameraWarpper::doRun()
     {
         return;
     }
+    
+    if (m_pCamera->isCallBackMode())
+    {
+        doCallBack();
+    }
+    else
+    {
+        doLoop();
+    }
+}
 
+void CCameraWarpper::doCallBack()
+{
+    m_eStat = STAT_RUN;
+    while(STAT_RUN == m_eStat)
+    {
+        WaitForSingleObject(m_evtPause, INFINITE); 
+
+        cvWaitKey(1);
+    }
+    m_eStat = STAT_STOPPED;
+
+    afterStop();
+}
+
+void CCameraWarpper::doLoop()
+{
     IplImage *pFrame = NULL;
 
     m_eStat = STAT_RUN;
@@ -196,11 +217,6 @@ void CCameraWarpper::doRun()
         if (!pFrame)
         {
             break;
-        }
-
-        if(ParamSet.bTransLensImage)
-        {
-            cvFlip(pFrame, NULL, 1);//Ë®Æ½¾µÏñ
         }
 
         FOR_EACH(IFrameReceiver*, updateFrame, pFrame);
