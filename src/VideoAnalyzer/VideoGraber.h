@@ -86,6 +86,10 @@ protected:
     virtual void doRun();
 	virtual void doAfterStop();
 
+    //分别为回调模式和循环模式
+    virtual void doCallBack();
+    virtual void doLoop();
+
 protected:
     ICamera* m_pCamera;
 };
