@@ -1,7 +1,7 @@
 #ifndef _VIWARPPER_H_
 #define _VIWARPPER_H_
 
-#include "CameraFactory.h"
+#include "DllMain.h"
 #include "videoInput/include/videoInput.h"
 
 #pragma comment(lib, "videoInput/videoInput.lib")
@@ -36,16 +36,17 @@ protected:
 class CVIMgr: public ICameraMgr
 {
 public:
-    static ICameraMgr* getInstance();
-    static void destroyInstance();
+    CVIMgr();
+    virtual ~CVIMgr();
 
     virtual ICamera* getCamera();
+    virtual void destroyCamera();
     virtual int getCount();
     virtual const char* getName(int iIndex);
 
 private:
     char m_szName[CAM_NAME_LEN];
-    static ICameraMgr* m_pInstance;
+    ICamera* m_pCamera;
 };
 
 #endif

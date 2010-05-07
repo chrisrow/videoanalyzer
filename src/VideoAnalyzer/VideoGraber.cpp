@@ -120,7 +120,7 @@ bool CCameraWarpper::doOpen(int iIndex)
 
     if (!m_pCamera)
     {
-        m_pCamera = getCameraMgr()->getCamera();
+        m_pCamera = CCameraDllMgr::getCameraMgr()->getCamera();
     }
 
     return m_pCamera->open(iIndex);
@@ -132,10 +132,13 @@ void CCameraWarpper::release()
     {
         m_pCamera->close();
     }
-    delete m_pCamera;
-    m_pCamera = NULL;
 
-    destoryCameraMgr();
+    CCameraDllMgr::getCameraMgr()->destroyCamera();
+//     delete m_pCamera;
+//     m_pCamera = NULL;
+
+    CCameraDllMgr::destoryCameraMgr();
+    m_pCamera = NULL;
 //     CVIMgr::destroyInstance();
 }
 
@@ -546,67 +549,60 @@ bool CVideoFile::getProperty(int iID, double& value)
 // 
 // }
 
-// typedef   int   (*SUMMARY)(int);   
-typedef ICameraMgr* (*PGETCAMERAMGR)();//getCameraMgr
-typedef void (*PDESTROYCAMERAMGR)();//getCameraMgr
+PGETCAMERAMGR CCameraDllMgr::m_pGetCameraMgr = NULL;
+PDESTROYCAMERAMGR CCameraDllMgr::m_pDestroyCameraMgr = NULL;
+HINSTANCE CCameraDllMgr::m_hIns;
 
-ICameraMgr* getCameraMgr()
+bool CCameraDllMgr::loadDll()
 {
-    static ICameraMgr* pCameraMgr = NULL;
-    if(pCameraMgr)
-    {
-        return pCameraMgr;
-    }
-
-    HINSTANCE hInst = LoadLibrary("libVideoInput.dll");
-    if(!hInst)
+    m_hIns = LoadLibrary("libVideoInput.dll");
+    if(!m_hIns)
     {
         AfxMessageBox("'libVideoInput.dll' not supported in this platform!");
-        return NULL;
+        return false;
     }
 
-    PGETCAMERAMGR pGetCameraMgr = (PGETCAMERAMGR)GetProcAddress(hInst,"getCameraMgr");
-    if(!pGetCameraMgr)
+    m_pGetCameraMgr = (PGETCAMERAMGR)GetProcAddress(m_hIns,"getCameraMgr");
+    if(!m_pGetCameraMgr)
     {
         DWORD errorCode = GetLastError();
         CString str;
         str.Format("Can't find 'getCameraMgr()' in 'libVideoInput.dll', ErrorCode = %d", errorCode);
         AfxMessageBox(str);
-        return NULL;
+        return false;
     }
 
-    pCameraMgr = pGetCameraMgr();
-    
-    return pCameraMgr;
+    m_pDestroyCameraMgr = (PDESTROYCAMERAMGR)GetProcAddress(m_hIns,"destoryCameraMgr");
+    if(!m_pDestroyCameraMgr)
+    {
+        DWORD errorCode = GetLastError();
+        CString str;
+        str.Format("Can't find 'getCameraMgr()' in 'libVideoInput.dll', ErrorCode = %d", errorCode);
+        AfxMessageBox(str);
+        return false;
+    }
+
+    return true;
 }
 
-void destoryCameraMgr()
+void CCameraDllMgr::freeDll()
 {
-    static PDESTROYCAMERAMGR pDestroyCameraMgr = NULL;
-    if(pDestroyCameraMgr)
+    FreeLibrary(m_hIns);
+}
+
+ICameraMgr* CCameraDllMgr::getCameraMgr()
+{
+    if (!m_pGetCameraMgr)
     {
-        pDestroyCameraMgr();
-        return;
+        return NULL;
     }
+    return m_pGetCameraMgr();
+}
 
-    HINSTANCE hInst = LoadLibrary("libVideoInput.dll");
-    if(!hInst)
+void CCameraDllMgr::destoryCameraMgr()
+{
+    if (m_pDestroyCameraMgr)
     {
-        AfxMessageBox("'libVideoInput.dll' not supported in this platform!");
-        return;
+        m_pDestroyCameraMgr();
     }
-
-    pDestroyCameraMgr = (PDESTROYCAMERAMGR)GetProcAddress(hInst,"destoryCameraMgr");
-    if(!pDestroyCameraMgr)
-    {
-        DWORD errorCode = GetLastError();
-        CString str;
-        str.Format("Can't find 'getCameraMgr()' in 'libVideoInput.dll', ErrorCode = %d", errorCode);
-        AfxMessageBox(str);
-        return;
-    }
-
-    pDestroyCameraMgr();
-
-    return;
 }
