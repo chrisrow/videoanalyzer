@@ -16,8 +16,8 @@
 #pragma comment(lib,"ml200.lib")
 #endif
 
-#include "Subject.h"
-#include "FrameReceiver.h"
+// #include "Subject.h"
+// #include "FrameReceiver.h"
 #include "cv.h"
 #include <vector>
 
@@ -46,13 +46,13 @@ public:
 
     //是否采用回调模式
     virtual bool isCallBackMode() { return false; }
-    //打开视频前需设置要将图像分发给谁使用
-    virtual void setFrameReceiver(CSubject<IFrameReceiver*>* pFrameReceiver) {}
-
-protected:
-
-    //将图像分发给接受者（在回调函数中调用此函数）
-    virtual void notifyFrame(IplImage* pFrame) {}
+//     //打开视频前需设置要将图像分发给谁使用
+//     virtual void setFrameReceiver(CSubject<IFrameReceiver*>* pFrameReceiver) {}
+// 
+// protected:
+// 
+//     //将图像分发给接受者（在回调函数中调用此函数）
+//     virtual void notifyFrame(IplImage* pFrame) {}
 };
 
 class ICameraMgr
@@ -60,8 +60,8 @@ class ICameraMgr
 public:
     virtual ~ICameraMgr() {}
 
-    virtual ICamera* getCamera() = 0;
-    virtual void destroyCamera() = 0;
+    virtual ICamera* createCamera() = 0;
+    virtual void destroyCamera(ICamera** pCamera) = 0;
     virtual int getCount() = 0;
     virtual const char* getName(int iIndex) = 0;
 };

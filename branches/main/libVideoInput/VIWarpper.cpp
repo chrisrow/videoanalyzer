@@ -127,20 +127,15 @@ CVIMgr::~CVIMgr()
     m_pCamera = NULL;
 }
 
-ICamera* CVIMgr::getCamera()
+ICamera* CVIMgr::createCamera()
 {
-    if (!m_pCamera)
-    {
-        m_pCamera = new CVIWarpper;
-    }
-
-    return m_pCamera;
+    return new CVIWarpper;
 }
 
-void CVIMgr::destroyCamera()
+void CVIMgr::destroyCamera(ICamera** pCamera)
 {
-    delete m_pCamera;
-    m_pCamera = NULL;
+    delete *pCamera;
+    *pCamera = NULL;
 }
 
 int CVIMgr::getCount()
