@@ -439,9 +439,13 @@ HINSTANCE CCameraDllMgr::m_hIns;
 bool CCameraDllMgr::loadDll()
 {
     m_hIns = LoadLibrary("libVideoInput.dll");
+//     m_hIns = LoadLibrary("libHikVision.dll");
     if(!m_hIns)
     {
-        AfxMessageBox("'libVideoInput.dll' not supported in this platform!");
+        DWORD errorCode = GetLastError();
+        CString str;
+        str.Format("'libVideoInput.dll' not supported, ErrorCode = %d", errorCode);
+        AfxMessageBox(str);
         return false;
     }
 
