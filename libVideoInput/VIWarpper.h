@@ -39,8 +39,8 @@ public:
     CVIMgr();
     virtual ~CVIMgr();
 
-    virtual ICamera* getCamera();
-    virtual void destroyCamera();
+    virtual ICamera* createCamera();
+    virtual void destroyCamera(ICamera** pCamera);
     virtual int getCount();
     virtual const char* getName(int iIndex);
 

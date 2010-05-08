@@ -115,7 +115,7 @@ bool CCameraWarpper::doOpen(int iIndex)
 
     if (!m_pCamera)
     {
-        m_pCamera = CCameraDllMgr::getCameraMgr()->getCamera();
+        m_pCamera = CCameraDllMgr::getCameraMgr()->createCamera();
     }
 
     return m_pCamera->open(iIndex);
@@ -126,12 +126,10 @@ void CCameraWarpper::release()
     if (m_pCamera)
     {
         m_pCamera->close();
+        CCameraDllMgr::getCameraMgr()->destroyCamera(&m_pCamera);
     }
 
-    CCameraDllMgr::getCameraMgr()->destroyCamera();
-
     CCameraDllMgr::destoryCameraMgr();
-    m_pCamera = NULL;
 }
 
 bool CCameraWarpper::setProperty(int iID, double value)
