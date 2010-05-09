@@ -15,6 +15,14 @@
 
 class CHikWarpper: public ICamera
 {
+    friend void CALLBACK VideoRealDataCB(
+        LONG      lRealHandle,
+        DWORD     dwDataType,
+        BYTE      *pBuffer,
+        DWORD     dwBufSize,
+        void      *pUser
+        );
+
 public:
     CHikWarpper();
     virtual ~CHikWarpper();
@@ -28,6 +36,7 @@ public:
     virtual int  getWidth();
     virtual int  getHeight();
 
+    virtual IplImage* retrieveFrame();
     virtual bool isCallBackMode() { return true; }
 
 protected:
@@ -37,6 +46,11 @@ protected:
     IplImage* m_pFrame;
     int m_iWidth;
     int m_iHeight;
+
+    //hik
+    LONG m_iUseID;
+    LONG m_hPlay;
+    LONG m_iPort;
 };
 
 
