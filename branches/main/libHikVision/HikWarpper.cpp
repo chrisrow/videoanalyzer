@@ -31,7 +31,7 @@ void CALLBACK VideoRealDataCB(
     CHikWarpper* pHik = (CHikWarpper*)pUser;
 
     //TODO: copy data to 
-//    BOOL result = PlayM4_GetBMP(m_iPort, PBYTE pBitmap,DWORD nBufSize,DWORD* pBmpSize);
+    //BOOL result = PlayM4_GetBMP(m_iPort, PBYTE pBitmap,DWORD nBufSize,DWORD* pBmpSize);
     pHik->m_pFrame;
 }
 
@@ -44,22 +44,24 @@ CHikWarpper::CHikWarpper()
 , m_hPlay(-1)
 , m_iPort(-1)
 {
+    NET_DVR_Init();
 }
 
 CHikWarpper::~CHikWarpper()
 {
+    if (m_iUseID != -1)
+    {
+        NET_DVR_Logout_V30(m_iUseID);
+    }
+    //释放资源
+    NET_DVR_Cleanup();
 }
 
 bool CHikWarpper::open(int iIndex)
 {
-    //初始化
-    if (!NET_DVR_Init())
-    {
-        return false;
-    }
-
     //登录
     NET_DVR_DEVICEINFO_V30 deviceInfo;
+    memset(&deviceInfo, 0, sizeof(NET_DVR_DEVICEINFO_V30));
     m_iUseID = NET_DVR_Login_V30("10.13.14.51", 8000, "admin", "admin", &deviceInfo);
     if (-1 == m_iUseID)
     {
@@ -70,7 +72,7 @@ bool CHikWarpper::open(int iIndex)
     BOOL bBlocked = FALSE;
     NET_DVR_CLIENTINFO clientInfo;
     //TODO: clientInfo
-    clientInfo.lChannel = 0;
+    clientInfo.lChannel = 1;
     m_hPlay = NET_DVR_RealPlay_V30(m_iUseID, &clientInfo, VideoRealDataCB, this, bBlocked);
     if (-1 == m_hPlay)
     {
@@ -93,8 +95,6 @@ void CHikWarpper::close()
     NET_DVR_StopRealPlay(m_hPlay);
     //登出
     NET_DVR_Logout_V30(m_iUseID);
-    //释放资源
-    NET_DVR_Cleanup();
 }
 
 IplImage* CHikWarpper::retrieveFrame()
