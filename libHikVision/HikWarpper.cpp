@@ -109,10 +109,10 @@ IplImage* CHikWarpper::retrieveFrame()
 
     //阻塞，直到m_pFrame更新
 //     DWORD result = WaitForSingleObject(hEvent, 1000);
-    if( result != WAIT_OBJECT_0) 
-    {
-        return NULL;
-    }
+//     if( result != WAIT_OBJECT_0) 
+//     {
+//         return NULL;
+//     }
 
     return m_pFrame;
 }

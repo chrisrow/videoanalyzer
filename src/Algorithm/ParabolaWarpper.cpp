@@ -83,8 +83,12 @@ ALERTTYPE CParabolaWarpper::haveAlert()
 void CParabolaWarpper::updateFrame(const IplImage *pFrame)
 {
     const IplImage* p = this->analysis(pFrame) ;
-//     if ( this->haveAlert() != AT_NONE)
-    if (m_pDetector->m_AlarmFlg)
+
+    //TODO: 这里应该显示处理后的视频
+    doReceiver(pFrame);
+
+    if ( this->haveAlert() != AT_NONE)
+//     if (m_pDetector->m_AlarmFlg)
     {
         m_pDetector->ImgMoveObjectDetect(m_pFrameContainer, m_pFrame_matlabFunced );
 

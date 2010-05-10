@@ -72,3 +72,27 @@ void CAnalyzer::doAlerter(const IplImage *pFrame)
         }
     }
 }
+
+
+//////////////////////////////////////////////////////////////////
+class CDefaultAnalyzer: public CAnalyzer
+{
+public:
+    virtual void updateFrame(const IplImage *pFrame)
+    {
+//         const IplImage* p = analysis(pFrame) ;
+        doReceiver(pFrame);
+    }
+
+    virtual const IplImage* analysis(const IplImage *pFrame)
+    {
+        return pFrame;
+    }
+
+    virtual ALERTTYPE haveAlert()  
+    {
+        return AT_NONE;
+    }
+
+};
+
