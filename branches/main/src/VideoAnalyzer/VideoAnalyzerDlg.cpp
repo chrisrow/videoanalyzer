@@ -1060,7 +1060,7 @@ void CVideoAnalyzerDlg::ResetAnalyzer()
 
     m_analyzerMgr.push_back(CAnalyzerMgr(new CPersonWarpper, new CDlgPersonCfg, "人员检测"));
     m_analyzerMgr.push_back(CAnalyzerMgr(new CParabolaWarpper, new CDlgSetting, "抛物检测"));
-    m_analyzerMgr.push_back(CAnalyzerMgr(NULL, NULL, "无"));
+    m_analyzerMgr.push_back(CAnalyzerMgr(new CDefaultAnalyzer, NULL, "无"));
     for (unsigned i = 0; i < m_analyzerMgr.size(); i++)
     {
         m_cbAnalyzer.InsertString(i, m_analyzerMgr[i].pComment);
