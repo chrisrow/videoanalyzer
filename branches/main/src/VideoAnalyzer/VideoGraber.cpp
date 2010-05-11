@@ -438,8 +438,8 @@ HINSTANCE CCameraDllMgr::m_hIns;
 
 bool CCameraDllMgr::loadDll()
 {
-//     m_hIns = LoadLibrary("libVideoInput.dll");
-    m_hIns = LoadLibrary("libHikVision.dll");
+    m_hIns = LoadLibrary("libVideoInput.dll");
+//     m_hIns = LoadLibrary("libHikVision.dll");
     if(!m_hIns)
     {
         DWORD errorCode = GetLastError();

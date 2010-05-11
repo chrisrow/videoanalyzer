@@ -86,8 +86,8 @@ protected:
     bool openSource(TVideoSource& tSource);
     void closeSource();
 
-    bool startRecord(const char* szFileName);
-    void stopRecord();
+//     bool startRecord(const char* szFileName);
+//     void stopRecord();
 
     bool loadConfig();
     bool saveConfig();
@@ -104,7 +104,7 @@ protected:
     CAnalyzer* m_pAnalyzer;
     CDialog* m_pDlgCfg;
     IAlerter* m_pUDPAlerter;
-    CVideoRecorder* m_pVideoRecoder;
+//     CVideoRecorder* m_pVideoRecoder;
     CHeartBeat* m_pHeartBeat;
 
     CTimer m_timer;
@@ -133,7 +133,7 @@ protected:
     CEdit m_edtFrameRate;
     CEdit m_edtStartFrame;
     CEdit m_edtStartTime;
-    CEdit m_edtRecPath;
+//     CEdit m_edtRecPath;
     CStatic m_txtCurrentFrame;
     CStatic m_txtAlert;
     CListCtrl m_lstStatus;
@@ -168,6 +168,6 @@ public:
     afx_msg void OnClose();
     afx_msg void OnEnSetfocusEditStartFrame();
     afx_msg void OnEnSetfocusEditStartTime();
-    afx_msg void OnBnClickedButtonRecOpen();
-    afx_msg void OnBnClickedButtonRecStart();
+//    afx_msg void OnBnClickedButtonRecOpen();
+//    afx_msg void OnBnClickedButtonRecStart();
 };

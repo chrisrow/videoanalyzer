@@ -36,6 +36,7 @@
 #define IDC_STATIC_CURRENT_FRAME        1021
 #define IDC_STATIC_CURRENT_FRAME2       1022
 #define IDC_STATIC_STATUS               1022
+#define IDC_CHECK_PREVIEW2              1022
 #define IDC_BUTTON1                     1023
 #define IDC_BUTTON_APPLY_FR             1023
 #define IDC_BUTTON_CLEAR                1023

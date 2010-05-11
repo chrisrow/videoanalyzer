@@ -78,7 +78,7 @@ CVideoAnalyzerDlg::CVideoAnalyzerDlg(CWnd* pParent /*=NULL*/)
     m_uCurrentFrame = 0;
     m_uAlert = 0;
     m_bRecord = false;
-    m_pVideoRecoder = NULL;
+//     m_pVideoRecoder = NULL;
     m_pHeartBeat = NULL;
     m_iWidth = 352;
     m_iHeight = 288;
@@ -87,8 +87,10 @@ CVideoAnalyzerDlg::CVideoAnalyzerDlg(CWnd* pParent /*=NULL*/)
 void CVideoAnalyzerDlg::DoDataExchange(CDataExchange* pDX)
 {
     CDialog::DoDataExchange(pDX);
-    DDX_Control(pDX, IDC_CHECK_PREVIEW, m_chkPreview);
     DDX_Control(pDX, IDC_COMBO_CAMERA, m_cbCamera);
+    DDX_Control(pDX, IDC_COMBO_AYALYZER, m_cbAnalyzer);
+    DDX_Control(pDX, IDC_COMBO_CONFIG_FILE, m_cbConfigFile);
+    DDX_Control(pDX, IDC_COMBO_CHANNEL, m_cbChannel);
     DDX_Control(pDX, IDC_VIDEO, m_ctlVideo);
     DDX_Control(pDX, IDC_EDIT_WIDTH, m_edtWidth);
     DDX_Control(pDX, IDC_EDIT_HEIGHT, m_edtHeight);
@@ -96,15 +98,13 @@ void CVideoAnalyzerDlg::DoDataExchange(CDataExchange* pDX)
     DDX_Control(pDX, IDC_EDIT_START_FRAME, m_edtStartFrame);
     DDX_Control(pDX, IDC_EDIT_START_TIME, m_edtStartTime);
     DDX_Control(pDX, IDC_BUTTON_PAUSE, m_btnPause);
-    DDX_Control(pDX, IDC_STATIC_CURRENT_FRAME, m_txtCurrentFrame);
-    DDX_Control(pDX, IDC_CHECK_DEBUG, m_chkDebug);
     DDX_Control(pDX, IDC_BUTTON_RESTART, m_btnRestart);
-    DDX_Control(pDX, IDC_COMBO_AYALYZER, m_cbAnalyzer);
+    DDX_Control(pDX, IDC_STATIC_CURRENT_FRAME, m_txtCurrentFrame);
     DDX_Control(pDX, IDC_STATIC_CURRENT_ALERT, m_txtAlert);
+    DDX_Control(pDX, IDC_CHECK_DEBUG, m_chkDebug);
+    DDX_Control(pDX, IDC_CHECK_PREVIEW, m_chkPreview);
     DDX_Control(pDX, IDC_LIST_STATUS, m_lstStatus);
-    DDX_Control(pDX, IDC_COMBO_CONFIG_FILE, m_cbConfigFile);
-    DDX_Control(pDX, IDC_COMBO_CHANNEL, m_cbChannel);
-    DDX_Control(pDX, IDC_EDIT_REC_PATH, m_edtRecPath);
+//     DDX_Control(pDX, IDC_EDIT_REC_PATH, m_edtRecPath);
 }
 
 BEGIN_MESSAGE_MAP(CVideoAnalyzerDlg, CDialog)
@@ -125,8 +125,8 @@ BEGIN_MESSAGE_MAP(CVideoAnalyzerDlg, CDialog)
     ON_BN_CLICKED(IDC_BUTTON_APPLY_FR, &CVideoAnalyzerDlg::OnBnClickedButtonApplyFr)
     ON_BN_CLICKED(IDC_BUTTON_SETUP, &CVideoAnalyzerDlg::OnBnClickedButtonSetup)
     ON_BN_CLICKED(IDC_CHECK_DEBUG, &CVideoAnalyzerDlg::OnBnClickedCheckDebug)
-    ON_BN_CLICKED(IDC_BUTTON_REC_OPEN, &CVideoAnalyzerDlg::OnBnClickedButtonRecOpen)
-    ON_BN_CLICKED(IDC_BUTTON_REC_START, &CVideoAnalyzerDlg::OnBnClickedButtonRecStart)
+//    ON_BN_CLICKED(IDC_BUTTON_REC_OPEN, &CVideoAnalyzerDlg::OnBnClickedButtonRecOpen)
+//    ON_BN_CLICKED(IDC_BUTTON_REC_START, &CVideoAnalyzerDlg::OnBnClickedButtonRecStart)
     ON_MESSAGE(WM_VIDEO_END, OnMsgVideoEnd)
     ON_NOTIFY(NM_RCLICK, IDC_LIST_STATUS, &CVideoAnalyzerDlg::OnNMRClickListStatus)
     ON_COMMAND(ID_MENU_CLEAR, &CVideoAnalyzerDlg::OnMenuClear)
@@ -234,7 +234,7 @@ BOOL CVideoAnalyzerDlg::OnInitDialog()
     }
     m_cbChannel.SetCurSel(0);
 
-    m_edtRecPath.SetWindowText("f:\\0.avi");
+//     m_edtRecPath.SetWindowText("f:\\0.avi");
 
     this->loadConfig();
 
@@ -822,10 +822,10 @@ void CVideoAnalyzerDlg::closeSource()
         m_pVideoGraber->close();
     }
 
-    if (m_pVideoRecoder)
-    {
-        m_pVideoRecoder->stop();
-    }
+//     if (m_pVideoRecoder)
+//     {
+//         m_pVideoRecoder->stop();
+//     }
 
     if (m_pHeartBeat)
     {
@@ -889,9 +889,9 @@ void CVideoAnalyzerDlg::OnCbnSelchangeComboCamera()
 
     this->OnBnClickedButtonRestart();
 
-    CString str;
-    str.Format("f:\\%d.avi", m_tSource.iCamID);
-    m_edtRecPath.SetWindowText(str);
+//     CString str;
+//     str.Format("f:\\%d.avi", m_tSource.iCamID);
+//     m_edtRecPath.SetWindowText(str);
 }
 
 void CVideoAnalyzerDlg::OnBnClickedButtonOpenFile()
@@ -993,8 +993,8 @@ void CVideoAnalyzerDlg::OnClose()
         }
         m_analyzerMgr.clear();
 
-        delete m_pVideoRecoder;
-        m_pVideoRecoder = NULL;
+//         delete m_pVideoRecoder;
+//         m_pVideoRecoder = NULL;
 
         delete m_pHeartBeat;
         m_pHeartBeat = NULL;
@@ -1264,85 +1264,85 @@ void CVideoAnalyzerDlg::OnEnSetfocusEditStartTime()
 }
 
 
-void CVideoAnalyzerDlg::OnBnClickedButtonRecOpen()
-{
-    CFileDialog	FileDlg(FALSE, "avi", NULL, OFN_HIDEREADONLY, 
-        "视频文件 (*.avi)|*.avi||");
-    if (FileDlg.DoModal() == IDOK)	
-    {
-        m_edtRecPath.SetWindowText(FileDlg.GetPathName());
-    }
-}
+//void CVideoAnalyzerDlg::OnBnClickedButtonRecOpen()
+//{
+//    CFileDialog	FileDlg(FALSE, "avi", NULL, OFN_HIDEREADONLY, 
+//        "视频文件 (*.avi)|*.avi||");
+//    if (FileDlg.DoModal() == IDOK)	
+//    {
+//        m_edtRecPath.SetWindowText(FileDlg.GetPathName());
+//    }
+//}
 
-void CVideoAnalyzerDlg::OnBnClickedButtonRecStart()
-{
-    if (m_bRecord) //正在录，停止
-    {
-        this->stopRecord();
+//void CVideoAnalyzerDlg::OnBnClickedButtonRecStart()
+//{
+//    if (m_bRecord) //正在录，停止
+//    {
+//        this->stopRecord();
+//
+//        m_bRecord = false;
+//        m_edtRecPath.EnableWindow(TRUE);
+//        GetDlgItem(IDC_BUTTON_REC_OPEN)->EnableWindow(TRUE);
+//        GetDlgItem(IDC_BUTTON_REC_START)->SetWindowText("开始");
+//        this->AddRunStatus("录像停止");
+//    } 
+//    else //没有录，开始录像
+//    {
+//        CString strRecPath;
+//        m_edtRecPath.GetWindowText(strRecPath);
+//        if (strRecPath.IsEmpty())
+//        {
+//            AfxMessageBox("文件名为空");
+//            return;
+//        }
+//
+//        if (!this->startRecord((LPCTSTR)strRecPath))
+//        {
+//            return;
+//        }
+//        m_bRecord = true;
+//        m_edtRecPath.EnableWindow(FALSE);
+//        GetDlgItem(IDC_BUTTON_REC_OPEN)->EnableWindow(FALSE);
+//        GetDlgItem(IDC_BUTTON_REC_START)->SetWindowText("停止");
+//        this->AddRunStatus("录像开始：%s", (LPCSTR)strRecPath);
+//    }
+//}
 
-        m_bRecord = false;
-        m_edtRecPath.EnableWindow(TRUE);
-        GetDlgItem(IDC_BUTTON_REC_OPEN)->EnableWindow(TRUE);
-        GetDlgItem(IDC_BUTTON_REC_START)->SetWindowText("开始");
-        this->AddRunStatus("录像停止");
-    } 
-    else //没有录，开始录像
-    {
-        CString strRecPath;
-        m_edtRecPath.GetWindowText(strRecPath);
-        if (strRecPath.IsEmpty())
-        {
-            AfxMessageBox("文件名为空");
-            return;
-        }
-
-        if (!this->startRecord((LPCTSTR)strRecPath))
-        {
-            return;
-        }
-        m_bRecord = true;
-        m_edtRecPath.EnableWindow(FALSE);
-        GetDlgItem(IDC_BUTTON_REC_OPEN)->EnableWindow(FALSE);
-        GetDlgItem(IDC_BUTTON_REC_START)->SetWindowText("停止");
-        this->AddRunStatus("录像开始：%s", (LPCSTR)strRecPath);
-    }
-}
-
-bool CVideoAnalyzerDlg::startRecord(const char* szFileName)
-{
-    if (!m_pVideoGraber)
-    {
-        this->AddRunStatus("启动录像失败：视频未启动");
-        return false;
-    }
-
-    if (m_pVideoRecoder)
-    {
-        m_pVideoRecoder->stop();
-        delete m_pVideoRecoder;
-    }
-
-    bool bResult = false;
-    m_pVideoRecoder = new CVideoRecorder;
-    m_pVideoRecoder->setResolution(m_iWidth, m_iHeight);
-    if (m_pVideoRecoder->start(szFileName))
-    {
-        m_pVideoGraber->addListener(m_pVideoRecoder);
-        bResult = true;
-    }
-    else
-    {
-        this->AddRunStatus("启动录像失败");
-        bResult = false;
-    }
-
-    return bResult;
-}
-
-void CVideoAnalyzerDlg::stopRecord()
-{
-    if (m_pVideoGraber)
-    {
-        m_pVideoGraber->removeListener(m_pVideoRecoder);
-    }
-}
+// bool CVideoAnalyzerDlg::startRecord(const char* szFileName)
+// {
+//     if (!m_pVideoGraber)
+//     {
+//         this->AddRunStatus("启动录像失败：视频未启动");
+//         return false;
+//     }
+// 
+//     if (m_pVideoRecoder)
+//     {
+//         m_pVideoRecoder->stop();
+//         delete m_pVideoRecoder;
+//     }
+// 
+//     bool bResult = false;
+//     m_pVideoRecoder = new CVideoRecorder;
+//     m_pVideoRecoder->setResolution(m_iWidth, m_iHeight);
+//     if (m_pVideoRecoder->start(szFileName))
+//     {
+//         m_pVideoGraber->addListener(m_pVideoRecoder);
+//         bResult = true;
+//     }
+//     else
+//     {
+//         this->AddRunStatus("启动录像失败");
+//         bResult = false;
+//     }
+// 
+//     return bResult;
+// }
+// 
+// void CVideoAnalyzerDlg::stopRecord()
+// {
+//     if (m_pVideoGraber)
+//     {
+//         m_pVideoGraber->removeListener(m_pVideoRecoder);
+//     }
+// }
