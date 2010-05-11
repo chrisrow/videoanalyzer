@@ -116,7 +116,7 @@ protected:
     bool m_bPause;
     unsigned int m_uCurrentFrame;
     unsigned int m_uAlert;
-    bool m_bRecord;
+//     bool m_bRecord;
     std::vector<CAnalyzerMgr> m_analyzerMgr;
 
     CButton m_btnRestart;
