@@ -77,8 +77,6 @@ CVideoAnalyzerDlg::CVideoAnalyzerDlg(CWnd* pParent /*=NULL*/)
     m_bPause = false;
     m_uCurrentFrame = 0;
     m_uAlert = 0;
-//     m_bRecord = false;
-//     m_pVideoRecoder = NULL;
     m_pHeartBeat = NULL;
     m_iWidth = 352;
     m_iHeight = 288;
@@ -90,13 +88,11 @@ void CVideoAnalyzerDlg::DoDataExchange(CDataExchange* pDX)
     DDX_Control(pDX, IDC_COMBO_CAMERA, m_cbCamera);
     DDX_Control(pDX, IDC_COMBO_AYALYZER, m_cbAnalyzer);
     DDX_Control(pDX, IDC_COMBO_CONFIG_FILE, m_cbConfigFile);
-    DDX_Control(pDX, IDC_COMBO_CHANNEL, m_cbChannel);
     DDX_Control(pDX, IDC_VIDEO, m_ctlVideo);
     DDX_Control(pDX, IDC_EDIT_WIDTH, m_edtWidth);
     DDX_Control(pDX, IDC_EDIT_HEIGHT, m_edtHeight);
     DDX_Control(pDX, IDC_EDIT_FRAME_RATE, m_edtFrameRate);
     DDX_Control(pDX, IDC_EDIT_START_FRAME, m_edtStartFrame);
-    DDX_Control(pDX, IDC_EDIT_START_TIME, m_edtStartTime);
     DDX_Control(pDX, IDC_BUTTON_PAUSE, m_btnPause);
     DDX_Control(pDX, IDC_BUTTON_RESTART, m_btnRestart);
     DDX_Control(pDX, IDC_STATIC_CURRENT_FRAME, m_txtCurrentFrame);
@@ -104,7 +100,7 @@ void CVideoAnalyzerDlg::DoDataExchange(CDataExchange* pDX)
     DDX_Control(pDX, IDC_CHECK_DEBUG, m_chkDebug);
     DDX_Control(pDX, IDC_CHECK_PREVIEW, m_chkPreview);
     DDX_Control(pDX, IDC_LIST_STATUS, m_lstStatus);
-//     DDX_Control(pDX, IDC_EDIT_REC_PATH, m_edtRecPath);
+    DDX_Control(pDX, IDC_CHECK_START_FRAME, m_chkStartFrame);
 }
 
 BEGIN_MESSAGE_MAP(CVideoAnalyzerDlg, CDialog)
@@ -125,14 +121,11 @@ BEGIN_MESSAGE_MAP(CVideoAnalyzerDlg, CDialog)
     ON_BN_CLICKED(IDC_BUTTON_APPLY_FR, &CVideoAnalyzerDlg::OnBnClickedButtonApplyFr)
     ON_BN_CLICKED(IDC_BUTTON_SETUP, &CVideoAnalyzerDlg::OnBnClickedButtonSetup)
     ON_BN_CLICKED(IDC_CHECK_DEBUG, &CVideoAnalyzerDlg::OnBnClickedCheckDebug)
-//    ON_BN_CLICKED(IDC_BUTTON_REC_OPEN, &CVideoAnalyzerDlg::OnBnClickedButtonRecOpen)
-//    ON_BN_CLICKED(IDC_BUTTON_REC_START, &CVideoAnalyzerDlg::OnBnClickedButtonRecStart)
     ON_MESSAGE(WM_VIDEO_END, OnMsgVideoEnd)
     ON_NOTIFY(NM_RCLICK, IDC_LIST_STATUS, &CVideoAnalyzerDlg::OnNMRClickListStatus)
     ON_COMMAND(ID_MENU_CLEAR, &CVideoAnalyzerDlg::OnMenuClear)
     ON_WM_CLOSE()
-    ON_EN_SETFOCUS(IDC_EDIT_START_FRAME, &CVideoAnalyzerDlg::OnEnSetfocusEditStartFrame)
-    ON_EN_SETFOCUS(IDC_EDIT_START_TIME, &CVideoAnalyzerDlg::OnEnSetfocusEditStartTime)
+    ON_BN_CLICKED(IDC_CHECK_START_FRAME, &CVideoAnalyzerDlg::OnBnClickedCheckStartFrame)
 END_MESSAGE_MAP()
 
 
@@ -196,7 +189,10 @@ BOOL CVideoAnalyzerDlg::OnInitDialog()
     m_edtWidth.SetWindowText(strWidth);
     m_edtHeight.SetWindowText(strHeight);
     m_edtFrameRate.SetWindowText(strFR);
+    m_chkStartFrame.SetCheck(0);
+    m_edtStartFrame.EnableWindow(FALSE);
     m_ctlVideo.SetWindowPos(NULL, 0, 0, m_iWidth, m_iHeight, SWP_NOMOVE | SWP_NOZORDER);
+    
 
     //选择摄像机
     OnCbnDropdownComboCamera();
@@ -226,15 +222,6 @@ BOOL CVideoAnalyzerDlg::OnInitDialog()
 
     m_cbConfigFile.AddString((LPCTSTR)strConfigFile);
     m_cbConfigFile.SetCurSel(0);
-    for (int i = 0; i < 9; i++)
-    {
-        CString str;
-        str.Format("%d", i);
-        m_cbChannel.AddString(str);
-    }
-    m_cbChannel.SetCurSel(0);
-
-//     m_edtRecPath.SetWindowText("f:\\0.avi");
 
     this->loadConfig();
 
@@ -329,11 +316,14 @@ void CVideoAnalyzerDlg::updateFrame(const IplImage *pFrame)
 {
     m_uCurrentFrame++;
 
-    CString str;
+    static CString str;
     str.Format("%u", m_uCurrentFrame);
     m_txtCurrentFrame.SetWindowText(str);
 
-    m_ctlVideo.showImage(pFrame);
+    if (m_chkPreview.GetCheck())
+    {
+        m_ctlVideo.showImage(pFrame);
+    }
 }
 
 bool CVideoAnalyzerDlg::CreateMultipleDirectory(const CString& szPath)
@@ -406,7 +396,7 @@ void CVideoAnalyzerDlg::alert(const IplImage *pFrame)
     }
     else
     {
-        iChannel = m_cbChannel.GetCurSel();
+        iChannel = 0; //m_cbChannel.GetCurSel();
     }
 
     if (iChannel < 0)
@@ -415,8 +405,7 @@ void CVideoAnalyzerDlg::alert(const IplImage *pFrame)
     }
 
     //保存图片
-    CString strFile, strChannel;
-    m_cbChannel.GetWindowText(strChannel);
+    CString strFile;
     strFile.Format("%s/%d月%d日/%d_%d_%d_%d.jpg",
         g_commParam.szImagePath,
         Systemtime.wMonth,Systemtime.wDay,
@@ -435,27 +424,14 @@ void CVideoAnalyzerDlg::alert(const IplImage *pFrame)
     }
 
     //列表框提示
-    this->AddRunStatus("第%d帧触发警报(%s_%d_%d_%d.jpg)", 
-        m_uCurrentFrame,(LPCTSTR)strChannel,
+    this->AddRunStatus("第%d帧触发警报(%d_%d_%d_%d.jpg)", 
+        m_uCurrentFrame, iChannel,
         Systemtime.wHour, Systemtime.wMinute, Systemtime.wSecond);
 
 }
 
 void CVideoAnalyzerDlg::OnBnClickedCheckPreview()
 {
-    if (m_pAnalyzer)
-    {
-        if (m_chkPreview.GetCheck())
-        {
-//             m_pVideoGraber->addListener(this);
-            m_pAnalyzer->addReceiver(this);
-        } 
-        else
-        {
-//             m_pVideoGraber->removeListener(this);
-            m_pAnalyzer->removeReceiver(this);
-        }
-    }
     ExpandDialog (IDC_VIDEO, m_chkPreview.GetCheck());
 }
 
@@ -634,6 +610,17 @@ bool CVideoAnalyzerDlg::autoStart()
     return true;
 }
 
+void CVideoAnalyzerDlg::OnBnClickedCheckStartFrame()
+{
+    if (m_chkStartFrame.GetCheck())
+    {
+        m_edtStartFrame.EnableWindow(TRUE);
+    }
+    else
+    {
+        m_edtStartFrame.EnableWindow(FALSE);
+    }
+}
 
 bool CVideoAnalyzerDlg::openSource(TVideoSource& tSource)
 {
@@ -647,7 +634,6 @@ bool CVideoAnalyzerDlg::openSource(TVideoSource& tSource)
         CString tmp;
         tmp.Format("Camera %d ", tSource.iCamID);
 		strWndCaption = tmp + strWndCaption; 
-        //strWndCaption += tmp;
         SetWindowText(strWndCaption);
 
         this->AddRunStatus("打开摄像机 %d", tSource.iCamID);
@@ -673,18 +659,14 @@ bool CVideoAnalyzerDlg::openSource(TVideoSource& tSource)
         return false;
     }
 
-    //设置视频显示
-//     m_pVideoGraber->addListener(this);
-
     //设置视频属性
-    double dWidth, dHeight, dFrameRate, dStartFrame, dStartTime;
+    double dWidth, dHeight, dFrameRate, dStartFrame;
     CString strWidth, strHeight, strFrameRate, strStartFrame, strStartTime;
 
     m_edtWidth.GetWindowText(strWidth);
     m_edtHeight.GetWindowText(strHeight);
     m_edtFrameRate.GetWindowText(strFrameRate);
     m_edtStartFrame.GetWindowText(strStartFrame);
-    m_edtStartTime.GetWindowText(strStartTime);
 
     m_iWidth = atoi((LPCTSTR)strWidth);
     m_iHeight = atoi((LPCTSTR)strHeight);
@@ -692,7 +674,6 @@ bool CVideoAnalyzerDlg::openSource(TVideoSource& tSource)
     dHeight = m_iHeight;
     dFrameRate = atoi((LPCTSTR)strFrameRate);
     dStartFrame = atoi((LPCTSTR)strStartFrame);
-    dStartTime = atoi((LPCTSTR)strStartTime);
 
     m_pVideoGraber->setProperty(PROP_WIDTH, dWidth);
     m_pVideoGraber->setProperty(PROP_HEITHT, dHeight);
@@ -710,32 +691,18 @@ bool CVideoAnalyzerDlg::openSource(TVideoSource& tSource)
     m_edtHeight.SetWindowText(strHeight);
 
     m_uCurrentFrame = 0;
-    if (TYPE_FILE == tSource.eType)
+    if (TYPE_FILE == tSource.eType && m_chkStartFrame.GetCheck() && dStartFrame >= 1)
     {
-        int iRadioCtrlID = GetCheckedRadioButton(IDC_RADIO_START_FRAME, IDC_RADIO_START_TIME);
-        if (IDC_RADIO_START_FRAME == iRadioCtrlID)
-        {
-            dStartTime = 0;
-            m_pVideoGraber->setProperty(PROP_POS_FRAME, dStartFrame);
-        } 
-        else if(IDC_RADIO_START_TIME == iRadioCtrlID)
-        {
-            dStartFrame = 0;
-            m_pVideoGraber->setProperty(PROP_POS_MSEC, dStartTime);
-        }
-
-        if (iRadioCtrlID != 0 && (dStartFrame > 0.1 || dStartTime > 0.0001))
-        {
-            m_pVideoGraber->pause();
-            m_btnPause.SetWindowText("继续");
-            m_bPause = true;
-            m_uCurrentFrame = (unsigned int)(dStartFrame-1);
-        }
-        else
-        {
-            m_btnPause.SetWindowText("暂停");
-            m_bPause = false;
-        }
+        m_pVideoGraber->setProperty(PROP_POS_FRAME, dStartFrame);
+        m_pVideoGraber->pause();
+        m_btnPause.SetWindowText("继续");
+        m_bPause = true;
+        m_uCurrentFrame = (unsigned int)(dStartFrame - 1);
+    }
+    else
+    {
+        m_btnPause.SetWindowText("暂停");
+        m_bPause = false;
     }
 
     m_uAlert = 0;
@@ -757,7 +724,7 @@ bool CVideoAnalyzerDlg::openSource(TVideoSource& tSource)
     }
     else
     {
-        iChannel = m_cbChannel.GetCurSel();
+        iChannel = 0; //m_cbChannel.GetCurSel();
     }
 
     //心跳
@@ -796,14 +763,7 @@ bool CVideoAnalyzerDlg::openSource(TVideoSource& tSource)
     }
     if (m_pAnalyzer)
     {
-//         m_pAnalyzer->addListener(m_pUDPAlerter);
         ADD_LISTENER(IAlerter*, m_pAnalyzer, m_pUDPAlerter);
-//         CSubject<IAlerter*>* ptr = dynamic_cast<CSubject<IAlerter*>*>(m_pAnalyzer);
-//         if (ptr)
-//         {
-//             ptr->addListener(m_pUDPAlerter);
-//         }
-
     }
 
     INIT_IMAGE();
@@ -822,11 +782,6 @@ void CVideoAnalyzerDlg::closeSource()
         m_pVideoGraber->close();
     }
 
-//     if (m_pVideoRecoder)
-//     {
-//         m_pVideoRecoder->stop();
-//     }
-
     if (m_pHeartBeat)
     {
         m_pHeartBeat->destroy();
@@ -841,7 +796,7 @@ void CVideoAnalyzerDlg::setVideoControl(VIDEO_CONTROL c)
 
 void CVideoAnalyzerDlg::OnCbnDropdownComboCamera()
 {
-    ICameraMgr* pCameraMgr = CCameraDllMgr::getCameraMgr();//new CVIMgr;
+    ICameraMgr* pCameraMgr = CCameraDllMgr::getCameraMgr();
     if(!pCameraMgr)
     {
         return;
@@ -877,9 +832,6 @@ void CVideoAnalyzerDlg::OnCbnDropdownComboCamera()
             m_cbCamera.SetCurSel(0);
         }
     }
-
-//     delete pCameraMgr;
-//     pCameraMgr = NULL;
 }
 
 void CVideoAnalyzerDlg::OnCbnSelchangeComboCamera()
@@ -888,10 +840,6 @@ void CVideoAnalyzerDlg::OnCbnSelchangeComboCamera()
     m_tSource.iCamID = m_cbCamera.GetCurSel();
 
     this->OnBnClickedButtonRestart();
-
-//     CString str;
-//     str.Format("f:\\%d.avi", m_tSource.iCamID);
-//     m_edtRecPath.SetWindowText(str);
 }
 
 void CVideoAnalyzerDlg::OnBnClickedButtonOpenFile()
@@ -993,9 +941,6 @@ void CVideoAnalyzerDlg::OnClose()
         }
         m_analyzerMgr.clear();
 
-//         delete m_pVideoRecoder;
-//         m_pVideoRecoder = NULL;
-
         delete m_pHeartBeat;
         m_pHeartBeat = NULL;
 
@@ -1087,9 +1032,6 @@ void CVideoAnalyzerDlg::OnCbnSelchangeComboAyalyzer()
 
     if (m_pAnalyzer)
     {
-//         ADD_LISTENER(IFrameReceiver*, m_pAnalyzer, this);
-//         ADD_LISTENER(IAlerter*, m_pAnalyzer, this);
-//        m_pAnalyzer->addListener(this);
         m_pAnalyzer->addReceiver(this);
         m_pAnalyzer->addAlerter(this);
         if (m_pVideoGraber)
@@ -1172,12 +1114,10 @@ void CVideoAnalyzerDlg::OnBnClickedButtonSetup()
 bool CVideoAnalyzerDlg::loadConfig()
 {
     CString strConfigFile;
-    CString strChannel;
     int iChannel = 0;
+
     m_cbConfigFile.GetWindowText(strConfigFile);
-    m_cbChannel.GetWindowText(strChannel);
     strConfigFile = m_strAppPath + "\\" + strConfigFile;
-    iChannel = atoi((LPCTSTR)strChannel);
 
     if (!m_cfgParse.Load((LPCTSTR)strConfigFile))
     {
@@ -1211,12 +1151,10 @@ bool CVideoAnalyzerDlg::saveConfig()
 {
     //保存参数到xml
     CString strConfigFile;
-    CString strChannel;
     int iChannel = 0;
+
     m_cbConfigFile.GetWindowText(strConfigFile);
-    m_cbChannel.GetWindowText(strChannel);
     strConfigFile = m_strAppPath + "\\" + strConfigFile;
-    iChannel = atoi((LPCTSTR)strChannel);
 
     //抛物
     if (!m_cfgParse.SaveChannel(iChannel, ParamSet, ParamDsting))
@@ -1253,96 +1191,3 @@ void CVideoAnalyzerDlg::OnBnClickedCheckDebug()
     }
 }
 
-void CVideoAnalyzerDlg::OnEnSetfocusEditStartFrame()
-{
-    CheckRadioButton(IDC_RADIO_START_FRAME, IDC_RADIO_START_TIME, IDC_RADIO_START_FRAME);
-}
-
-void CVideoAnalyzerDlg::OnEnSetfocusEditStartTime()
-{
-    CheckRadioButton(IDC_RADIO_START_FRAME, IDC_RADIO_START_TIME, IDC_RADIO_START_TIME);
-}
-
-
-//void CVideoAnalyzerDlg::OnBnClickedButtonRecOpen()
-//{
-//    CFileDialog	FileDlg(FALSE, "avi", NULL, OFN_HIDEREADONLY, 
-//        "视频文件 (*.avi)|*.avi||");
-//    if (FileDlg.DoModal() == IDOK)	
-//    {
-//        m_edtRecPath.SetWindowText(FileDlg.GetPathName());
-//    }
-//}
-
-//void CVideoAnalyzerDlg::OnBnClickedButtonRecStart()
-//{
-//    if (m_bRecord) //正在录，停止
-//    {
-//        this->stopRecord();
-//
-//        m_bRecord = false;
-//        m_edtRecPath.EnableWindow(TRUE);
-//        GetDlgItem(IDC_BUTTON_REC_OPEN)->EnableWindow(TRUE);
-//        GetDlgItem(IDC_BUTTON_REC_START)->SetWindowText("开始");
-//        this->AddRunStatus("录像停止");
-//    } 
-//    else //没有录，开始录像
-//    {
-//        CString strRecPath;
-//        m_edtRecPath.GetWindowText(strRecPath);
-//        if (strRecPath.IsEmpty())
-//        {
-//            AfxMessageBox("文件名为空");
-//            return;
-//        }
-//
-//        if (!this->startRecord((LPCTSTR)strRecPath))
-//        {
-//            return;
-//        }
-//        m_bRecord = true;
-//        m_edtRecPath.EnableWindow(FALSE);
-//        GetDlgItem(IDC_BUTTON_REC_OPEN)->EnableWindow(FALSE);
-//        GetDlgItem(IDC_BUTTON_REC_START)->SetWindowText("停止");
-//        this->AddRunStatus("录像开始：%s", (LPCSTR)strRecPath);
-//    }
-//}
-
-// bool CVideoAnalyzerDlg::startRecord(const char* szFileName)
-// {
-//     if (!m_pVideoGraber)
-//     {
-//         this->AddRunStatus("启动录像失败：视频未启动");
-//         return false;
-//     }
-// 
-//     if (m_pVideoRecoder)
-//     {
-//         m_pVideoRecoder->stop();
-//         delete m_pVideoRecoder;
-//     }
-// 
-//     bool bResult = false;
-//     m_pVideoRecoder = new CVideoRecorder;
-//     m_pVideoRecoder->setResolution(m_iWidth, m_iHeight);
-//     if (m_pVideoRecoder->start(szFileName))
-//     {
-//         m_pVideoGraber->addListener(m_pVideoRecoder);
-//         bResult = true;
-//     }
-//     else
-//     {
-//         this->AddRunStatus("启动录像失败");
-//         bResult = false;
-//     }
-// 
-//     return bResult;
-// }
-// 
-// void CVideoAnalyzerDlg::stopRecord()
-// {
-//     if (m_pVideoGraber)
-//     {
-//         m_pVideoGraber->removeListener(m_pVideoRecoder);
-//     }
-// }

@@ -86,9 +86,6 @@ protected:
     bool openSource(TVideoSource& tSource);
     void closeSource();
 
-//     bool startRecord(const char* szFileName);
-//     void stopRecord();
-
     bool loadConfig();
     bool saveConfig();
 
@@ -104,7 +101,6 @@ protected:
     CAnalyzer* m_pAnalyzer;
     CDialog* m_pDlgCfg;
     IAlerter* m_pUDPAlerter;
-//     CVideoRecorder* m_pVideoRecoder;
     CHeartBeat* m_pHeartBeat;
 
     CTimer m_timer;
@@ -116,24 +112,21 @@ protected:
     bool m_bPause;
     unsigned int m_uCurrentFrame;
     unsigned int m_uAlert;
-//     bool m_bRecord;
     std::vector<CAnalyzerMgr> m_analyzerMgr;
 
     CButton m_btnRestart;
     CButton m_btnPause;
+    CButton m_chkStartFrame;
     CButton m_chkPreview;
     CButton m_chkDebug;
     CComboBox m_cbCamera;
     CComboBox m_cbAnalyzer;
     CComboBox m_cbConfigFile;
-    CComboBox m_cbChannel;
     CPreviewStatic m_ctlVideo;
     CEdit m_edtWidth;
     CEdit m_edtHeight;
     CEdit m_edtFrameRate;
     CEdit m_edtStartFrame;
-    CEdit m_edtStartTime;
-//     CEdit m_edtRecPath;
     CStatic m_txtCurrentFrame;
     CStatic m_txtAlert;
     CListCtrl m_lstStatus;
@@ -166,8 +159,5 @@ public:
     afx_msg void OnBnClickedButtonSetup();
     afx_msg void OnBnClickedCheckDebug();
     afx_msg void OnClose();
-    afx_msg void OnEnSetfocusEditStartFrame();
-    afx_msg void OnEnSetfocusEditStartTime();
-//    afx_msg void OnBnClickedButtonRecOpen();
-//    afx_msg void OnBnClickedButtonRecStart();
+    afx_msg void OnBnClickedCheckStartFrame();
 };
