@@ -100,7 +100,7 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="¸´ÖÆÆ¤·ô¿â"
-				CommandLine="copy /y $(SolutionDir)src\3rdParty\SkinSharp\bin\skinh.*  $(SolutionDir)$(ConfigurationName)"
+				CommandLine="copy /y $(SolutionDir)src\3rdParty\SkinSharp\bin\skinh.dll  $(SolutionDir)$(ConfigurationName)&#x0D;&#x0A;copy /y $(SolutionDir)src\3rdParty\SkinSharp\bin\aero.she  $(SolutionDir)$(ConfigurationName)\skinh.she&#x0D;&#x0A;&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration
