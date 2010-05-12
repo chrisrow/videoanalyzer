@@ -62,7 +62,7 @@ bool CHikWarpper::open(int iIndex)
     //µÇÂ¼
     NET_DVR_DEVICEINFO_V30 deviceInfo;
     memset(&deviceInfo, 0, sizeof(NET_DVR_DEVICEINFO_V30));
-    m_iUseID = NET_DVR_Login_V30("10.13.14.51", 8000, "admin", "admin", &deviceInfo);
+    m_iUseID = NET_DVR_Login_V30("10.13.14.51", 8000, "admin", "12345", &deviceInfo);
     if (-1 == m_iUseID)
     {
         return false;
