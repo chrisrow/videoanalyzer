@@ -26,8 +26,9 @@
 
 class CPersonDetect
 {
-#define  SAMPLING_INTERVAL    5             //  采样间隔（每两帧处理一帧）
-#define  BKUPDATE_INTERVAL    10             //  采样间隔（每两帧处理一帧）
+#define  JUDGE_NIGHT_INTERVAL 150           //  判断是否是黑夜的采样间隔
+#define  SAMPLING_INTERVAL    5             //  采样间隔
+#define  BKUPDATE_INTERVAL    10            //  采样间隔
 #define  MAXTHRESHOLD         70            //  第一次差分大阈值(室外)
 #define  MINTHRESHOLD         45            //  第二次差分小阈值(室外)
 #define  SMOOTHSTARTLINE      80            //  平滑起始行数
@@ -218,9 +219,13 @@ public:/*处理主函数*/
   **************************************/
 private:
 
+  uint16_t m_iNigthRgbThreshold;
+  uint16_t m_iRgbThreshold;
   static const uint16_t m_nTrackObjectMaxNum = 200;  //! 最大跟踪目标数
   static const uint8_t m_nTrackObjShowNum = 10;      //! 显示跟踪轨迹点数
   static const uint8_t m_nMaxCameraNum = 4;          //! 同时处理通道数
+
+  RectArray m_nightRectArray;
 
 public:
   struct LabelObjStatus 
@@ -296,6 +301,8 @@ public:
 public:
 
     void   setDelay_counter()                              { delay_counter = 0; }
+
+    void judgeNight(CFrameContainer* pFrame_in);
 
  /*检测移动目标  指定区域画框*/
  ErrVal ImgMoveObjectDetect(CFrameContainer* p_frame_in_out);

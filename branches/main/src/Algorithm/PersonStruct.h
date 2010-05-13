@@ -7,14 +7,18 @@ typedef std::vector<CPoint> PolyLine; //折线
 typedef PolyLine Line;     //直线
 
 typedef std::vector<PolyLine> PolyLineArray;
+typedef std::vector<CRect> RectArray;
 
 //人员检测相关参数
 struct TPersonDetect
 {
-    Line warnLine;
-    Line referLine;
-    PolyLineArray maskLine;
-    IplImage* mask;
+    int iNightRangeVal;          //判断是否到夜间
+    int iNigthRgbThreshold;      // 夜间二值化阈值
+    Line warnLine;               //报警线
+    PolyLineArray maskLine;      //遮罩
+    RectArray nigthRectArray;    //通过该区域来判断是否是黑夜
+
+    IplImage* mask;         //遮罩图像。通过makeMask生成
 
     TPersonDetect(): mask(NULL) {}
     virtual ~TPersonDetect() { reset(); }
@@ -25,8 +29,8 @@ struct TPersonDetect
 void TPersonDetect::reset()
 {
     warnLine.clear();
-    referLine.clear();
     maskLine.clear();
+    nigthRectArray.clear();
     if (mask)
     {
         cvReleaseImage(&mask);

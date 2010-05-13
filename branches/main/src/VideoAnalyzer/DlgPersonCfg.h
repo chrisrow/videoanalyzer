@@ -29,12 +29,8 @@ private:
 
     PolyLineArray m_mask; //ÕÚÕÖ
     LineArray m_warningLine;   //Ô¤¾¯Ïß
-//    LineArray m_referLine;//
-    RectArray m_rect;
+    RectArray m_nigthRectArray;
 
-    CButton m_btnWarnLine;
-    CButton m_btnReferLine;
-    CButton m_btnMask;
     CButton m_btnFill;
 
 protected:
@@ -42,13 +38,18 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 public:
-    afx_msg void OnBnClickedButtonWarningLine();
     afx_msg void OnBnClickedButtonClearWarningLine();
-    afx_msg void OnBnClickedButtonPoly();
+
     afx_msg void OnBnClickedButtonClearPoly();
     afx_msg void OnBnClickedButtonFill();
+
+    afx_msg void OnBnClickedButtonClearNigth();
+
     afx_msg void OnBnClickedButtonClearall();
+
     afx_msg void OnBnClickedOk();
-    afx_msg void OnBnClickedButtonReferLine();
-    afx_msg void OnBnClickedButtonClearReferLine();
+
+    afx_msg void OnBnClickedRadioWarningLine();
+    afx_msg void OnBnClickedRadioMask();
+    afx_msg void OnBnClickedRadioNigth();
 };

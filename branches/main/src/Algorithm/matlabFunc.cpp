@@ -1589,5 +1589,52 @@ CMatlabFunc::refineObjListRgb( CDList< CObjLabeled*, CPointerDNode >* ObjDList_i
 
 
 
+void CMatlabFunc::RGB24ToYUV444( unsigned char * Src , unsigned char * Dst ,int wide ,int height )
+{
+    int16_t   rVal = 0, gVal = 0, bVal = 0;
+    int32_t  bmp_pos = 0, yuv_pos = 0;
 
-//#endif //#if( 1 = MATLABFUNC )
+    // ITU-R version of the conversion formula 
+    // m_nYuvByteSize[0] is YByteSize
+    for( yuv_pos = 0, bmp_pos = 0; yuv_pos < wide*height; ++yuv_pos, bmp_pos+=3 )
+    {
+        // Note: we use <<7 instead of <<8, because 255<<8 = 65280, which is larger than 2^7-1=32767, while 255<<7 = 32640 is smaller than 2^7-1=32767.
+        bVal = (Src[bmp_pos])<<7;
+        gVal = (Src[bmp_pos+1])<<7;
+        rVal = (Src[bmp_pos+2])<<7; 
+
+
+        Dst[yuv_pos]= MIN( 255, MAX( 0, ((rVal>>2)+(rVal>>5)+(rVal>>6) + (gVal>>1)+(gVal>>4)+(gVal>>6) +(gVal>>7) + (bVal>>3) -(bVal>>7))>>7 ) ); //Y
+    }
+
+    return;
+}
+
+bool CMatlabFunc::isNight(unsigned char *pSrc, std::vector<CRect>& rectArray, int iWidth, int iHeight, int iNightRangeVal)
+{
+    for (unsigned int k = 0; k < rectArray.size(); k++)
+    {
+        int iPointNum = 0;
+        int iBrightSum = 0;
+        CRect& rect = rectArray[k];
+
+        for (int j = rect.top; j < rect.bottom; j++)
+        {
+            for (int i = rect.left; i < rect.right; i++)
+            {
+                iBrightSum += pSrc[i + j * iWidth ];
+                iPointNum++;
+            }
+        }
+
+        //  亮度和/点数 < 阈值
+        if ( (iPointNum > 0) && (iBrightSum/iPointNum < iNightRangeVal) )
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+
