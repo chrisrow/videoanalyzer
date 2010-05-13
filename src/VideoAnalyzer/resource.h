@@ -92,8 +92,14 @@
 #define IDC_BUTTON_REFER_LINE           1065
 #define IDC_BUTTON_CLEAR_REFER_LINE     1066
 #define IDC_BUTTON3                     1067
+#define IDC_BUTTON_NIGTH                1067
 #define IDC_CHECK1                      1068
 #define IDC_CHECK_START_FRAME           1068
+#define IDC_BUTTON_CLEAR_NIGTH          1069
+#define IDC_RADIO_WARNING_LINE          1070
+#define IDC_RADIO_MASK                  1071
+#define IDC_RADIO3                      1072
+#define IDC_RADIO_NIGTH                 1072
 #define ID_32771                        32771
 #define ID_MENU_CLEAR                   32772
 
@@ -103,7 +109,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        133
 #define _APS_NEXT_COMMAND_VALUE         32773
-#define _APS_NEXT_CONTROL_VALUE         1069
+#define _APS_NEXT_CONTROL_VALUE         1073
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

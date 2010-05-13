@@ -2069,33 +2069,7 @@ bool CParabolaDetect::NightMedol(unsigned char  *pSrc, LineSet *pRect1, LineSet 
 	else
 		return false ;
 }
-void 
-CParabolaDetect::YUV444FromRGB24( unsigned char * Src , unsigned char * Dst ,int wide ,int height )
-{
-	int16_t   rVal = 0, gVal = 0, bVal = 0;
-	int32_t  bmp_pos = 0, yuv_pos = 0;
 
-	// ITU-R version of the conversion formula 
-	// m_nYuvByteSize[0] is YByteSize
-	for( yuv_pos = 0, bmp_pos = 0; yuv_pos < wide*height; ++yuv_pos, bmp_pos+=3 )
-	{
-		// Note: we use <<7 instead of <<8, because 255<<8 = 65280, which is larger than 2^7-1=32767, while 255<<7 = 32640 is smaller than 2^7-1=32767.
-		bVal = (Src[bmp_pos])<<7;
-		gVal = (Src[bmp_pos+1])<<7;
-		rVal = (Src[bmp_pos+2])<<7; 
-
-
-		Dst[yuv_pos]= MIN( 255, MAX( 0, ((rVal>>2)+(rVal>>5)+(rVal>>6) + (gVal>>1)+(gVal>>4)+(gVal>>6) +(gVal>>7) + (bVal>>3) -(bVal>>7))>>7 ) ); //Y
-		//	m_YuvPlane[1][yuv_pos]= MIN( 255, MAX( 0, ((-(rVal>>2)+(rVal>>4)+(rVal>>6) -(gVal>>2)-(gVal>>4)-(gVal>>6) +(bVal>>1))>>7) +128) ); //U
-		//	m_YuvPlane[2][yuv_pos]= MIN( 255, MAX( 0, (((rVal>>1) -(gVal>>1)+(gVal>>4)+(gVal>>6) -(bVal>>4)-(bVal>>6))>>7) +128) ); //V
-
-
-
-
-	}
-
-	return;
-}
 ErrVal 
 CParabolaDetect::ParaDetectTwo( const CFrameContainer* const pFrame_in,CFrameContainer* const pFrame_out)
 { 
@@ -2118,7 +2092,7 @@ CParabolaDetect::ParaDetectTwo( const CFrameContainer* const pFrame_in,CFrameCon
 	{
 		m_NightNumber = 0 ;
 
-		YUV444FromRGB24(pFrame_in->m_BmpBuffer,pFrame_in->m_YuvPlane[0],pFrame_in->getWidth(), pFrame_in->getHeight());
+		CMatlabFunc::RGB24ToYUV444(pFrame_in->m_BmpBuffer,pFrame_in->m_YuvPlane[0],pFrame_in->getWidth(), pFrame_in->getHeight());
 
 		if( NightMedol( pFrame_in->m_YuvPlane[0], 
 			&ParamSet.tNightRange[0], 

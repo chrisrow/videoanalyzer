@@ -111,6 +111,11 @@ public:
   void   refineObjListRgb( CDList< CObjLabeled*, CPointerDNode >* ObjDList_inout, 
     const CFrameContainer* const pFrame_Rgb_in ) const;
 
+  static void RGB24ToYUV444( unsigned char * Src , unsigned char * Dst ,int wide ,int height );
+
+  //根据指定矩形框内的点的亮度来判断是否是黑夜
+  static bool isNight(unsigned char *pSrc, std::vector<CRect>& rectArray, int iWidth, int iHeight, int iNightRangeVal);
+
 private:
   uint8_t m_nRgbThreshold; //<! threshold to be used in binarizeY_fromRgbBkgnd
   

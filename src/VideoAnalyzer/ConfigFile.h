@@ -69,9 +69,11 @@ private:
     //人员检测
     int GetElemValue(TiXmlElement* xParentElement, const char* szName, PolyLine *pValue);
     int GetElemValue(TiXmlElement* xParentElement, const char* szName, PolyLineArray *pValue);
+    int GetElemValue(TiXmlElement* xParentElement, const char* szName, RectArray *pValue);
     //人员检测
     int SetElemValue(TiXmlElement* xParentElement, const char* szName, PolyLine *pValue);
     int SetElemValue(TiXmlElement* xParentElement, const char* szName, PolyLineArray *pValue);
+    int SetElemValue(TiXmlElement* xParentElement, const char* szName, RectArray *pValue);
 
 private:
     TiXmlDocument m_xDoc;      //xml文件操作类

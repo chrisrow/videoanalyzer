@@ -893,9 +893,10 @@ int CCfgParse::LoadChannel(int iCh, TPersonDetect& pd)
     }
 
     GET_VALUE(xPSElement, "WarningLine", pd.warnLine);
-    //GET_VALUE(xPSElement, "ReferLine", pd.referLine);
-		
     GET_VALUE(xPSElement, "Mask", pd.maskLine);
+    GET_VALUE(xPSElement, "Night", pd.nigthRectArray);
+    GET_VALUE(xPSElement, "iNightRangeVal", pd.iNightRangeVal);
+    GET_VALUE(xPSElement, "iNigthRgbThreshold", pd.iNigthRgbThreshold);
 
     return 1;
 }
@@ -925,9 +926,10 @@ int CCfgParse::SaveChannel(int iCh, TPersonDetect& pd)
     }
 
     SET_VALUE(xPSElement, "WarningLine", pd.warnLine);
-    SET_VALUE(xPSElement, "ReferLine", pd.referLine);
-		
     SET_VALUE(xPSElement, "Mask", pd.maskLine);
+    SET_VALUE(xPSElement, "Night", pd.nigthRectArray);
+    SET_VALUE(xPSElement, "iNightRangeVal", pd.iNightRangeVal);
+    SET_VALUE(xPSElement, "iNigthRgbThreshold", pd.iNigthRgbThreshold);
 
     return 1;
 }
@@ -1104,6 +1106,98 @@ int CCfgParse::SetElemValue(TiXmlElement* xParentElement, const char* szName, Po
             sprintf(num, "%d", polyline[j].y);
             ptElement->SetAttribute(ATTR_Y, num);
         }
+    }
+
+    return 1;
+}
+
+int CCfgParse::GetElemValue(TiXmlElement* xParentElement, const char* szName, RectArray *pValue)
+{
+    const char* NODE_RECT = "Rect";
+    const char* ATTR_X1 = "x1";
+    const char* ATTR_Y1 = "y1";
+    const char* ATTR_X2 = "x2";
+    const char* ATTR_Y2 = "y2";
+
+    TiXmlElement* xElem = SearchElement(xParentElement, szName);
+    if(NULL == xElem)
+    {
+        LOG_DEBUG(DEBUG_ERR, "No '%s' info", szName);
+        return NULL;
+    }
+
+    //获取Rect数组
+    TiXmlElement *xValueElem = this->SearchElement(xElem, NODE_RECT);
+    if (!xValueElem)
+    {
+        LOG_DEBUG(DEBUG_ERR, "No '%s' in '%s'", NODE_RECT, szName);
+        return 0;
+    }
+
+    pValue->clear();
+
+    int x1 = 0, y1 = 0, x2 = 0, y2 = 0;
+    if (xValueElem->Attribute(ATTR_X1, &x1) 
+        && xValueElem->Attribute(ATTR_Y1, &y1)
+        && xValueElem->Attribute(ATTR_X2, &x2) 
+        && xValueElem->Attribute(ATTR_Y2, &y2))
+    {
+        pValue->push_back(CRect(x1, y1, x2, y2));
+    }
+
+    xValueElem = xValueElem->NextSiblingElement(NODE_RECT);
+
+    while(xValueElem)
+    {
+        if (xValueElem->Attribute(ATTR_X1, &x1) 
+            && xValueElem->Attribute(ATTR_Y1, &y1)
+            && xValueElem->Attribute(ATTR_X2, &x2) 
+            && xValueElem->Attribute(ATTR_Y2, &y2))
+        {
+            pValue->push_back(CRect(x1, y1, x2, y2));
+        }
+
+        xValueElem = xValueElem->NextSiblingElement(NODE_RECT);
+    }
+
+    return 1;
+}
+
+int CCfgParse::SetElemValue(TiXmlElement* xParentElement, const char* szName, RectArray *pValue)
+{
+    const char* NODE_RECT = "Rect";
+    const char* ATTR_X1 = "x1";
+    const char* ATTR_Y1 = "y1";
+    const char* ATTR_X2 = "x2";
+    const char* ATTR_Y2 = "y2";
+
+    TiXmlElement* xElem = SearchElement(xParentElement, szName);
+    if(NULL == xElem)
+    {
+        LOG_DEBUG(DEBUG_ERR, "No '%s' info", szName);
+        return NULL;
+    }
+
+    xElem->Clear();
+
+    for (unsigned i = 0; i < pValue->size(); i++)
+    {
+        TiXmlElement* ptElement = new TiXmlElement(NODE_RECT); // 退出时未清理内存
+        char num[20] = {0};
+        xElem->LinkEndChild(ptElement);
+
+        CRect& rect = (*pValue)[i];
+        sprintf(num, "%d", rect.left);
+        ptElement->SetAttribute(ATTR_X1, num);
+
+        sprintf(num, "%d", rect.top);
+        ptElement->SetAttribute(ATTR_Y1, num);
+
+        sprintf(num, "%d", rect.right);
+        ptElement->SetAttribute(ATTR_X2, num);
+
+        sprintf(num, "%d", rect.bottom);
+        ptElement->SetAttribute(ATTR_Y2, num);
     }
 
     return 1;

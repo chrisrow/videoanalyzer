@@ -6,26 +6,31 @@
         <HeartBeat>180</HeartBeat>
         <!-- 发送心跳消息的间隔时间(秒) -->
         <ImagePath>d:\AlarmImage</ImagePath>
+        <Debug>1</Debug>
     </golbal>
     <camera channel="0">
         <PersonDetect>
             <WarningLine>
-                <Point x="235" y="101" />
-                <Point x="103" y="209" />
+                <Point x="19" y="188" />
+                <Point x="281" y="110" />
             </WarningLine>
             <Mask>
                 <Poly>
-                    <Point x="0" y="0" />
-                    <Point x="100" y="15" />
-                    <Point x="100" y="100" />
-                    <Point x="0" y="20" />
-                </Poly>
-                <Poly>
-                    <Point x="210" y="215" />
-                    <Point x="210" y="255" />
-                    <Point x="260" y="215" />
+                    <Point x="4" y="5" />
+                    <Point x="7" y="57" />
+                    <Point x="343" y="57" />
+                    <Point x="348" y="2" />
+                    <Point x="4" y="2" />
                 </Poly>
             </Mask>
+            <Night>
+                <Rect x1="120" y1="3" x2="147" y2="23" />
+                <Rect x1="222" y1="3" x2="239" y2="14" />
+            </Night>
+            <iNightRangeVal value="120" />
+            <!-- 判读是否到夜间的阈值 (80 ~ 150) -->
+            <iNigthRgbThreshold value="80" />
+            <!-- 夜间二值化阈值 (60 ~ 90) -->
         </PersonDetect>
         <ParamStruct>
             <iStyleChange value="1" />

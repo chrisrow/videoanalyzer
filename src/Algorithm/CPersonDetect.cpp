@@ -29,6 +29,9 @@ CPersonDetect::CPersonDetect(uint16_t const  nYWidth_in, uint16_t const  nYHeigh
   m_pFrame_RgbSmoothed_low   = NULL;
   m_pFrame_bkgndDetected_low = NULL;
   m_pFrame_matlabFunced_low  = NULL;
+
+  m_iRgbThreshold = MAXTHRESHOLD;
+  m_iNigthRgbThreshold = MAXTHRESHOLD;
 }
 
 CPersonDetect::~CPersonDetect()
@@ -201,58 +204,6 @@ CPersonDetect::init_pudong (uint16_t const  nYWidth_in, uint16_t const  nYHeight
   int16_t warning_pt1_x,warning_pt1_y,warning_pt2_x,warning_pt2_y;
   int16_t alarm_pt1_x,alarm_pt1_y,alarm_pt2_x,alarm_pt2_y;
 
-  /*Channel_1*/
-
-//   warning_pt1_x = ReadIni("C://Intelligent_video.ini","WarningLine0","warning_pt1_x");
-//   warning_pt1_y = ReadIni("C://Intelligent_video.ini","WarningLine0","warning_pt1_y");
-//   warning_pt2_x = ReadIni("C://Intelligent_video.ini","WarningLine0","warning_pt2_x");
-//   warning_pt2_y = ReadIni("C://Intelligent_video.ini","WarningLine0","warning_pt2_y");
-//   alarm_pt1_x   = ReadIni("C://Intelligent_video.ini","AlarmLine0","alarm_pt1_x");
-//   alarm_pt1_y   = ReadIni("C://Intelligent_video.ini","AlarmLine0","alarm_pt1_y");
-//   alarm_pt2_x   = ReadIni("C://Intelligent_video.ini","AlarmLine0","alarm_pt2_x");
-//   alarm_pt2_y   = ReadIni("C://Intelligent_video.ini","AlarmLine0","alarm_pt2_y");
-//   Warning_Line[0].m_distancetotop     = ReadIni("C://Intelligent_video.ini","WarningLine0","warning_distancetotop");
-//   Warning_Line[0].m_distancetobottom  = ReadIni("C://Intelligent_video.ini","WarningLine0","warning_distancetobottom");
-//   Alarm_Line[0].m_distancetotop       = ReadIni("C://Intelligent_video.ini","AlarmLine0","alarm_distancetotop");
-//   Alarm_Line[0].m_distancetobottom    = ReadIni("C://Intelligent_video.ini","AlarmLine0","alarm_distancetobottom");
-// 
-//   Calculate_Line_Parameter(Warning_Line[0].m_slope,Warning_Line[0].m_pitch,warning_pt1_x,warning_pt1_y,warning_pt2_x,warning_pt2_y);//扩展到4路
-//   Calculate_Line_Parameter(Alarm_Line[0].m_slope,Alarm_Line[0].m_pitch,alarm_pt1_x,alarm_pt1_y,alarm_pt2_x,alarm_pt2_y);
-  /*Channel_1  end*/
-
-
-  /*Channel_2*/
-
-//   warning_pt1_x = ReadIni("C://Intelligent_video.ini","WarningLine1","warning_pt1_x");
-//   warning_pt1_y = ReadIni("C://Intelligent_video.ini","WarningLine1","warning_pt1_y");
-//   warning_pt2_x = ReadIni("C://Intelligent_video.ini","WarningLine1","warning_pt2_x");
-//   warning_pt2_y = ReadIni("C://Intelligent_video.ini","WarningLine1","warning_pt2_y");
-//   alarm_pt1_x   = ReadIni("C://Intelligent_video.ini","AlarmLine1","alarm_pt1_x");
-//   alarm_pt1_y   = ReadIni("C://Intelligent_video.ini","AlarmLine1","alarm_pt1_y");
-//   alarm_pt2_x   = ReadIni("C://Intelligent_video.ini","AlarmLine1","alarm_pt2_x");
-//   alarm_pt2_y   = ReadIni("C://Intelligent_video.ini","AlarmLine1","alarm_pt2_y");
-//   Warning_Line[1].m_distancetotop     = ReadIni("C://Intelligent_video.ini","WarningLine1","warning_distancetotop");
-//   Warning_Line[1].m_distancetobottom  = ReadIni("C://Intelligent_video.ini","WarningLine1","warning_distancetobottom");
-//   Alarm_Line[1].m_distancetotop       = ReadIni("C://Intelligent_video.ini","AlarmLine1","alarm_distancetotop");
-//   Alarm_Line[1].m_distancetobottom    = ReadIni("C://Intelligent_video.ini","AlarmLine1","alarm_distancetobottom");
-//   Calculate_Line_Parameter(Warning_Line[1].m_slope,Warning_Line[1].m_pitch,warning_pt1_x,warning_pt1_y,warning_pt2_x,warning_pt2_y);//扩展到4路
-//   Calculate_Line_Parameter(Alarm_Line[1].m_slope,Alarm_Line[1].m_pitch,alarm_pt1_x,alarm_pt1_y,alarm_pt2_x,alarm_pt2_y);
-  /*Channel_2  end*/
-
-  /*Channel_3*/
-//   warning_pt1_x = ReadIni("C://Intelligent_video.ini","WarningLine2","warning_pt1_x");
-//   warning_pt1_y = ReadIni("C://Intelligent_video.ini","WarningLine2","warning_pt1_y");
-//   warning_pt2_x = ReadIni("C://Intelligent_video.ini","WarningLine2","warning_pt2_x");
-//   warning_pt2_y = ReadIni("C://Intelligent_video.ini","WarningLine2","warning_pt2_y");
-//   alarm_pt1_x   = ReadIni("C://Intelligent_video.ini","AlarmLine2","alarm_pt1_x");
-//   alarm_pt1_y   = ReadIni("C://Intelligent_video.ini","AlarmLine2","alarm_pt1_y");
-//   alarm_pt2_x   = ReadIni("C://Intelligent_video.ini","AlarmLine2","alarm_pt2_x");
-//   alarm_pt2_y   = ReadIni("C://Intelligent_video.ini","AlarmLine2","alarm_pt2_y");
-//   Warning_Line[2].m_distancetotop     = ReadIni("C://Intelligent_video.ini","WarningLine2","warning_distancetotop");
-//   Warning_Line[2].m_distancetobottom  = ReadIni("C://Intelligent_video.ini","WarningLine2","warning_distancetobottom");
-//   Alarm_Line[2].m_distancetotop       = ReadIni("C://Intelligent_video.ini","AlarmLine2","alarm_distancetotop");
-//   Alarm_Line[2].m_distancetobottom    = ReadIni("C://Intelligent_video.ini","AlarmLine2","alarm_distancetobottom");
-
   if (g_personParam.warnLine.size() == 2)
   {
       warning_pt1_x = (int16_t)g_personParam.warnLine[0].x;
@@ -278,30 +229,6 @@ CPersonDetect::init_pudong (uint16_t const  nYWidth_in, uint16_t const  nYHeight
       alarm_pt2_y = 0;
   }
   
-  int16_t refer1_pt1_x,refer1_pt1_y,refer1_pt2_x,refer1_pt2_y;
-  int16_t refer2_pt1_x,refer2_pt1_y,refer2_pt2_x,refer2_pt2_y;
-  if(g_personParam.referLine.size() >= 4)
- {
-      refer2_pt1_x = (int16_t)g_personParam.referLine[2].x;
-      refer2_pt1_y = (int16_t)g_personParam.referLine[2].y;
-      refer2_pt2_x = (int16_t)g_personParam.referLine[3].x;
-      refer2_pt2_y = (int16_t)g_personParam.referLine[3].y;
-	  
-      refer1_pt1_x = (int16_t)g_personParam.referLine[0].x;
-      refer1_pt1_y = (int16_t)g_personParam.referLine[0].y;
-      refer1_pt2_x = (int16_t)g_personParam.referLine[1].x;
-      refer1_pt2_y = (int16_t)g_personParam.referLine[1].y;	 
-	  
-      Calculate_Line_Parameter(Refer_Line[0].m_slope,Refer_Line[0].m_pitch,refer1_pt1_x,refer1_pt1_y,refer1_pt2_x,refer1_pt2_y);	  
-      Calculate_Line_Parameter(Refer_Line[0].m_slope,Refer_Line[0].m_pitch,refer2_pt1_x,refer2_pt1_y,refer2_pt2_x,refer2_pt2_y);	  
-
-  }
-  else
-  {
-      Refer_Line[0].m_slope = 0;
-      Refer_Line[1].m_slope = 0;
-  }
-
   Warning_Line[2].m_distancetotop     = 0;
   Warning_Line[2].m_distancetobottom  = nYHeight_in;
   Alarm_Line[2].m_distancetotop       = 0;
@@ -322,26 +249,9 @@ CPersonDetect::init_pudong (uint16_t const  nYWidth_in, uint16_t const  nYHeight
       ::makeMask(g_personParam.maskLine, g_personParam.mask);
   }
 
-  /*Channel_3  end*/
-
-  /*Channel_4*/
-
-//   warning_pt1_x = ReadIni("C://Intelligent_video.ini","WarningLine3","warning_pt1_x");
-//   warning_pt1_y = ReadIni("C://Intelligent_video.ini","WarningLine3","warning_pt1_y");
-//   warning_pt2_x = ReadIni("C://Intelligent_video.ini","WarningLine3","warning_pt2_x");
-//   warning_pt2_y = ReadIni("C://Intelligent_video.ini","WarningLine3","warning_pt2_y");
-//   alarm_pt1_x   = ReadIni("C://Intelligent_video.ini","AlarmLine3","alarm_pt1_x");
-//   alarm_pt1_y   = ReadIni("C://Intelligent_video.ini","AlarmLine3","alarm_pt1_y");
-//   alarm_pt2_x   = ReadIni("C://Intelligent_video.ini","AlarmLine3","alarm_pt2_x");
-//   alarm_pt2_y   = ReadIni("C://Intelligent_video.ini","AlarmLine3","alarm_pt2_y");
-//   Warning_Line[3].m_distancetotop     = ReadIni("C://Intelligent_video.ini","WarningLine3","warning_distancetotop");
-//   Warning_Line[3].m_distancetobottom  = ReadIni("C://Intelligent_video.ini","WarningLine3","warning_distancetobottom");
-//   Alarm_Line[3].m_distancetotop       = ReadIni("C://Intelligent_video.ini","AlarmLine3","alarm_distancetotop");
-//   Alarm_Line[3].m_distancetobottom    = ReadIni("C://Intelligent_video.ini","AlarmLine3","alarm_distancetobottom");
-// 
-//   Calculate_Line_Parameter(Warning_Line[3].m_slope,Warning_Line[3].m_pitch,/*144,64,253,282*/warning_pt1_x,warning_pt1_y,warning_pt2_x,warning_pt2_y);//扩展到4路
-//   Calculate_Line_Parameter(Alarm_Line[3].m_slope,Alarm_Line[3].m_pitch,alarm_pt1_x,alarm_pt1_y,alarm_pt2_x,alarm_pt2_y);
-  /*Channel_4  end*/
+  //夜间模式
+  m_nightRectArray = g_personParam.nigthRectArray;
+  m_iNigthRgbThreshold = g_personParam.iNigthRgbThreshold;
 
   ROK();
 }
@@ -1157,6 +1067,28 @@ void CPersonDetect::initTempImage(int iWidth, int iHeight, YUVTYPE YuvType_in)
     }
 }
 
+void CPersonDetect::judgeNight(CFrameContainer* pFrame_in)
+{
+    if (m_nightRectArray.size() == 0)
+    {
+        return;
+    }
+
+    CMatlabFunc::RGB24ToYUV444(pFrame_in->m_BmpBuffer,
+        pFrame_in->m_YuvPlane[0],
+        pFrame_in->getWidth(), 
+        pFrame_in->getHeight());
+
+    if( CMatlabFunc::isNight( pFrame_in->m_YuvPlane[0], 
+        m_nightRectArray, 
+        pFrame_in->getWidth(), 
+        pFrame_in->getHeight(),
+        g_personParam.iNightRangeVal) )
+    {
+        m_iRgbThreshold =  m_iNigthRgbThreshold ;
+    }
+}
+
 ErrVal  
 CPersonDetect::PersenDetect_Process_v2(CFrameContainer* pFrame_matlabFunced,       
                                     CFrameContainer* pFrame_in,
@@ -1168,6 +1100,11 @@ CPersonDetect::PersenDetect_Process_v2(CFrameContainer* pFrame_matlabFunced,
 {
     *pFrame_out = *pFrame_in;
     CFrameContainer frame = *pFrame_out;
+
+    if (0 == CurFrameNum % JUDGE_NIGHT_INTERVAL)
+    {
+        judgeNight(&frame);
+    }
 
     //需要更新背景 或者 检测人员
     if (0 == CurFrameNum % BKUPDATE_INTERVAL || 0 == CurFrameNum % SAMPLING_INTERVAL)
@@ -1205,7 +1142,7 @@ CPersonDetect::PersenDetect_Process_v2(CFrameContainer* pFrame_matlabFunced,
         //二值
         EXM_NOK( binarizeY_fromRgbBkgnd(m_pFrame_matlabFunced_low ,
             m_pFrame_RgbSmoothed_low,
-            m_pFrame_bkgndDetected_low ,MAXTHRESHOLD), "pMatlabFunc fail!" );
+            m_pFrame_bkgndDetected_low ,m_iRgbThreshold), "pMatlabFunc fail!" );
 
         //标定，顺便得到他们的RGB信息（暂时没用）
         EXM_NOK( pMatlabFunc->labelObj( ObjectLabeledDList, 
@@ -1328,7 +1265,7 @@ CPersonDetect::PersenDetect_Process(CFrameContainer* pFrame_matlabFunced,
         //二值
         EXM_NOK( binarizeY_fromRgbBkgnd(m_pFrame_matlabFunced_low ,
                                         m_pFrame_RgbSmoothed_low,
-                                        m_pFrame_bkgndDetected_low ,MAXTHRESHOLD), "pMatlabFunc fail!" );
+                                        m_pFrame_bkgndDetected_low ,m_iRgbThreshold), "pMatlabFunc fail!" );
 
         //标定，顺便得到他们的RGB信息（暂时没用）
         EXM_NOK( pMatlabFunc->labelObj( ObjectLabeledDList, 
