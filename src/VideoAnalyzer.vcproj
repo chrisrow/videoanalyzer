@@ -306,6 +306,14 @@
 				RelativePath=".\Algorithm\PersonWarpper.h"
 				>
 			</File>
+			<File
+				RelativePath=".\Algorithm\RoadWarpper.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Algorithm\RoadWarpper.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="VideoAnalyzer"

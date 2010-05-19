@@ -8,6 +8,7 @@
 #include "UDPAlerter.h"
 #include "Algorithm/ParabolaWarpper.h"
 #include "Algorithm/PersonWarpper.h"
+#include "Algorithm/RoadWarpper.h"
 #include "Algorithm/Macro.h"
 #include "Option.h"
 #include "Common.h"
@@ -1003,8 +1004,9 @@ void CVideoAnalyzerDlg::ResetAnalyzer()
     m_analyzerMgr.clear();
     m_cbAnalyzer.ResetContent();
 
-    m_analyzerMgr.push_back(CAnalyzerMgr(new CPersonWarpper, new CDlgPersonCfg, "人员检测"));
-    m_analyzerMgr.push_back(CAnalyzerMgr(new CParabolaWarpper, new CDlgSetting, "抛物检测"));
+    m_analyzerMgr.push_back(CAnalyzerMgr(new CRoadWarpper, NULL, _T("道路检测")));
+    m_analyzerMgr.push_back(CAnalyzerMgr(new CPersonWarpper, new CDlgPersonCfg, _T("人员检测")));
+    m_analyzerMgr.push_back(CAnalyzerMgr(new CParabolaWarpper, new CDlgSetting, _T("抛物检测")));
     m_analyzerMgr.push_back(CAnalyzerMgr(new CDefaultAnalyzer, NULL, "无"));
     for (unsigned i = 0; i < m_analyzerMgr.size(); i++)
     {
