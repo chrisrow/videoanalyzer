@@ -20,6 +20,7 @@ public:
 
 private:
     IplImage *m_pFrameOut, *m_pFrameTmp;
+    IplImage *m_pFrameLayer;
     CvMemStorage* m_storage;
     CvFont m_font;
 };
