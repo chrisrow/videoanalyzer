@@ -63,11 +63,21 @@ const IplImage* CRoadWarpper::analysis(const IplImage *pFrame)
 
     int half_width = pFrame->width/2;
     int half_height = pFrame->height/2;
+
+    int rect_top    = pFrame->height/2 - 10;
+    int rect_bottom = pFrame->height/2 + 10;
+    int rect_left   = pFrame->width/2  - 20;
+    int rect_right  = pFrame->width/2  + 20;
+
     double k = 0;  // 斜率
     double b = 0;  // 截距
     CvSeq* lines = 0;
     cvClearMemStorage(m_storage);
-    lines = cvHoughLines2( m_pFrameTmp, m_storage, CV_HOUGH_PROBABILISTIC, 1, CV_PI/180, 20, 20, 30 );
+
+    int threshold = 20;  //线段上点的个数，值越大，表示组成线段所需的点越多
+    double param1 = 10;  //线段的最小长度
+    double param2 = 5;   //多条线段不能连成一条直线的分隔点距离，值越小，越不能连成直线
+    lines = cvHoughLines2( m_pFrameTmp, m_storage, CV_HOUGH_PROBABILISTIC, 1, CV_PI/180, threshold, param1, param2 );
     for( int i = 0; i < lines->total; i++ )
     {
         CvPoint* line = (CvPoint*)cvGetSeqElem(lines,i);
@@ -79,6 +89,7 @@ const IplImage* CRoadWarpper::analysis(const IplImage *pFrame)
 
         k = (1.0 * (line[0].y - line[1].y))/(line[0].x - line[1].x);
 
+        ////////////////////////////////////////////////////////////////////////////
         // 斜率不能太小 || 左边的线的斜率必须小于零 || 右边的线的斜率必须大于零
         if ( (k <= 0.3 && k >= -0.3)
             || ( (line[0].x < half_width) && (line[1].x < half_width) && (k > 0) )
@@ -89,37 +100,47 @@ const IplImage* CRoadWarpper::analysis(const IplImage *pFrame)
         }
 
         b = 1.0 * (line[0].x * line[1].y - line[1].x * line[0].y) / (line[0].x - line[1].x);
+
+        ////////////////////////////////////////////////////////////////////////////
         // 是否跟中间的小框的上下两个边有交点
         bool flag = false;
         int x = 0, y = 0;
         char szText[64] = {0};
 
-        y = half_height-10;
+        y = rect_top;
         x = int((y - b) / k);
-        if (x > half_width-15 && x < half_width+15)
+        if (x > rect_left && x < rect_right)
         {
             flag = true;
         }
 
-        y = half_height+10;
+        y = rect_bottom;
         x = int((y - b) / k);
-        if (x > half_width-15 && x < half_width+15)
+        if (x > rect_left && x < rect_right)
         {
             flag = true;
         }
 
         if (false == flag)
         {
-            cvLine( m_pFrameOut, line[0], line[1], CV_RGB(0,0,255), 1, CV_AA, 0 );
-            sprintf(szText, "%d,%.2f,%.2f", x,b,k);
-            cvPutText(m_pFrameOut, szText, line[0], &m_font, cvScalar(0,0,0,0));
+            continue;
+        }
+
+        ////////////////////////////////////////////////////////////////////////////
+        // 矩形框下底边以上的线段需过滤掉
+        int max_y = MAX(line[1].y, line[0].y);
+        if (max_y < rect_bottom)
+        {
             continue;
         }
 
         cvLine( m_pFrameOut, line[0], line[1], CV_RGB(255,0,0), 1, CV_AA, 0 );
     }
 
-    cvRectangle(m_pFrameOut, cvPoint(half_width-15, half_height-10), cvPoint(half_width+15, half_height+10), cvScalar(0, 255, 0, 0));
+    cvRectangle(m_pFrameOut, 
+        cvPoint(rect_left,  rect_top), 
+        cvPoint(rect_right, rect_bottom), 
+        cvScalar(0, 255, 0, 0));
 
     return m_pFrameOut;
 }
