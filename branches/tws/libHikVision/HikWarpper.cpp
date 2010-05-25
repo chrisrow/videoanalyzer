@@ -22,71 +22,56 @@ void destoryCameraMgr()
 }
 
 //////////////////////////////////////////////////////////////////////////
-#define YUV2RGB(y, u, v, r, g, b)\
-    r = y + ((v*1436) >>10);\
-    g = y - ((u*352 + v*731) >> 10);\
-    b = y + ((u*1814) >> 10);\
-    r = r < 0 ? 0 : r;\
-    g = g < 0 ? 0 : g;\
-    b = b < 0 ? 0 : b;\
-    r = r > 255 ? 255 : r;\
-    g = g > 255 ? 255 : g;\
-    b = b > 255 ? 255 : b
+IplImage* g_pFrame = NULL;
+CCriticalSection g_CSect; //保护g_pFrame
 
-
-static inline void yv12_to_rgb24 (unsigned char *src, unsigned char *dest, int width, int height)
+class CGuard
 {
-    register int i,j;
-    register int y0, y1, u, v;
-    register int r, g, b;
-    register unsigned char *s[3];
-    s[0] = src;
-    s[1] = s[0] + width*height;
-    s[2] = s[1] + width*height/4;
-    for (i = 0; i < height; i++) 
+public:
+    CGuard(CCriticalSection& CSect): m_lock(&CSect)
+    { 
+        m_lock.Lock(); 
+    }
+
+    ~CGuard()                 
+    { 
+        m_lock.Unlock(); 
+    }
+
+private:
+    CSingleLock m_lock;
+};
+
+void CALLBACK DecordCB(long nPort,char * pBuf, long nSize, FRAME_INFO * pFrameInfo, 
+                        long nUser,long nReserved2)
+{
+    CHikWarpper* pHik = (CHikWarpper*)nUser;
+
+    CGuard guard(g_CSect);
+    if (pFrameInfo->nType = T_YV12)
     {
-        for (j = 0; j < width/2; j++) 
+        if (!g_pFrame
+            || pFrameInfo->nWidth != g_pFrame->width 
+            || pFrameInfo->nHeight != g_pFrame->height)
         {
-            y0 = *(s[0])++;
-            y1 = *(s[0])++;
-            if (i % 2 == 0 ) 
+            if (!g_pFrame)
             {
-                u = *(s[1])++ - 128;
-                v = *(s[2])++ - 128;
+                cvReleaseImage(&g_pFrame);
             }
-            YUV2RGB (y0, u, v, r, g, b);
-            *dest++ = r;
-            *dest++ = g;
-            *dest++ = b;
-            YUV2RGB (y1, u, v, r, g, b);
-            *dest++ = r;
-            *dest++ = g;
-            *dest++ = b;
+
+            int iDepth = 8;
+            int iChannel = 3;
+            g_pFrame = cvCreateImage(cvSize(pFrameInfo->nWidth, pFrameInfo->nHeight), iDepth, iChannel);
         }
+
+        yv12_to_rgb24((unsigned char*)pBuf, (unsigned char*)g_pFrame->imageData, pFrameInfo->nWidth, pFrameInfo->nHeight);
+        
+        SetEvent(pHik->m_hEvent);
+
+//         cvShowImage("tmp3", pHik->m_pFrame);
+//         cvWaitKey(10);
     }
-}
 
-void CALLBACK DecCBFunc(long nPort,char * pBuf, long nSize, FRAME_INFO * pFrameInfo, 
-                        long nReserved1,long nReserved2)
-{
-//frame type
-// #define T_AUDIO16	101
-// #define T_AUDIO8	    100
-// #define T_UYVY		1
-// #define T_YV12		3
-// #define T_RGB32		7
-
-    if (pFrameInfo->nType = 3)
-    {
-        IplImage *pFrame = cvCreateImage(cvSize(pFrameInfo->nWidth, pFrameInfo->nHeight), 8, 3);
-
-        yv12_to_rgb24((unsigned char*)pBuf, (unsigned char*)pFrame->imageData, pFrameInfo->nWidth, pFrameInfo->nHeight);
-
-        cvShowImage("tmp3", pFrame);
-        cvWaitKey(10);
-
-        cvReleaseImage(&pFrame);
-    }
 }
 
 void CALLBACK VideoRealDataCB(
@@ -124,7 +109,12 @@ void CALLBACK VideoRealDataCB(
                 break;
             }
 
-            BOOL  bResult = PlayM4_SetDecCallBack(lPort, DecCBFunc);
+            PlayM4_SetDecCBStream(lPort, 1);  // 1 视频流
+
+            if (PlayM4_SetDecCallBackMend(lPort, DecordCB, (long)pHik)) //解码回调函数
+            {
+                break;
+            }
 
             if (!PlayM4_Play(lPort, NULL)) //播放开始
             {
@@ -134,7 +124,8 @@ void CALLBACK VideoRealDataCB(
     case NET_DVR_STREAMDATA:   //码流数据
         if (dwBufSize > 0 && lPort != -1)
         {
-            if (!PlayM4_InputData(lPort, pBuffer, dwBufSize))  //输入流数据
+//             if (!PlayM4_InputData(lPort, pBuffer, dwBufSize))  //输入流数据
+            if (!PlayM4_InputVideoData(lPort, pBuffer, dwBufSize))  //输入视频流数据
             {
                 break;
             } 
@@ -150,6 +141,7 @@ CHikWarpper::CHikWarpper()
 , m_pFrame(NULL)
 , m_iWidth(CIF_WIDTH)
 , m_iHeight(CIF_HEIGHT)
+, m_hEvent(false, true)
 , m_iUseID(-1)
 , m_hPlay(-1)
 , m_iPort(-1)
@@ -159,6 +151,11 @@ CHikWarpper::CHikWarpper()
 
 CHikWarpper::~CHikWarpper()
 {
+    if (m_pFrame)
+    {
+        cvReleaseImage(&m_pFrame);
+    }
+
     if (m_iUseID != -1)
     {
         NET_DVR_Logout_V30(m_iUseID);
@@ -197,6 +194,11 @@ bool CHikWarpper::open(int iIndex)
 
 void CHikWarpper::close()
 {
+    PlayM4_CloseStream(m_iPort);
+
+    PlayM4_FreePort(m_iPort);
+    m_iPort = -1;
+
     //停止播放
     NET_DVR_StopRealPlay(m_hPlay);
     //登出
@@ -205,21 +207,36 @@ void CHikWarpper::close()
 
 IplImage* CHikWarpper::retrieveFrame()
 {
-    if( !m_pFrame )
+    //阻塞，直到m_pFrame更新
+    DWORD result = WaitForSingleObject(m_hEvent, 1000);
+    ResetEvent(m_hEvent);
+    if( result != WAIT_OBJECT_0) 
+    {
+        return NULL;
+    }
+
+    CGuard guard(g_CSect);
+    if (NULL == g_pFrame)
+    {
+        return NULL;
+    }
+    
+    if (NULL == m_pFrame) 
     {
         int depth = 8;
         int channel = 3;
-        m_pFrame = cvCreateImage( cvSize(m_iWidth, m_iHeight), depth, channel );
-        cvSetZero(m_pFrame);
+        m_pFrame = cvCloneImage(g_pFrame);
+        return m_pFrame;
+    } 
+
+    if (m_pFrame->width != g_pFrame->width
+        || m_pFrame->height != g_pFrame->height)
+    {
+        cvReleaseImage(&m_pFrame);
+        m_pFrame = cvCloneImage(g_pFrame);
+        return m_pFrame;
     }
-
-    //阻塞，直到m_pFrame更新
-//     DWORD result = WaitForSingleObject(hEvent, 1000);
-//     if( result != WAIT_OBJECT_0) 
-//     {
-//         return NULL;
-//     }
-
+    
     return m_pFrame;
 }
 
