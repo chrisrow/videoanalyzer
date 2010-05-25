@@ -23,6 +23,15 @@ class CHikWarpper: public ICamera
         void      *pUser
         );
 
+    friend void CALLBACK DecCBFunc(
+        long nPort,
+        char *pBuf, 
+        long nSize, 
+        FRAME_INFO * pFrameInfo, 
+        long nReserved1,
+        long nReserved2);
+
+
 public:
     CHikWarpper();
     virtual ~CHikWarpper();

@@ -6,10 +6,9 @@
 
 extern int g_debug;
 
-FILE* g_fp = NULL;
-const int ANGLE_NUM = 25;
-double g_angle_l[ANGLE_NUM];
-double g_angle_r[ANGLE_NUM];
+// const int ANGLE_NUM = 25;
+// double g_angle_l[ANGLE_NUM];
+// double g_angle_r[ANGLE_NUM];
 
 CRoadWarpper::CRoadWarpper()
 : m_pFrameOut(NULL)
@@ -17,13 +16,11 @@ CRoadWarpper::CRoadWarpper()
 , m_pFrameLayer(NULL)
 , m_storage(NULL)
 {
-    g_fp = fopen("c:/xx.txt", "w+");
 }
 
 CRoadWarpper::~CRoadWarpper()
 {
     reset();
-    fclose(g_fp);
 }
 
 void CRoadWarpper::reset()
@@ -52,8 +49,6 @@ void CRoadWarpper::reset()
 
 const IplImage* CRoadWarpper::analysis(const IplImage *pFrame)
 {
-    fprintf(g_fp, "===\n");
-
     if (!m_pFrameOut
         || pFrame->width != m_pFrameOut->width 
         || pFrame->height != m_pFrameOut->height)
@@ -69,6 +64,12 @@ const IplImage* CRoadWarpper::analysis(const IplImage *pFrame)
 
     cvCvtColor(pFrame, m_pFrameTmp, CV_RGB2GRAY);  //单通道灰度图
     cvSmooth(m_pFrameTmp, m_pFrameTmp);            //高斯平滑
+
+    //cvThreshold(m_pFrameTmp, m_pFrameLayer, 120, 255, CV_THRESH_BINARY);
+//     cvAdaptiveThreshold(m_pFrameTmp, m_pFrameLayer, 255, CV_ADAPTIVE_THRESH_MEAN_C, CV_THRESH_BINARY, 41, 10);
+//     cvEqualizeHist(m_pFrameTmp, m_pFrameLayer);
+    SHOW_IMAGE("cvAdaptiveThreshold", m_pFrameTmp);
+
     cvCanny(m_pFrameTmp, m_pFrameTmp, 150, 30, 3);  //边缘检测
 
     SHOW_IMAGE("temp", m_pFrameTmp);
@@ -76,10 +77,10 @@ const IplImage* CRoadWarpper::analysis(const IplImage *pFrame)
     int half_width = pFrame->width/2;
     int half_height = pFrame->height/2;
 
-    int rect_top    = pFrame->height/2 - 10;
-    int rect_bottom = pFrame->height/2 + 10;
-    int rect_left   = pFrame->width/2  - 18;
-    int rect_right  = pFrame->width/2  + 18;
+    int rect_top    = pFrame->height/2 - pFrame->height/30; //10;
+    int rect_bottom = pFrame->height/2 + pFrame->height/30; //10;
+    int rect_left   = pFrame->width/2  - pFrame->width/20;  //18;
+    int rect_right  = pFrame->width/2  + pFrame->width/20;  //18;
 
     double k = 0;  // 斜率
     double b = 0;  // 截距
