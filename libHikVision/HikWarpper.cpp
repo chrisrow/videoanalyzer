@@ -184,7 +184,7 @@ bool CHikWarpper::open(int iIndex)
     BOOL bBlocked = FALSE;
     NET_DVR_CLIENTINFO clientInfo;
     //TODO: clientInfo
-    clientInfo.lChannel = 1;  // 通道号，从1开始
+    clientInfo.lChannel = iIndex + deviceInfo.byStartChan;  // 通道号，从1开始
     clientInfo.lLinkMode = 0;
     clientInfo.hPlayWnd = NULL;
     clientInfo.sMultiCastIP = NULL;
@@ -281,11 +281,19 @@ int  CHikWarpper::getHeight()
 
 CHikMgr::CHikMgr()
 {
+    m_iUseID = -1;
     memset(m_szName, 0, CAM_NAME_LEN);
+
+    NET_DVR_Init();
+    memset(&m_deviceInfo, 0, sizeof(NET_DVR_DEVICEINFO_V30));
+    m_iUseID = NET_DVR_Login_V30("10.13.14.51", 8000, "admin", "12345", &m_deviceInfo);
 }
 
 CHikMgr::~CHikMgr()
 {
+    //登出
+    NET_DVR_Logout_V30(m_iUseID);
+    NET_DVR_Cleanup();
 }
 
 ICamera* CHikMgr::createCamera()
@@ -301,10 +309,29 @@ void CHikMgr::destroyCamera(ICamera** pCamera)
 
 int CHikMgr::getCount()
 {
-    return 1;
+    if (-1 == m_iUseID)
+    {
+        return 0;
+    }
+
+    return m_deviceInfo.byChanNum + m_deviceInfo.byIPChanNum;
 }
 
 const char* CHikMgr::getName(int iIndex)
 {
-    return "test";
+    if (-1 == m_iUseID || iIndex < 0)
+    {
+        return "Invalid camera index.";
+    }
+
+    if (iIndex < m_deviceInfo.byChanNum)
+    {
+        sprintf(m_szName, "Camera %02d", m_deviceInfo.byStartChan + iIndex);
+    }
+    else
+    {
+        sprintf(m_szName, "IPCamera %02d", iIndex + 1);
+    }
+    
+    return m_szName;
 }

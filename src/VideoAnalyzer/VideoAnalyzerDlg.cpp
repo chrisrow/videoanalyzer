@@ -809,7 +809,7 @@ void CVideoAnalyzerDlg::OnCbnDropdownComboCamera()
     for(int i = 0; i < iCount; i++)
     {
         CString strName;
-        strName.Format("%d|", i);
+        strName.Format("%02d|", i);
         strName += pCameraMgr->getName(i);
         vCameraName.push_back(strName);
     }
