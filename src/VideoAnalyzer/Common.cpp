@@ -5,6 +5,7 @@
 #include <string.h>
 
 TCommonParam g_commParam;
+extern int g_debug;
 
 TCommonParam::TCommonParam()
 {
@@ -13,18 +14,21 @@ TCommonParam::TCommonParam()
 
 void TCommonParam::reset()
 {
+    memset(szDriverDll, 0, 64+1);
     memset(szLocalAddr, 0, 4);
     memset(szUDPServerIP, 0, 4);
     iUDPServerPort = 0;
     memset(szImagePath, 0, MAX_PATH);
     iHeartBeat = 180;
+    iDebug = 0;
 }
 
-
+const char* NODE_DRIVERDLL = "DriverDll";
 const char* NODE_LOCALADDR = "LocalAddr";
 const char* NODE_UPDSERVER = "UDPServer";
 const char* NODE_HEARTBEAT = "HeartBeat";
 const char* NODE_IMAGEPATH = "ImagePath";
+const char* NODE_DEBUGMODE = "Debug";
 
 const char* loadCommonParam(const char* szFileName)
 {
@@ -32,6 +36,19 @@ const char* loadCommonParam(const char* szFileName)
     if (!parse.Load(szFileName))
     {
         return _T("载入配置文件失败");
+    }
+
+    // 视频捕获DLL
+    {
+        const char* driver = parse.GetGolbalParam(NODE_DRIVERDLL);
+        if(driver)
+        {
+            _snprintf(g_commParam.szDriverDll, 64, "%s", driver);
+        }
+        else
+        {
+            _snprintf(g_commParam.szDriverDll, 64, "libVideoInput.dll");
+        }
     }
 
     //本机IP
@@ -83,6 +100,28 @@ const char* loadCommonParam(const char* szFileName)
         }
     }
 
+    //是否为调试模式
+    {
+        const char* pDebug = NULL;
+        if ( NULL != (pDebug = parse.GetGolbalParam(NODE_DEBUGMODE)) )
+        {
+            g_commParam.iDebug = atoi(pDebug);
+        }
+        else
+        {
+            g_commParam.iDebug = 0;
+        }
+
+        if(1 == g_commParam.iDebug)
+        {
+            g_debug = 1;
+        }
+        else
+        {
+            g_debug = 0;
+        }
+    }
+
     //报警图片保存路径
     {
         const char* path = parse.GetGolbalParam(NODE_IMAGEPATH);
@@ -94,7 +133,6 @@ const char* loadCommonParam(const char* szFileName)
         {
             _snprintf(g_commParam.szImagePath, MAX_PATH, "d:/");
         }
-
     }
 
     return NULL;
