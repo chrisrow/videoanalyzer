@@ -178,28 +178,7 @@ void CCameraWarpper::doRun()
         return;
     }
     
-    if (m_pCamera->isCallBackMode())
-    {
-        doCallBack();
-    }
-    else
-    {
-        doLoop();
-    }
-}
-
-void CCameraWarpper::doCallBack()
-{
-    m_eStat = STAT_RUN;
-    while(STAT_RUN == m_eStat)
-    {
-        WaitForSingleObject(m_evtPause, INFINITE); 
-
-        cvWaitKey(1);
-    }
-    m_eStat = STAT_STOPPED;
-
-    afterStop();
+    doLoop();
 }
 
 void CCameraWarpper::doLoop()
