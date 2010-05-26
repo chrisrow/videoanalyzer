@@ -184,7 +184,7 @@ bool CHikWarpper::open(int iIndex)
     BOOL bBlocked = FALSE;
     NET_DVR_CLIENTINFO clientInfo;
     //TODO: clientInfo
-    clientInfo.lChannel = 1;
+    clientInfo.lChannel = 1;  // 通道号，从1开始
     clientInfo.lLinkMode = 0;
     clientInfo.hPlayWnd = NULL;
     clientInfo.sMultiCastIP = NULL;
@@ -307,5 +307,4 @@ int CHikMgr::getCount()
 const char* CHikMgr::getName(int iIndex)
 {
     return "test";
-
 }
