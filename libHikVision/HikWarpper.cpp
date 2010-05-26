@@ -47,6 +47,7 @@ void CALLBACK DecordCB(long nPort,char * pBuf, long nSize, FRAME_INFO * pFrameIn
 {
     CHikWarpper* pHik = (CHikWarpper*)nUser;
 
+    DWORD nResult = PLAYM4_NOERROR;
     CGuard guard(g_CSect);
     if (pFrameInfo->nType = T_YV12)
     {
@@ -67,9 +68,6 @@ void CALLBACK DecordCB(long nPort,char * pBuf, long nSize, FRAME_INFO * pFrameIn
         yv12_to_rgb24((unsigned char*)pBuf, (unsigned char*)g_pFrame->imageData, pFrameInfo->nWidth, pFrameInfo->nHeight);
         
         SetEvent(pHik->m_hEvent);
-
-//         cvShowImage("tmp3", pHik->m_pFrame);
-//         cvWaitKey(10);
     }
 
 }
@@ -84,6 +82,8 @@ void CALLBACK VideoRealDataCB(
 {
     CHikWarpper* pHik = (CHikWarpper*)pUser;
 
+    DWORD nResult = PLAYM4_NOERROR;
+
     LONG lPort;
     lPort = pHik->m_iPort; //回调数据不是系统头时，需要获取之前播放器分配的port号
 
@@ -93,6 +93,7 @@ void CALLBACK VideoRealDataCB(
 
         if (!PlayM4_GetPort(&lPort))  //获取播放库未使用的通道号
         {
+            nResult = PlayM4_GetLastError(lPort);
             break;
         }
         pHik->m_iPort = lPort;  //将播放器分配的通道号保存为全局的，以便之后播放回调的码流数据
@@ -101,39 +102,43 @@ void CALLBACK VideoRealDataCB(
         {
             if (!PlayM4_SetStreamOpenMode(lPort, STREAME_REALTIME))  //设置实时流播放模式
             {
+                nResult = PlayM4_GetLastError(lPort);
                 break;
             }
 
             if (!PlayM4_OpenStream(lPort, pBuffer, dwBufSize, 1024*1024)) //打开流接口
             {
+                nResult = PlayM4_GetLastError(lPort);
                 break;
             }
 
-            PlayM4_SetDecCBStream(lPort, 1);  // 1 视频流
-
-            if (PlayM4_SetDecCallBackMend(lPort, DecordCB, (long)pHik)) //解码回调函数
+            if (!PlayM4_SetDecCallBackMend(lPort, DecordCB, (long)pHik)) //解码回调函数
             {
+                nResult = PlayM4_GetLastError(lPort);
                 break;
             }
 
             if (!PlayM4_Play(lPort, NULL)) //播放开始
             {
+                nResult = PlayM4_GetLastError(lPort);
                 break;
             }
         }
     case NET_DVR_STREAMDATA:   //码流数据
         if (dwBufSize > 0 && lPort != -1)
         {
-//             if (!PlayM4_InputData(lPort, pBuffer, dwBufSize))  //输入流数据
-            if (!PlayM4_InputVideoData(lPort, pBuffer, dwBufSize))  //输入视频流数据
+            if (!PlayM4_InputData(lPort, pBuffer, dwBufSize))  //输入流数据
             {
+                nResult = PlayM4_GetLastError(lPort);
                 break;
             } 
         }
     }
 
+    if (nResult != PLAYM4_NOERROR)
+    {
 
-
+    }
 }
 
 CHikWarpper::CHikWarpper()
@@ -236,6 +241,8 @@ IplImage* CHikWarpper::retrieveFrame()
         m_pFrame = cvCloneImage(g_pFrame);
         return m_pFrame;
     }
+
+    cvCopyImage(g_pFrame, m_pFrame);
     
     return m_pFrame;
 }
