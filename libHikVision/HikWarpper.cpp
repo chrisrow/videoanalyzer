@@ -66,6 +66,9 @@ void CALLBACK DecordCB(long nPort,char * pBuf, long nSize, FRAME_INFO * pFrameIn
         }
 
         yv12_to_rgb24((unsigned char*)pBuf, (unsigned char*)g_pFrame->imageData, pFrameInfo->nWidth, pFrameInfo->nHeight);
+
+//         cvShowImage("xxx", g_pFrame);
+//         cvWaitKey(10);
         
         SetEvent(pHik->m_hEvent);
     }
