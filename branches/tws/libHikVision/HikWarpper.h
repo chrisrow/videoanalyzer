@@ -127,6 +127,10 @@ public:
 
 private:
     char m_szName[CAM_NAME_LEN];
+
+    //hik
+    NET_DVR_DEVICEINFO_V30 m_deviceInfo;
+    int m_iUseID;
 };
 
 #endif
