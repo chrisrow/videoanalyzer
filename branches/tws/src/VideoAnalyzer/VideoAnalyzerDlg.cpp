@@ -159,13 +159,6 @@ BOOL CVideoAnalyzerDlg::OnInitDialog()
 	SetIcon(m_hIcon, TRUE);			// 设置大图标
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 
-    //载入摄像机dll
-    if (!CCameraDllMgr::loadDll())
-    {
-        this->AddRunStatus(_T("载入摄像机驱动失败"));
-        return FALSE;
-    }
-
     //列表框
     CRect rectListStatus;
     m_lstStatus.GetClientRect(&rectListStatus);
@@ -182,27 +175,6 @@ BOOL CVideoAnalyzerDlg::OnInitDialog()
     m_chkDebug.SetCheck(g_debug);//改动
     m_chkPreview.SetCheck(1);
     
-    //选择视频属性
-    CString strWidth, strHeight, strFR;
-    strWidth.Format("%d", m_iWidth);
-    strHeight.Format("%d", m_iHeight);
-    strFR.Format("%d", 100);
-    m_edtWidth.SetWindowText(strWidth);
-    m_edtHeight.SetWindowText(strHeight);
-    m_edtFrameRate.SetWindowText(strFR);
-    m_chkStartFrame.SetCheck(0);
-    m_edtStartFrame.EnableWindow(FALSE);
-    m_ctlVideo.SetWindowPos(NULL, 0, 0, m_iWidth, m_iHeight, SWP_NOMOVE | SWP_NOZORDER);
-    
-
-    //选择摄像机
-    OnCbnDropdownComboCamera();
-
-    //选择分析器
-    this->ResetAnalyzer();
-    m_cbAnalyzer.SetCurSel(0);
-    this->OnCbnSelchangeComboAyalyzer();
-
     //获取本程序的路径
     GetModuleFileName(NULL,m_strAppPath.GetBufferSetLength(MAX_PATH+1),MAX_PATH);   
     m_strAppPath.ReleaseBuffer();   
@@ -224,7 +196,38 @@ BOOL CVideoAnalyzerDlg::OnInitDialog()
     m_cbConfigFile.AddString((LPCTSTR)strConfigFile);
     m_cbConfigFile.SetCurSel(0);
 
+    //载入配置文件
     this->loadConfig();
+
+    //载入摄像机dll
+    if (!CCameraDllMgr::loadDll())
+    {
+        this->AddRunStatus(_T("载入摄像机驱动失败"));
+        return FALSE;
+    }
+
+    //选择视频属性
+    CString strWidth, strHeight, strFR;
+    strWidth.Format("%d", m_iWidth);
+    strHeight.Format("%d", m_iHeight);
+    strFR.Format("%d", 100);
+    m_edtWidth.SetWindowText(strWidth);
+    m_edtHeight.SetWindowText(strHeight);
+    m_edtFrameRate.SetWindowText(strFR);
+    m_chkStartFrame.SetCheck(0);
+    m_edtStartFrame.EnableWindow(FALSE);
+    m_ctlVideo.SetWindowPos(NULL, 0, 0, m_iWidth, m_iHeight, SWP_NOMOVE | SWP_NOZORDER);
+    
+
+    //选择摄像机
+    OnCbnDropdownComboCamera();
+
+    //选择分析器
+    this->ResetAnalyzer();
+    m_cbAnalyzer.SetCurSel(0);
+    this->OnCbnSelchangeComboAyalyzer();
+
+
 
     this->AddRunStatus("程序启动");
 

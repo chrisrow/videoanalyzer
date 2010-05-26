@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="gb2312" ?>
 <configure>
     <golbal>
+        <DriverDll>libHikVision.dll</DriverDll>
         <LocalAddr>0.0.0.0</LocalAddr>
         <UDPServer>10.2.1.13:10116</UDPServer>
         <HeartBeat>180</HeartBeat>
-        <!-- 发送心跳消息的间隔时间(秒) -->
         <ImagePath>d:\AlarmImage</ImagePath>
-        <Debug>1</Debug>
+        <Debug>0</Debug>
     </golbal>
     <camera channel="0">
         <PersonDetect>

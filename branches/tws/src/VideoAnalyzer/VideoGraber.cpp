@@ -5,8 +5,12 @@
 #include "Algorithm/CParabolaDetect.h"
 #include "Algorithm/Macro.h"
 
+#include "VideoAnalyzer/Common.h"
+
 extern int g_debug;
-extern ParamStruct ParamSet;
+extern TCommonParam g_commParam;
+
+// extern ParamStruct ParamSet;
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -323,10 +327,10 @@ void CVideoFile::doRun()
         }
         m_uFrame++;
 
-        if(ParamSet.bTransLensImage)
-        {
-            cvFlip(pFrame, NULL, 1);//水平镜像
-        }
+//         if(ParamSet.bTransLensImage)
+//         {
+//             cvFlip(pFrame, NULL, 1);//水平镜像
+//         }
 
         if (m_uFrame >= m_iStartFrame)
         {
@@ -417,13 +421,12 @@ HINSTANCE CCameraDllMgr::m_hIns;
 
 bool CCameraDllMgr::loadDll()
 {
-//     m_hIns = LoadLibrary("libVideoInput.dll");
-    m_hIns = LoadLibrary("libHikVision.dll");
+    m_hIns = LoadLibrary(g_commParam.szDriverDll);
     if(!m_hIns)
     {
         DWORD errorCode = GetLastError();
         CString str;
-        str.Format("'libVideoInput.dll' not supported, ErrorCode = %d", errorCode);
+        str.Format("'%s' not supported, ErrorCode = %d", g_commParam.szDriverDll, errorCode);
         AfxMessageBox(str);
         return false;
     }
@@ -433,7 +436,7 @@ bool CCameraDllMgr::loadDll()
     {
         DWORD errorCode = GetLastError();
         CString str;
-        str.Format("Can't find 'getCameraMgr()' in 'libVideoInput.dll', ErrorCode = %d", errorCode);
+        str.Format("Can't find 'getCameraMgr()' in '%s', ErrorCode = %d", errorCode, g_commParam.szDriverDll);
         AfxMessageBox(str);
         return false;
     }
@@ -443,7 +446,7 @@ bool CCameraDllMgr::loadDll()
     {
         DWORD errorCode = GetLastError();
         CString str;
-        str.Format("Can't find 'getCameraMgr()' in 'libVideoInput.dll', ErrorCode = %d", errorCode);
+        str.Format("Can't find 'getCameraMgr()' in '%s', ErrorCode = %d", errorCode, g_commParam.szDriverDll);
         AfxMessageBox(str);
         return false;
     }
