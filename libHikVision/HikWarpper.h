@@ -94,7 +94,6 @@ public:
     virtual int  getHeight();
 
     virtual IplImage* retrieveFrame();
-    virtual bool isCallBackMode() { return true; }
 
 protected:
 //     videoInput m_camera;

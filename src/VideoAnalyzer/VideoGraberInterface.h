@@ -42,17 +42,7 @@ public:
     virtual int  getHeight() = 0;
 
     //主动获取每一帧图像（阻塞式）
-    virtual IplImage* retrieveFrame() { return NULL; }
-
-    //是否采用回调模式
-    virtual bool isCallBackMode() { return false; }
-//     //打开视频前需设置要将图像分发给谁使用
-//     virtual void setFrameReceiver(CSubject<IFrameReceiver*>* pFrameReceiver) {}
-// 
-// protected:
-// 
-//     //将图像分发给接受者（在回调函数中调用此函数）
-//     virtual void notifyFrame(IplImage* pFrame) {}
+    virtual IplImage* retrieveFrame() = 0;
 };
 
 class ICameraMgr
