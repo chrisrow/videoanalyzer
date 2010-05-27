@@ -958,14 +958,19 @@ void CVideoAnalyzerDlg::OnBnClickedButtonApplyRes()
 {
     if (m_pVideoGraber)
     {
+        int iOrgWidth, iOrgHeight;
         double dWidth, dHeight;
         CString strWidth, strHeight;
 
         m_edtWidth.GetWindowText(strWidth);
         m_edtHeight.GetWindowText(strHeight);
 
+        iOrgWidth = m_iWidth;
+        iOrgHeight = m_iHeight;
+
         m_iWidth = atoi((LPCTSTR)strWidth);
         m_iHeight = atoi((LPCTSTR)strHeight);
+        
         dWidth = m_iWidth;
         dHeight = m_iHeight;
 
@@ -974,8 +979,20 @@ void CVideoAnalyzerDlg::OnBnClickedButtonApplyRes()
 
         m_pVideoGraber->getProperty(PROP_WIDTH, dWidth);
         m_pVideoGraber->getProperty(PROP_HEITHT, dHeight);
-        GetDlgItem(IDC_VIDEO)->SetWindowPos(NULL, 0, 0, 
-            (int)dWidth, (int)dHeight, SWP_NOMOVE);
+
+        m_iWidth = (int)dWidth;
+        m_iHeight = (int)dHeight;
+            
+        GetDlgItem(IDC_VIDEO)->SetWindowPos(NULL, 0, 0, m_iWidth, m_iHeight, SWP_NOMOVE);
+
+        //改变对话框大小（只放大，不缩小）
+        CRect rect;
+        GetWindowRect(&rect);  
+        ScreenToClient(&rect);
+        int delta_x = (m_iWidth > iOrgWidth   ? (m_iWidth - iOrgWidth)   : 0);
+        int delta_y = (m_iHeight > iOrgHeight ? (m_iHeight - iOrgHeight) : 0);
+        this->SetWindowPos(NULL, 0, 0, rect.Width() + delta_x, rect.Height() + delta_y, SWP_NOMOVE);
+
         strWidth.Format("%d", int(dWidth));
         strHeight.Format("%d", int(dHeight));
         m_edtWidth.SetWindowText(strWidth);
