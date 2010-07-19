@@ -197,7 +197,10 @@ BOOL CVideoAnalyzerDlg::OnInitDialog()
     m_cbConfigFile.SetCurSel(0);
 
     //载入配置文件
-    this->loadConfig();
+    if (!this->loadConfig())
+    {
+        return FALSE;
+    }
 
     //载入摄像机dll
     if (!CCameraDllMgr::loadDll())
@@ -1024,10 +1027,10 @@ void CVideoAnalyzerDlg::ResetAnalyzer()
     m_analyzerMgr.clear();
     m_cbAnalyzer.ResetContent();
 
-    m_analyzerMgr.push_back(CAnalyzerMgr(new CRoadWarpper, NULL, _T("道路检测")));
+    m_analyzerMgr.push_back(CAnalyzerMgr(new CDefaultAnalyzer, NULL, "无"));
     m_analyzerMgr.push_back(CAnalyzerMgr(new CPersonWarpper, new CDlgPersonCfg, _T("人员检测")));
     m_analyzerMgr.push_back(CAnalyzerMgr(new CParabolaWarpper, new CDlgSetting, _T("抛物检测")));
-    m_analyzerMgr.push_back(CAnalyzerMgr(new CDefaultAnalyzer, NULL, "无"));
+    m_analyzerMgr.push_back(CAnalyzerMgr(new CRoadWarpper, NULL, _T("道路检测")));
     for (unsigned i = 0; i < m_analyzerMgr.size(); i++)
     {
         m_cbAnalyzer.InsertString(i, m_analyzerMgr[i].pComment);
