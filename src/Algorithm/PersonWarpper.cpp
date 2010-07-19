@@ -70,7 +70,7 @@ void CPersonWarpper::updateFrame(const IplImage *pFrame)
     const IplImage* p = analysis(pFrame) ;
 
     //显示分析后的视频
-    doReceiver(pFrame);
+    doReceiver(p);
 
     if ( this->haveAlert() != AT_NONE)
     {
