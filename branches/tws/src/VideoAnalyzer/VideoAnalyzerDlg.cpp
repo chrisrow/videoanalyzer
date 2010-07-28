@@ -35,17 +35,17 @@ extern struct TCommonParam g_commParam;
 class CAboutDlg : public CDialog
 {
 public:
-	CAboutDlg();
+    CAboutDlg();
 
-// 对话框数据
-	enum { IDD = IDD_ABOUTBOX };
+    // 对话框数据
+    enum { IDD = IDD_ABOUTBOX };
 
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 支持
-
-// 实现
 protected:
-	DECLARE_MESSAGE_MAP()
+    virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 支持
+
+    // 实现
+protected:
+    DECLARE_MESSAGE_MAP()
 };
 
 CAboutDlg::CAboutDlg() : CDialog(CAboutDlg::IDD)
@@ -54,7 +54,7 @@ CAboutDlg::CAboutDlg() : CDialog(CAboutDlg::IDD)
 
 void CAboutDlg::DoDataExchange(CDataExchange* pDX)
 {
-	CDialog::DoDataExchange(pDX);
+    CDialog::DoDataExchange(pDX);
 }
 
 BEGIN_MESSAGE_MAP(CAboutDlg, CDialog)
@@ -67,9 +67,9 @@ END_MESSAGE_MAP()
 
 
 CVideoAnalyzerDlg::CVideoAnalyzerDlg(CWnd* pParent /*=NULL*/)
-	: CDialog(CVideoAnalyzerDlg::IDD, pParent)
+: CDialog(CVideoAnalyzerDlg::IDD, pParent)
 {
-	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
+    m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
     m_pVideoGraber = NULL;
     m_pAnalyzer = NULL;
     m_pDlgCfg = NULL;
@@ -105,10 +105,10 @@ void CVideoAnalyzerDlg::DoDataExchange(CDataExchange* pDX)
 }
 
 BEGIN_MESSAGE_MAP(CVideoAnalyzerDlg, CDialog)
-	ON_WM_SYSCOMMAND()
-	ON_WM_PAINT()
-	ON_WM_QUERYDRAGICON()
-	//}}AFX_MSG_MAP
+    ON_WM_SYSCOMMAND()
+    ON_WM_PAINT()
+    ON_WM_QUERYDRAGICON()
+    //}}AFX_MSG_MAP
     ON_CBN_DROPDOWN(IDC_COMBO_CAMERA, &CVideoAnalyzerDlg::OnCbnDropdownComboCamera)
     ON_CBN_SELCHANGE(IDC_COMBO_CAMERA, &CVideoAnalyzerDlg::OnCbnSelchangeComboCamera)
     ON_CBN_SELCHANGE(IDC_COMBO_AYALYZER, &CVideoAnalyzerDlg::OnCbnSelchangeComboAyalyzer)
@@ -134,30 +134,30 @@ END_MESSAGE_MAP()
 
 BOOL CVideoAnalyzerDlg::OnInitDialog()
 {
-	CDialog::OnInitDialog();
+    CDialog::OnInitDialog();
 
-	// 将“关于...”菜单项添加到系统菜单中。
+    // 将“关于...”菜单项添加到系统菜单中。
 
-	// IDM_ABOUTBOX 必须在系统命令范围内。
-	ASSERT((IDM_ABOUTBOX & 0xFFF0) == IDM_ABOUTBOX);
-	ASSERT(IDM_ABOUTBOX < 0xF000);
+    // IDM_ABOUTBOX 必须在系统命令范围内。
+    ASSERT((IDM_ABOUTBOX & 0xFFF0) == IDM_ABOUTBOX);
+    ASSERT(IDM_ABOUTBOX < 0xF000);
 
-	CMenu* pSysMenu = GetSystemMenu(FALSE);
-	if (pSysMenu != NULL)
-	{
-		CString strAboutMenu;
-		strAboutMenu.LoadString(IDS_ABOUTBOX);
-		if (!strAboutMenu.IsEmpty())
-		{
-			pSysMenu->AppendMenu(MF_SEPARATOR);
-			pSysMenu->AppendMenu(MF_STRING, IDM_ABOUTBOX, strAboutMenu);
-		}
-	}
+    CMenu* pSysMenu = GetSystemMenu(FALSE);
+    if (pSysMenu != NULL)
+    {
+        CString strAboutMenu;
+        strAboutMenu.LoadString(IDS_ABOUTBOX);
+        if (!strAboutMenu.IsEmpty())
+        {
+            pSysMenu->AppendMenu(MF_SEPARATOR);
+            pSysMenu->AppendMenu(MF_STRING, IDM_ABOUTBOX, strAboutMenu);
+        }
+    }
 
-	// 设置此对话框的图标。当应用程序主窗口不是对话框时，框架将自动
-	//  执行此操作
-	SetIcon(m_hIcon, TRUE);			// 设置大图标
-	SetIcon(m_hIcon, FALSE);		// 设置小图标
+    // 设置此对话框的图标。当应用程序主窗口不是对话框时，框架将自动
+    //  执行此操作
+    SetIcon(m_hIcon, TRUE);			// 设置大图标
+    SetIcon(m_hIcon, FALSE);		// 设置小图标
 
     //列表框
     CRect rectListStatus;
@@ -174,7 +174,7 @@ BOOL CVideoAnalyzerDlg::OnInitDialog()
     g_debug = 0;
     m_chkDebug.SetCheck(g_debug);//改动
     m_chkPreview.SetCheck(1);
-    
+
     //获取本程序的路径
     GetModuleFileName(NULL,m_strAppPath.GetBufferSetLength(MAX_PATH+1),MAX_PATH);   
     m_strAppPath.ReleaseBuffer();   
@@ -220,7 +220,7 @@ BOOL CVideoAnalyzerDlg::OnInitDialog()
     m_chkStartFrame.SetCheck(0);
     m_edtStartFrame.EnableWindow(FALSE);
     m_ctlVideo.SetWindowPos(NULL, 0, 0, m_iWidth, m_iHeight, SWP_NOMOVE | SWP_NOZORDER);
-    
+
 
     //选择摄像机
     OnCbnDropdownComboCamera();
@@ -236,23 +236,23 @@ BOOL CVideoAnalyzerDlg::OnInitDialog()
 
     this->autoStart();
 
-//     SkinH_Attach();
-//     SkinH_SetAero(true);
-//     SkinH_AdjustAero(220,0,0,5,0,0,-1,-1,-1);
+    //     SkinH_Attach();
+    //     SkinH_SetAero(true);
+    //     SkinH_AdjustAero(220,0,0,5,0,0,-1,-1,-1);
     return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
 
 void CVideoAnalyzerDlg::OnSysCommand(UINT nID, LPARAM lParam)
 {
-	if ((nID & 0xFFF0) == IDM_ABOUTBOX)
-	{
-		CAboutDlg dlgAbout;
-		dlgAbout.DoModal();
-	}
-	else
-	{
-		CDialog::OnSysCommand(nID, lParam);
-	}
+    if ((nID & 0xFFF0) == IDM_ABOUTBOX)
+    {
+        CAboutDlg dlgAbout;
+        dlgAbout.DoModal();
+    }
+    else
+    {
+        CDialog::OnSysCommand(nID, lParam);
+    }
 }
 
 // 如果向对话框添加最小化按钮，则需要下面的代码
@@ -261,34 +261,34 @@ void CVideoAnalyzerDlg::OnSysCommand(UINT nID, LPARAM lParam)
 
 void CVideoAnalyzerDlg::OnPaint()
 {
-	if (IsIconic())
-	{
-		CPaintDC dc(this); // 用于绘制的设备上下文
+    if (IsIconic())
+    {
+        CPaintDC dc(this); // 用于绘制的设备上下文
 
-		SendMessage(WM_ICONERASEBKGND, reinterpret_cast<WPARAM>(dc.GetSafeHdc()), 0);
+        SendMessage(WM_ICONERASEBKGND, reinterpret_cast<WPARAM>(dc.GetSafeHdc()), 0);
 
-		// 使图标在工作区矩形中居中
-		int cxIcon = GetSystemMetrics(SM_CXICON);
-		int cyIcon = GetSystemMetrics(SM_CYICON);
-		CRect rect;
-		GetClientRect(&rect);
-		int x = (rect.Width() - cxIcon + 1) / 2;
-		int y = (rect.Height() - cyIcon + 1) / 2;
+        // 使图标在工作区矩形中居中
+        int cxIcon = GetSystemMetrics(SM_CXICON);
+        int cyIcon = GetSystemMetrics(SM_CYICON);
+        CRect rect;
+        GetClientRect(&rect);
+        int x = (rect.Width() - cxIcon + 1) / 2;
+        int y = (rect.Height() - cyIcon + 1) / 2;
 
-		// 绘制图标
-		dc.DrawIcon(x, y, m_hIcon);
-	}
-	else
-	{
-		CDialog::OnPaint();
-	}
+        // 绘制图标
+        dc.DrawIcon(x, y, m_hIcon);
+    }
+    else
+    {
+        CDialog::OnPaint();
+    }
 }
 
 //当用户拖动最小化窗口时系统调用此函数取得光标
 //显示。
 HCURSOR CVideoAnalyzerDlg::OnQueryDragIcon()
 {
-	return static_cast<HCURSOR>(m_hIcon);
+    return static_cast<HCURSOR>(m_hIcon);
 }
 
 LRESULT CVideoAnalyzerDlg::OnMsgVideoEnd(WPARAM wParam,LPARAM lParam)
@@ -304,7 +304,7 @@ LRESULT CVideoAnalyzerDlg::OnMsgVideoEnd(WPARAM wParam,LPARAM lParam)
     case VC_RESTART: 
         m_btnRestart.EnableWindow(TRUE);
         (void)this->openSource(m_tSource);
-    	break;
+        break;
     case VC_DESTROY:
         SendMessage(WM_CLOSE, 0, 0);
         break;
@@ -385,17 +385,17 @@ void CVideoAnalyzerDlg::alert(const IplImage *pFrame)
 
     SYSTEMTIME Systemtime ;
     GetLocalTime(&Systemtime);
-    
+
     //创建目录
     CString strPath;
     strPath.Format(_T("%s\\%d月%d日"),g_commParam.szImagePath,Systemtime.wMonth,Systemtime.wDay);
-//     if (!CreateDirectory(strPath, NULL))
+    //     if (!CreateDirectory(strPath, NULL))
     if(!CreateMultipleDirectory(strPath))
     {
         this->AddRunStatus("创建目录失败：%s", LPCTSTR(strPath));
         return;
     }
-    
+
     int iChannel = 0;
     if (TYPE_CAMERA == m_tSource.eType)
     {
@@ -418,7 +418,7 @@ void CVideoAnalyzerDlg::alert(const IplImage *pFrame)
         Systemtime.wMonth,Systemtime.wDay,
         iChannel,
         Systemtime.wHour, Systemtime.wMinute, Systemtime.wSecond );
-//     cvFlip(pFrame, NULL, 0);//垂直镜像
+    //     cvFlip(pFrame, NULL, 0);//垂直镜像
 
     try
     {
@@ -640,7 +640,7 @@ bool CVideoAnalyzerDlg::openSource(TVideoSource& tSource)
     {
         CString tmp;
         tmp.Format("Camera %d ", tSource.iCamID);
-		strWndCaption = tmp + strWndCaption; 
+        strWndCaption = tmp + strWndCaption; 
         SetWindowText(strWndCaption);
 
         this->AddRunStatus("打开摄像机 %d", tSource.iCamID);
@@ -722,7 +722,7 @@ bool CVideoAnalyzerDlg::openSource(TVideoSource& tSource)
     {
         m_pVideoGraber->addListener(m_pAnalyzer);
     }
-    
+
     //通道号
     int iChannel = 0;
     if (TYPE_CAMERA == m_tSource.eType)
@@ -740,10 +740,10 @@ bool CVideoAnalyzerDlg::openSource(TVideoSource& tSource)
         m_pHeartBeat = new CHeartBeat;
     }
     if (!m_pHeartBeat->init(iChannel, 
-                            g_commParam.szLocalAddr, 
-                            g_commParam.szUDPServerIP, 
-                            g_commParam.iUDPServerPort, 
-                            g_commParam.iHeartBeat))
+        g_commParam.szLocalAddr, 
+        g_commParam.szUDPServerIP, 
+        g_commParam.iUDPServerPort, 
+        g_commParam.iHeartBeat))
     {
         this->AddRunStatus("初始化心跳消息失败");
         return false;
@@ -761,16 +761,17 @@ bool CVideoAnalyzerDlg::openSource(TVideoSource& tSource)
         int iAlarmType = 1;
 
         (void)pUDPAlerter->init(iAlarmType, 
-                                iChannel, 
-                                g_commParam.szLocalAddr, 
-                                g_commParam.szUDPServerIP, 
-                                g_commParam.iUDPServerPort);
+            iChannel, 
+            g_commParam.szLocalAddr, 
+            g_commParam.szUDPServerIP, 
+            g_commParam.iUDPServerPort);
 
         m_pUDPAlerter = pUDPAlerter;
     }
     if (m_pAnalyzer)
     {
-        ADD_LISTENER(IAlerter*, m_pAnalyzer, m_pUDPAlerter);
+//         ADD_LISTENER(IAlerter*, m_pAnalyzer, m_pUDPAlerter);
+        m_pAnalyzer->addAlerter(m_pUDPAlerter);
     }
 
     INIT_IMAGE();
@@ -827,7 +828,7 @@ void CVideoAnalyzerDlg::OnCbnDropdownComboCamera()
     }
 
 
-//     m_tSource.eType = TYPE_CAMERA;
+    //     m_tSource.eType = TYPE_CAMERA;
     if (iCount > 0)
     {
         if (m_tSource.iCamID >= 0 && m_tSource.iCamID < iCount)
@@ -973,7 +974,7 @@ void CVideoAnalyzerDlg::OnBnClickedButtonApplyRes()
 
         m_iWidth = atoi((LPCTSTR)strWidth);
         m_iHeight = atoi((LPCTSTR)strHeight);
-        
+
         dWidth = m_iWidth;
         dHeight = m_iHeight;
 
@@ -985,7 +986,7 @@ void CVideoAnalyzerDlg::OnBnClickedButtonApplyRes()
 
         m_iWidth = (int)dWidth;
         m_iHeight = (int)dHeight;
-            
+
         GetDlgItem(IDC_VIDEO)->SetWindowPos(NULL, 0, 0, m_iWidth, m_iHeight, SWP_NOMOVE);
 
         //改变对话框大小（只放大，不缩小）
@@ -1090,7 +1091,7 @@ void CVideoAnalyzerDlg::AddRunStatus(const char* szStatus, ...)
 
 void CVideoAnalyzerDlg::OnNMRClickListStatus(NMHDR *pNMHDR, LRESULT *pResult)
 {
-//     LPNMITEMACTIVATE pNMItemActivate = reinterpret_cast<NMITEMACTIVATE>(pNMHDR);
+    //     LPNMITEMACTIVATE pNMItemActivate = reinterpret_cast<NMITEMACTIVATE>(pNMHDR);
 
     CPoint   ptCursorPos; 
     GetCursorPos(&ptCursorPos); 
